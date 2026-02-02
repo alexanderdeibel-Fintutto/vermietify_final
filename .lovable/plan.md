@@ -1,189 +1,190 @@
 
-# Vermietify - Immobilienverwaltungs-Plattform
+# Stripe Subscription Integration Plan
 
-## Übersicht
-Eine vollständige deutsche Immobilienverwaltungs-Plattform für Vermieter mit Multi-Mandanten-Architektur, die alle Aspekte der Vermietung abdeckt.
+## Uebersicht
 
----
-
-## Phase 1: Grundgerüst & Design System
-
-### Design System
-- **Hauptfarbe**: #2563EB (Blau)
-- **Akzentfarbe**: #4F46E5 (Indigo)
-- **Hero Gradient**: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%)
-- **Font**: Inter (Google Fonts)
-- Deutsche Sprache durchgehend mit formeller Anrede (Sie)
-
-### App-Struktur
-- Responsive Sidebar-Navigation mit allen 9 Hauptbereichen
-- Gemeinsames Layout mit Header und Benutzermenü
-- Durchgängiges Komponentendesign (Cards, Buttons, Formulare)
+Implementierung einer vollstaendigen Stripe-Subscription-Integration fuer Vermietify mit Pricing-Seite, Checkout-Flow, Webhook-Handling und Feature-Gating.
 
 ---
 
-## Phase 2: Authentifizierung & Mandanten
+## Phase 1: Stripe Aktivierung
 
-### Benutzer-System
-- Registrierung und Login mit E-Mail
-- Organisation erstellen beim ersten Login
-- Benutzer können zu Organisationen eingeladen werden
-
-### Datenbank-Struktur (Supabase)
-- **organizations**: Vermieter-Unternehmen/Einzelpersonen
-- **profiles**: Benutzerprofile mit Verknüpfung zu Organisationen
-- **user_roles**: Rollen (admin, member) für Berechtigungen
-- Row-Level Security für alle Tabellen
+### 1.1 Stripe Integration aktivieren
+- Lovable's native Stripe-Integration aktivieren
+- Stripe Secret Key konfigurieren (wird vom User eingegeben)
+- Stripe Public Key als Environment Variable speichern
 
 ---
 
-## Phase 3: Dashboard
+## Phase 2: Datenbank-Schema
 
-### KPI-Karten
-- Gesamtmiete (monatlich)
-- Leerstandsquote (%)
-- Offene Reparaturen (Anzahl)
-- Ausstehende Zahlungen (€)
+### 2.1 User Subscriptions Tabelle erstellen
 
-### Visualisierungen
-- Liniendiagramm: Mieteinnahmen der letzten 12 Monate
-- Tabelle: Nächste Fälligkeiten (Mietzahlungen, Vertragsenden)
-- Liste: Offene Aufgaben und Erinnerungen
+```text
++-------------------------+
+|   user_subscriptions    |
++-------------------------+
+| id (UUID, PK)          |
+| user_id (UUID)         |
+| stripe_customer_id     |
+| stripe_subscription_id |
+| app_id                 |
+| plan_id                |
+| status                 |
+| current_period_start   |
+| current_period_end     |
+| cancel_at_period_end   |
+| created_at             |
+| updated_at             |
++-------------------------+
+```
 
----
-
-## Phase 4: Immobilienverwaltung
-
-### Gebäude-Übersicht
-- Karten-Grid mit allen Gebäuden
-- Statusanzeige (vermietet/leer)
-- Schnellaktionen pro Gebäude
-
-### Gebäude hinzufügen/bearbeiten
-- Name, Adresse, PLZ, Stadt
-- Gebäudetyp (Mehrfamilienhaus, Einfamilienhaus, Gewerbe)
-- Baujahr, Gesamtfläche
-
-### Wohnungseinheiten
-- Liste aller Wohnungen pro Gebäude
-- Pro Einheit: Nummer, Fläche, Zimmer, Kaltmiete, Status
-- Status: Vermietet, Leer, In Renovierung
+### 2.2 RLS Policies
+- SELECT: User sieht nur eigene Subscriptions
+- INSERT/UPDATE/DELETE: Nur via Service Role (Webhook)
 
 ---
 
-## Phase 5: Mieterverwaltung
+## Phase 3: Backend (Edge Functions)
 
-### Mieterliste
-- Suchbare Tabelle aller Mieter
-- Filterung nach Gebäude, Status
-- Kontaktdaten auf einen Blick
+### 3.1 create-checkout-session
+- Erstellt Stripe Checkout Session
+- Erstellt/holt stripe_customer_id fuer User
+- Gibt Checkout URL zurueck
 
-### Mieter-Profil
-- Persönliche Daten (Name, Adresse, Kontakt)
-- Aktuelle und vergangene Mietverträge
-- Zahlungshistorie
-- Dokumentenübersicht
+### 3.2 stripe-webhook
+- Verarbeitet Stripe Events
+- checkout.session.completed -> Subscription erstellen
+- customer.subscription.updated -> Status aktualisieren
+- customer.subscription.deleted -> Subscription deaktivieren
 
-### Mietvertrag-Wizard (Schritt für Schritt)
-1. Wohnungsauswahl
-2. Mieterdaten eingeben/auswählen
-3. Vertragsdaten (Start, Ende, Kaltmiete, Nebenkosten)
-4. Kaution und Zahlungsmodalitäten
-5. Zusammenfassung und Bestätigung
+### 3.3 create-portal-session
+- Erstellt Stripe Customer Portal Session
+- Fuer Plan-Aenderungen und Kuendigungen
 
 ---
 
-## Phase 6: Finanzen
+## Phase 4: Frontend Komponenten
 
-### Einnahmen & Ausgaben
-- Übersicht aller Transaktionen
-- Kategorisierung (Miete, Nebenkosten, Reparaturen, etc.)
-- Import/Export-Funktionen
+### 4.1 Neue Dateien
 
-### Bankkonten
-- Verknüpfung mehrerer Konten
-- Zuordnung zu Objekten
+| Datei | Beschreibung |
+|-------|--------------|
+| src/pages/Pricing.tsx | Pricing-Seite mit Plan-Karten |
+| src/pages/PaymentSuccess.tsx | Erfolgs-Seite nach Zahlung |
+| src/hooks/useSubscription.tsx | Hook fuer Subscription-Status |
+| src/components/subscription/PricingCard.tsx | Einzelne Plan-Karte |
+| src/components/subscription/UpgradePrompt.tsx | Upgrade-Aufforderung |
+| src/components/subscription/BillingToggle.tsx | Monatlich/Jaehrlich Toggle |
+| src/lib/stripe.ts | Stripe Helper-Funktionen |
+| src/config/plans.ts | Plan-Konfiguration |
 
-### Berichte
-- Monatliche/Jährliche Zusammenfassungen
-- Objekt-bezogene Auswertungen
+### 4.2 Pricing Page Features
+- Monatlich/Jaehrlich Toggle (20% Rabatt)
+- 4 Plan-Karten: Free, Basic, Pro, Business
+- Dynamische CTA-Buttons basierend auf User-Status
+- Responsive Design
 
----
+### 4.3 Plan Konfiguration
 
-## Phase 7: Dokumente
+```text
+FREE     - 0 EUR     - 1 Immobilie, 5 Einheiten
+BASIC    - 9.99 EUR  - 3 Immobilien, 25 Einheiten
+PRO      - 24.99 EUR - 10 Immobilien, 100 Einheiten
+BUSINESS - 49.99 EUR - Unbegrenzt
+```
 
-### Dokumentenverwaltung
-- Upload-Funktion für alle Dokumenttypen
-- Kategorisierung (Verträge, Rechnungen, Bescheide, etc.)
-- Zuordnung zu Gebäuden/Mietern
+### 4.4 useSubscription Hook
+- Laedt aktuelle Subscription
+- Stellt plan, isPro, isActive bereit
+- Caching mit React Query
 
-### Dokumententypen
-- Mietverträge
-- Übergabeprotokolle
-- Nebenkostenabrechnungen
-- Versicherungspolicen
-
----
-
-## Phase 8: Abrechnungen
-
-### Nebenkostenabrechnung
-- Erfassung aller umlagefähigen Kosten
-- Verteilerschlüssel (qm, Personen, Einheiten)
-- Automatische Berechnung pro Mieter
-- PDF-Export
-
----
-
-## Phase 9: Steuern
-
-### Anlage V Vorbereitung
-- Zusammenfassung relevanter Daten
-- Export-Format für Steuerberater
-- Übersicht aller steuerrelevanten Positionen
+### 4.5 UpgradePrompt Komponente
+- Wird bei Pro-Features angezeigt
+- Link zur Pricing-Seite
+- Erklaert Feature-Vorteile
 
 ---
 
-## Phase 10: Kommunikation
+## Phase 5: Routing & Navigation
 
-### Nachrichten
-- Direkte Nachrichten an Mieter
-- E-Mail-Versand
-- Vorlagen für häufige Anschreiben
-- Nachrichtenhistorie
+### 5.1 Neue Routes
+- /pricing - Pricing-Seite (oeffentlich)
+- /payment-success - Erfolgs-Seite (protected)
 
----
-
-## Phase 11: Einstellungen
-
-### Organisation
-- Firmenname, Logo, Kontaktdaten
-- Mitgliederverwaltung
-
-### Benutzer
-- Profilbearbeitung
-- Passwortänderung
-- Benachrichtigungseinstellungen
+### 5.2 Navigation Update
+- Link zur Pricing-Seite in Sidebar
+- "Upgrade" Button in Settings
 
 ---
 
-## Technische Umsetzung
+## Technische Details
 
-### Frontend
-- React + TypeScript + Tailwind CSS
-- shadcn/ui Komponenten
-- Recharts für Diagramme
-- React Router für Navigation
+### Edge Function: create-checkout-session
 
-### Backend (Supabase)
-- Authentication mit Multi-Tenant-Unterstützung
-- PostgreSQL mit Row-Level Security
-- Storage für Dokumente
-- Edge Functions bei Bedarf
+```text
+Request:
+POST /create-checkout-session
+{
+  priceId: string,
+  successUrl: string,
+  cancelUrl: string
+}
 
-### Datenbank-Tabellen
-- organizations, profiles, user_roles
-- buildings, units
-- tenants, leases
-- transactions, documents
-- utility_costs, messages
+Response:
+{
+  url: string (Stripe Checkout URL)
+}
+```
+
+### Edge Function: stripe-webhook
+
+```text
+Events verarbeitet:
+- checkout.session.completed
+- customer.subscription.created
+- customer.subscription.updated
+- customer.subscription.deleted
+- invoice.payment_succeeded
+- invoice.payment_failed
+```
+
+### Edge Function: create-portal-session
+
+```text
+Request:
+POST /create-portal-session
+{
+  returnUrl: string
+}
+
+Response:
+{
+  url: string (Stripe Portal URL)
+}
+```
+
+---
+
+## Implementierungs-Reihenfolge
+
+1. Stripe Integration aktivieren
+2. Datenbank-Migration ausfuehren
+3. Edge Functions erstellen und deployen
+4. Plan-Konfiguration erstellen
+5. useSubscription Hook implementieren
+6. Pricing-Seite erstellen
+7. Success-Seite erstellen
+8. UpgradePrompt Komponente erstellen
+9. Routing aktualisieren
+10. Navigation anpassen
+11. Ende-zu-Ende testen
+
+---
+
+## Sicherheitshinweise
+
+- Webhook-Signatur-Verifizierung
+- RLS Policies fuer Subscriptions
+- Service Role nur fuer Webhooks
+- Keine sensiblen Daten im Frontend
