@@ -97,6 +97,17 @@ export default function Properties() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Check if user has an organization
+    if (!profile?.organization_id) {
+      toast({
+        title: "Fehler",
+        description: "Bitte richten Sie zuerst Ihre Organisation ein.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
     // Validate input data
     const validationResult = buildingSchema.safeParse(newBuilding);
     if (!validationResult.success) {
@@ -115,7 +126,7 @@ export default function Properties() {
       const { error } = await supabase
         .from('buildings')
         .insert({
-          organization_id: profile?.organization_id,
+          organization_id: profile.organization_id,
           name: validatedData.name,
           address: validatedData.address,
           city: validatedData.city,
