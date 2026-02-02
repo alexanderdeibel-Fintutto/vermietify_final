@@ -13,7 +13,7 @@ interface UseSubscriptionReturn {
   subscription: SubscriptionData | null;
   plan: Plan;
   isPro: boolean;
-  isBusiness: boolean;
+  isEnterprise: boolean;
   isActive: boolean;
   isLoading: boolean;
   error: Error | null;
@@ -60,15 +60,15 @@ export function useSubscription(): UseSubscriptionReturn {
     }
   }
 
-  const isPro = ['pro', 'business'].includes(currentPlan.id);
-  const isBusiness = currentPlan.id === 'business';
+  const isPro = ['pro', 'enterprise'].includes(currentPlan.id);
+  const isEnterprise = currentPlan.id === 'enterprise';
   const isActive = subscription?.subscribed ?? false;
 
   return {
     subscription,
     plan: currentPlan,
     isPro,
-    isBusiness,
+    isEnterprise,
     isActive,
     isLoading,
     error: error as Error | null,

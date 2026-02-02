@@ -24,11 +24,11 @@ export default function Pricing() {
       return;
     }
 
-    // Free plan -> no action needed
-    if (plan.id === 'free') {
+    // Starter plan -> no action needed
+    if (plan.id === 'starter') {
       toast({
-        title: 'Free Plan',
-        description: 'Sie nutzen bereits den kostenlosen Plan.',
+        title: 'Starter Plan',
+        description: 'Sie nutzen bereits den Starter Plan.',
       });
       return;
     }
@@ -223,10 +223,10 @@ export default function Pricing() {
 
 function getPlanRank(planId: string): number {
   const ranks: Record<string, number> = {
-    free: 0,
+    starter: 0,
     basic: 1,
     pro: 2,
-    business: 3,
+    enterprise: 3,
   };
   return ranks[planId] ?? 0;
 }

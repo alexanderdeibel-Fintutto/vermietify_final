@@ -26,12 +26,12 @@ export function PricingCard({
   const isCurrentPlan = currentPlanId === plan.id;
   const isUpgrade = getPlanRank(plan.id) > getPlanRank(currentPlanId);
   const isDowngrade = getPlanRank(plan.id) < getPlanRank(currentPlanId);
-  const isFree = plan.id === 'free';
+  const isStarter = plan.id === 'starter';
 
   const getButtonText = () => {
     if (!isLoggedIn) return 'Registrieren';
     if (isCurrentPlan) return 'Aktueller Plan';
-    if (isFree) return 'Kostenlos starten';
+    if (isStarter) return 'Kostenlos starten';
     if (isUpgrade) return 'Upgrade';
     if (isDowngrade) return 'Downgrade';
     return 'Auswählen';
@@ -112,10 +112,10 @@ export function PricingCard({
 
 function getPlanRank(planId: string): number {
   const ranks: Record<string, number> = {
-    free: 0,
+    starter: 0,
     basic: 1,
     pro: 2,
-    business: 3,
+    enterprise: 3,
   };
   return ranks[planId] ?? 0;
 }

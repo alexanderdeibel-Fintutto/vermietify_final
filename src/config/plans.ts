@@ -17,13 +17,13 @@ export interface Plan {
 
 export const PLANS: Plan[] = [
   {
-    id: 'free',
-    name: 'Free',
+    id: 'starter',
+    name: 'Starter',
     description: 'Für den Einstieg',
     priceMonthly: 0,
     priceYearly: 0,
-    priceId: '',
-    productId: '',
+    priceId: 'price_1Sr55p52lqSgjCzeX6tlI5tv',
+    productId: 'prod_starter',
     features: [
       '1 Immobilie',
       '5 Einheiten',
@@ -40,9 +40,9 @@ export const PLANS: Plan[] = [
     name: 'Basic',
     description: 'Perfekt für kleine Vermieter',
     priceMonthly: 9.99,
-    priceYearly: 95.90, // 20% discount
-    priceId: 'price_1SwKPf52lqSgjCzel2uP15K4',
-    productId: 'prod_Tu8hD91ohLphf6',
+    priceYearly: 95.90,
+    priceId: 'price_1Sr56K52lqSgjCzeqfCfOudX',
+    productId: 'prod_basic',
     features: [
       '3 Immobilien',
       '25 Einheiten',
@@ -60,9 +60,9 @@ export const PLANS: Plan[] = [
     name: 'Pro',
     description: 'Für professionelle Vermieter',
     priceMonthly: 24.99,
-    priceYearly: 239.90, // 20% discount
-    priceId: 'price_1SwKQt52lqSgjCzep01CJAjm',
-    productId: 'prod_Tu8iRxcAtXiVZh',
+    priceYearly: 239.90,
+    priceId: 'price_1Sr56o52lqSgjCzeRuGrant2',
+    productId: 'prod_pro',
     features: [
       '10 Immobilien',
       '100 Einheiten',
@@ -78,13 +78,13 @@ export const PLANS: Plan[] = [
     popular: true,
   },
   {
-    id: 'business',
-    name: 'Business',
+    id: 'enterprise',
+    name: 'Enterprise',
     description: 'Für große Portfolios',
     priceMonthly: 49.99,
-    priceYearly: 479.90, // 20% discount
-    priceId: 'price_1SwKSe52lqSgjCze2ZjO6mw2',
-    productId: 'prod_Tu8kX2R2vKILqu',
+    priceYearly: 479.90,
+    priceId: 'price_1Sr57E52lqSgjCze3iHixnBn',
+    productId: 'prod_enterprise',
     features: [
       'Unbegrenzte Immobilien',
       'Unbegrenzte Einheiten',
