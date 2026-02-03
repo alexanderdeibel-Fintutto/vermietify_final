@@ -4,7 +4,8 @@ import { z } from "zod";
 const NAME_MAX_LENGTH = 100;
 const ADDRESS_MAX_LENGTH = 255;
 const POSTAL_CODE_PATTERN = /^[0-9]{5}$/;
-const PHONE_PATTERN = /^[+]?[\d\s\-()]{6,30}$/;
+// More permissive phone pattern that allows common international formats
+const PHONE_PATTERN = /^[+]?[\d\s\-().\/]{6,30}$/;
 const MIN_YEAR = 1800;
 const MAX_YEAR = new Date().getFullYear() + 5;
 
@@ -106,40 +107,45 @@ export const organizationSchema = z.object({
     .trim()
     .max(ADDRESS_MAX_LENGTH, `Adresse darf maximal ${ADDRESS_MAX_LENGTH} Zeichen lang sein`)
     .optional()
-    .or(z.literal("")),
+    .or(z.literal(""))
+    .transform((val) => val || ""),
   city: z
     .string()
     .trim()
     .max(NAME_MAX_LENGTH, `Stadt darf maximal ${NAME_MAX_LENGTH} Zeichen lang sein`)
     .optional()
-    .or(z.literal("")),
+    .or(z.literal(""))
+    .transform((val) => val || ""),
   postal_code: z
     .string()
     .trim()
-    .refine(
-      (val) => !val || POSTAL_CODE_PATTERN.test(val),
-      "PLZ muss 5 Ziffern haben"
-    )
     .optional()
-    .or(z.literal("")),
+    .or(z.literal(""))
+    .transform((val) => val || "")
+    .refine(
+      (val) => val === "" || POSTAL_CODE_PATTERN.test(val),
+      "PLZ muss 5 Ziffern haben"
+    ),
   phone: z
     .string()
     .trim()
-    .refine(
-      (val) => !val || PHONE_PATTERN.test(val),
-      "Ungültige Telefonnummer"
-    )
     .optional()
-    .or(z.literal("")),
+    .or(z.literal(""))
+    .transform((val) => val || "")
+    .refine(
+      (val) => val === "" || PHONE_PATTERN.test(val),
+      "Ungültige Telefonnummer"
+    ),
   email: z
     .string()
     .trim()
-    .refine(
-      (val) => !val || z.string().email().safeParse(val).success,
-      "Ungültige E-Mail-Adresse"
-    )
     .optional()
-    .or(z.literal("")),
+    .or(z.literal(""))
+    .transform((val) => val || "")
+    .refine(
+      (val) => val === "" || z.string().email().safeParse(val).success,
+      "Ungültige E-Mail-Adresse"
+    ),
 });
 
 // Profile validation schema

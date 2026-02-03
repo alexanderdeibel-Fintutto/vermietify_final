@@ -4,9 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Settings as SettingsIcon, Building2, User, Bell, Shield, Loader2 } from "lucide-react";
+import { Building2, User, Bell, Shield, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { profileSchema, organizationSchema } from "@/lib/validationSchemas";
 import { sanitizeErrorMessage } from "@/lib/errorHandler";
+import { AddressAutocomplete } from "@/components/ui/address-autocomplete";
 
 interface Organization {
   id: string;
@@ -277,12 +277,20 @@ export default function Settings() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="orgAddress">Adresse</Label>
-                  <Textarea
+                  <AddressAutocomplete
                     id="orgAddress"
                     value={orgAddress}
-                    onChange={(e) => setOrgAddress(e.target.value)}
-                    rows={2}
+                    onChange={setOrgAddress}
+                    onPlaceSelect={(details) => {
+                      setOrgAddress(details.address);
+                      setOrgCity(details.city);
+                      setOrgPostalCode(details.postalCode);
+                    }}
+                    placeholder="Straße und Hausnummer eingeben..."
                   />
+                  <p className="text-xs text-muted-foreground">
+                    Beginnen Sie zu tippen, um Adressvorschläge zu erhalten
+                  </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
