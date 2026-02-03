@@ -101,7 +101,14 @@ serve(async (req) => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR", { message: errorMessage });
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    
+    // Return safe error message to client
+    let safeMessage = "An error occurred while checking subscription status.";
+    if (errorMessage.includes("No authorization header") || errorMessage.includes("Authentication error")) {
+      safeMessage = "Authentication required. Please sign in.";
+    }
+    
+    return new Response(JSON.stringify({ error: safeMessage }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });

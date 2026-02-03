@@ -85,7 +85,16 @@ serve(async (req) => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR", { message: errorMessage });
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    
+    // Return safe error message to client
+    let safeMessage = "An error occurred while creating checkout session.";
+    if (errorMessage.includes("No authorization header") || errorMessage.includes("Authentication error")) {
+      safeMessage = "Authentication required. Please sign in.";
+    } else if (errorMessage.includes("priceId is required")) {
+      safeMessage = "Invalid request. Please select a plan.";
+    }
+    
+    return new Response(JSON.stringify({ error: safeMessage }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });

@@ -76,9 +76,12 @@ serve(async (req) => {
     );
   } catch (error: unknown) {
     console.error("Error in validate-address:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    
+    // Return safe error message to client
+    const safeMessage = "An error occurred while validating the address. Please try again.";
+    
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: safeMessage }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
