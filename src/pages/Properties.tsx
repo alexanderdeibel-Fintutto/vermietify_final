@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { buildingSchema, BuildingFormData } from "@/lib/validationSchemas";
 import { sanitizeErrorMessage } from "@/lib/errorHandler";
+import { AddressAutocomplete } from "@/components/ui/address-autocomplete";
 interface Building {
   id: string;
   name: string;
@@ -42,6 +43,7 @@ export default function Properties() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAddressValidated, setIsAddressValidated] = useState(false);
 
   // Form state
   const [newBuilding, setNewBuilding] = useState({
@@ -53,6 +55,17 @@ export default function Properties() {
     year_built: "",
     total_area: "",
   });
+
+  // Handle Google Maps place selection
+  const handlePlaceSelect = (details: { address: string; city: string; postalCode: string }) => {
+    setNewBuilding((prev) => ({
+      ...prev,
+      address: details.address,
+      city: details.city,
+      postal_code: details.postalCode,
+    }));
+    setIsAddressValidated(true);
+  };
 
   useEffect(() => {
     if (profile?.organization_id) {
@@ -153,6 +166,7 @@ export default function Properties() {
         year_built: "",
         total_area: "",
       });
+      setIsAddressValidated(false);
       fetchBuildings();
     } catch (error: unknown) {
       toast({
@@ -247,13 +261,21 @@ export default function Properties() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="address">Adresse *</Label>
-                    <Input
+                    <AddressAutocomplete
                       id="address"
-                      placeholder="Musterstraße 123"
+                      placeholder="Adresse eingeben und aus Vorschlägen wählen..."
                       value={newBuilding.address}
-                      onChange={(e) => setNewBuilding({ ...newBuilding, address: e.target.value })}
-                      required
+                      onChange={(value) => {
+                        setNewBuilding({ ...newBuilding, address: value });
+                        setIsAddressValidated(false);
+                      }}
+                      onPlaceSelect={handlePlaceSelect}
                     />
+                    {!isAddressValidated && newBuilding.address.length > 0 && (
+                      <p className="text-xs text-destructive">
+                        Bitte wählen Sie eine Adresse aus den Vorschlägen aus
+                      </p>
+                    )}
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -263,6 +285,7 @@ export default function Properties() {
                         placeholder="12345"
                         value={newBuilding.postal_code}
                         onChange={(e) => setNewBuilding({ ...newBuilding, postal_code: e.target.value })}
+                        disabled={isAddressValidated}
                         required
                       />
                     </div>
@@ -273,6 +296,7 @@ export default function Properties() {
                         placeholder="Berlin"
                         value={newBuilding.city}
                         onChange={(e) => setNewBuilding({ ...newBuilding, city: e.target.value })}
+                        disabled={isAddressValidated}
                         required
                       />
                     </div>
@@ -322,7 +346,7 @@ export default function Properties() {
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Abbrechen
                   </Button>
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting || !isAddressValidated}>
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Anlegen
                   </Button>
