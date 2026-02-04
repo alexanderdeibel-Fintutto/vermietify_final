@@ -10,16 +10,20 @@ export interface Address {
 }
 
 // ===========================================
-// Building Types
+// Building Types (matches Supabase schema)
 // ===========================================
 
 export interface Building {
   id: string;
   organization_id: string;
   name: string;
-  address: Address;
-  image_url?: string;
-  total_units: number;
+  address: string;
+  postal_code: string;
+  city: string;
+  building_type: 'apartment' | 'house' | 'commercial' | 'mixed';
+  total_area?: number;
+  year_built?: number;
+  notes?: string;
   created_at: string;
   updated_at: string;
 }
@@ -33,34 +37,36 @@ export interface BuildingInsert extends Omit<Building, 'id' | 'created_at' | 'up
 export interface BuildingUpdate extends Partial<BuildingInsert> {}
 
 // ===========================================
-// Unit Types
+// Unit Types (matches Supabase schema)
 // ===========================================
 
-export type UnitStatus = 'available' | 'rented' | 'maintenance';
+export type UnitStatus = 'vacant' | 'rented' | 'renovating';
 
 export interface Unit {
   id: string;
   building_id: string;
-  name: string;
+  unit_number: string;
   floor?: number;
-  size_sqm?: number;
-  rooms?: number;
-  rent_cold: number; // in Cents
-  rent_warm?: number; // in Cents
+  area: number;
+  rooms: number;
+  rent_amount: number;
+  utility_advance?: number;
   status: UnitStatus;
-  current_tenant_id?: string;
+  notes?: string;
   created_at: string;
+  updated_at: string;
 }
 
-export interface UnitInsert extends Omit<Unit, 'id' | 'created_at'> {
+export interface UnitInsert extends Omit<Unit, 'id' | 'created_at' | 'updated_at'> {
   id?: string;
   created_at?: string;
+  updated_at?: string;
 }
 
 export interface UnitUpdate extends Partial<UnitInsert> {}
 
 // ===========================================
-// Tenant Types
+// Tenant Types (matches Supabase schema)
 // ===========================================
 
 export interface Tenant {
@@ -87,7 +93,7 @@ export interface TenantInsert extends Omit<Tenant, 'id' | 'created_at' | 'update
 export interface TenantUpdate extends Partial<TenantInsert> {}
 
 // ===========================================
-// Lease Contract Types
+// Lease/Contract Types (matches Supabase schema)
 // ===========================================
 
 export type LeaseStatus = 'draft' | 'active' | 'terminated' | 'expired';
@@ -98,26 +104,31 @@ export interface LeaseContract {
   tenant_id: string;
   start_date: string;
   end_date?: string;
-  rent_amount: number; // in Cents
-  deposit_amount: number; // in Cents
-  deposit_paid: boolean;
-  status: LeaseStatus;
+  rent_amount: number;
+  utility_advance?: number;
+  deposit_amount?: number;
+  deposit_paid?: boolean;
+  payment_day?: number;
+  is_active?: boolean;
+  notes?: string;
   created_at: string;
+  updated_at: string;
 }
 
-export interface LeaseContractInsert extends Omit<LeaseContract, 'id' | 'created_at'> {
+export interface LeaseContractInsert extends Omit<LeaseContract, 'id' | 'created_at' | 'updated_at'> {
   id?: string;
   created_at?: string;
+  updated_at?: string;
 }
 
 export interface LeaseContractUpdate extends Partial<LeaseContractInsert> {}
 
 // ===========================================
-// Task Types
+// Task Types (matches Supabase schema)
 // ===========================================
 
 export type TaskCategory = 'damage' | 'maintenance' | 'request' | 'other';
-export type TaskPriority = 'low' | 'normal' | 'high' | 'urgent';
+export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
 export type TaskStatus = 'open' | 'in_progress' | 'completed' | 'cancelled';
 export type TaskSource = 'tenant' | 'landlord' | 'caretaker' | 'system';
 
@@ -128,12 +139,8 @@ export interface Task {
   unit_id?: string;
   title: string;
   description?: string;
-  category: TaskCategory;
-  priority: TaskPriority;
-  status: TaskStatus;
-  created_by: string;
-  assigned_to?: string;
-  source: TaskSource;
+  priority?: string;
+  is_completed?: boolean;
   due_date?: string;
   created_at: string;
   updated_at: string;
@@ -158,7 +165,7 @@ export interface TaskAttachment {
 }
 
 // ===========================================
-// Meter Types
+// Meter Types (for future implementation)
 // ===========================================
 
 export type MeterType = 'electricity' | 'gas' | 'water' | 'heating';
@@ -216,7 +223,7 @@ export interface OperatingCostStatement {
   period_start: string;
   period_end: string;
   status: OperatingCostStatus;
-  total_costs: number; // in Cents
+  total_costs: number;
   created_at: string;
   updated_at: string;
 }
@@ -240,7 +247,7 @@ export interface OperatingCostLineItem {
   statement_id: string;
   cost_type: string;
   description?: string;
-  amount: number; // in Cents
+  amount: number;
   distribution_key: DistributionKey;
   created_at: string;
 }
@@ -257,7 +264,7 @@ export interface Payment {
   organization_id: string;
   lease_id: string;
   tenant_id: string;
-  amount: number; // in Cents
+  amount: number;
   due_date: string;
   paid_date?: string;
   payment_type: PaymentType;
@@ -285,40 +292,40 @@ export interface BuildingWithUnits extends Building {
 }
 
 export interface UnitWithTenant extends Unit {
-  tenant?: Tenant;
-  building?: Building;
+  tenant?: Partial<Tenant>;
+  building?: Partial<Building>;
 }
 
 export interface UnitWithLease extends Unit {
   lease?: LeaseContract;
-  tenant?: Tenant;
+  tenant?: Partial<Tenant>;
 }
 
 export interface TaskWithAttachments extends Task {
   attachments: TaskAttachment[];
-  building?: Building;
-  unit?: Unit;
+  building?: Partial<Building>;
+  unit?: Partial<Unit>;
 }
 
 export interface LeaseContractWithDetails extends LeaseContract {
-  tenant: Tenant;
-  unit: Unit;
-  building?: Building;
+  tenant?: Partial<Tenant>;
+  unit?: Partial<Unit>;
+  building?: Partial<Building>;
 }
 
 export interface MeterWithReadings extends Meter {
   readings: MeterReading[];
-  unit?: Unit;
+  unit?: Partial<Unit>;
 }
 
 export interface OperatingCostStatementWithItems extends OperatingCostStatement {
   line_items: OperatingCostLineItem[];
-  building?: Building;
+  building?: Partial<Building>;
 }
 
 export interface TenantWithLeases extends Tenant {
   leases: LeaseContract[];
-  current_unit?: Unit;
+  current_unit?: Partial<Unit>;
 }
 
 // ===========================================
@@ -331,7 +338,7 @@ export interface DashboardStats {
   occupied_units: number;
   vacant_units: number;
   total_tenants: number;
-  total_monthly_rent: number; // in Cents
+  total_monthly_rent: number;
   overdue_payments: number;
   open_tasks: number;
 }
@@ -341,7 +348,7 @@ export interface OccupancyStats {
   occupied: number;
   vacant: number;
   maintenance: number;
-  occupancy_rate: number; // percentage
+  occupancy_rate: number;
 }
 
 export interface FinancialSummary {
@@ -361,19 +368,23 @@ export interface BuildingFormData {
   street: string;
   zip: string;
   city: string;
-  country: string;
-  image_url?: string;
+  country?: string;
+  building_type?: 'apartment' | 'house' | 'commercial' | 'mixed';
+  total_area?: number;
+  year_built?: number;
+  notes?: string;
 }
 
 export interface UnitFormData {
   building_id: string;
-  name: string;
+  unit_number: string;
   floor?: number;
-  size_sqm?: number;
-  rooms?: number;
-  rent_cold: number;
-  rent_warm?: number;
+  area: number;
+  rooms: number;
+  rent_amount: number;
+  utility_advance?: number;
   status: UnitStatus;
+  notes?: string;
 }
 
 export interface TenantFormData {
@@ -393,8 +404,10 @@ export interface LeaseFormData {
   start_date: string;
   end_date?: string;
   rent_amount: number;
-  deposit_amount: number;
-  deposit_paid: boolean;
+  utility_advance?: number;
+  deposit_amount?: number;
+  deposit_paid?: boolean;
+  payment_day?: number;
 }
 
 export interface TaskFormData {
@@ -402,9 +415,7 @@ export interface TaskFormData {
   unit_id?: string;
   title: string;
   description?: string;
-  category: TaskCategory;
-  priority: TaskPriority;
-  assigned_to?: string;
+  priority?: string;
   due_date?: string;
 }
 
