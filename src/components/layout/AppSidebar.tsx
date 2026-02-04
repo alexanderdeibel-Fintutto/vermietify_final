@@ -2,18 +2,22 @@ import {
   LayoutDashboard, 
   Building2, 
   Users, 
-  Wallet, 
   FileText, 
-  Receipt, 
-  Calculator, 
   MessageSquare, 
   Settings,
   LogOut,
   ChevronDown,
-  CreditCard
+  CreditCard,
+  FileSignature,
+  Receipt,
+  Gauge,
+  CheckSquare,
+  DoorOpen,
+  ChevronRight
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -24,6 +28,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
@@ -32,23 +39,37 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const navigationItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Immobilien", url: "/properties", icon: Building2 },
+  { 
+    title: "Immobilien", 
+    icon: Building2,
+    subItems: [
+      { title: "Gebäude", url: "/properties" },
+      { title: "Einheiten", url: "/properties#einheiten" },
+    ]
+  },
   { title: "Mieter", url: "/tenants", icon: Users },
-  { title: "Finanzen", url: "/finances", icon: Wallet },
+  { title: "Verträge", url: "/vertraege", icon: FileSignature },
+  { title: "Zahlungen", url: "/zahlungen", icon: CreditCard },
+  { title: "Betriebskosten", url: "/betriebskosten", icon: Receipt },
+  { title: "Zähler", url: "/zaehler", icon: Gauge },
+  { title: "Aufgaben", url: "/aufgaben", icon: CheckSquare },
   { title: "Dokumente", url: "/documents", icon: FileText },
-  { title: "Abrechnungen", url: "/billing", icon: Receipt },
-  { title: "Steuern", url: "/taxes", icon: Calculator },
   { title: "Kommunikation", url: "/communication", icon: MessageSquare },
-  { title: "Preise", url: "/pricing", icon: CreditCard },
 ];
 
 export function AppSidebar() {
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const getInitials = () => {
     if (profile?.first_name && profile?.last_name) {
@@ -63,6 +84,10 @@ export function AppSidebar() {
     }
     return user?.email || 'Benutzer';
   };
+
+  const isActive = (url: string) => location.pathname === url;
+  const isSubmenuActive = (subItems: { url: string }[]) => 
+    subItems.some(item => location.pathname === item.url || location.pathname.startsWith(item.url.split('#')[0]));
 
   return (
     <Sidebar className="border-r-0">
@@ -85,10 +110,45 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => {
-                const isActive = location.pathname === item.url;
+                if (item.subItems) {
+                  const submenuActive = isSubmenuActive(item.subItems);
+                  return (
+                    <Collapsible
+                      key={item.title}
+                      open={openSubmenu === item.title || submenuActive}
+                      onOpenChange={(open) => setOpenSubmenu(open ? item.title : null)}
+                    >
+                      <SidebarMenuItem>
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton className="w-full justify-between">
+                            <div className="flex items-center gap-3">
+                              <item.icon className="h-5 w-5" />
+                              <span>{item.title}</span>
+                            </div>
+                            <ChevronRight className={`h-4 w-4 transition-transform ${openSubmenu === item.title || submenuActive ? 'rotate-90' : ''}`} />
+                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {item.subItems.map((subItem) => (
+                              <SidebarMenuSubItem key={subItem.title}>
+                                <SidebarMenuSubButton asChild isActive={isActive(subItem.url.split('#')[0])}>
+                                  <NavLink to={subItem.url}>
+                                    {subItem.title}
+                                  </NavLink>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  );
+                }
+                
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive}>
+                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
                       <NavLink 
                         to={item.url}
                         className="flex items-center gap-3"

@@ -25,6 +25,21 @@ import Pricing from "./pages/Pricing";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 
+// New Detail Pages
+import BuildingDetail from "./pages/buildings/BuildingDetail";
+import UnitDetail from "./pages/units/UnitDetail";
+import TenantDetail from "./pages/tenants/TenantDetail";
+import ContractList from "./pages/contracts/ContractList";
+import ContractDetail from "./pages/contracts/ContractDetail";
+import PaymentList from "./pages/payments/PaymentList";
+import OperatingCosts from "./pages/operating-costs/OperatingCosts";
+import NewBilling from "./pages/operating-costs/NewBilling";
+import MeterDashboard from "./pages/meters/MeterDashboard";
+import MeterDetail from "./pages/meters/MeterDetail";
+import TaskList from "./pages/tasks/TaskList";
+import TaskDetail from "./pages/tasks/TaskDetail";
+import NewTask from "./pages/tasks/NewTask";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -57,14 +72,79 @@ const App = () => (
                 <Properties />
               </ProtectedRoute>
             } />
+            <Route path="/gebaeude/:id" element={
+              <ProtectedRoute>
+                <BuildingDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/einheiten/:id" element={
+              <ProtectedRoute>
+                <UnitDetail />
+              </ProtectedRoute>
+            } />
             <Route path="/tenants" element={
               <ProtectedRoute>
                 <Tenants />
               </ProtectedRoute>
             } />
+            <Route path="/mieter/:id" element={
+              <ProtectedRoute>
+                <TenantDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/vertraege" element={
+              <ProtectedRoute>
+                <ContractList />
+              </ProtectedRoute>
+            } />
+            <Route path="/vertraege/:id" element={
+              <ProtectedRoute>
+                <ContractDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/zahlungen" element={
+              <ProtectedRoute>
+                <PaymentList />
+              </ProtectedRoute>
+            } />
             <Route path="/finances" element={
               <ProtectedRoute>
                 <Finances />
+              </ProtectedRoute>
+            } />
+            <Route path="/betriebskosten" element={
+              <ProtectedRoute>
+                <OperatingCosts />
+              </ProtectedRoute>
+            } />
+            <Route path="/betriebskosten/neu" element={
+              <ProtectedRoute>
+                <NewBilling />
+              </ProtectedRoute>
+            } />
+            <Route path="/zaehler" element={
+              <ProtectedRoute>
+                <MeterDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/zaehler/:id" element={
+              <ProtectedRoute>
+                <MeterDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/aufgaben" element={
+              <ProtectedRoute>
+                <TaskList />
+              </ProtectedRoute>
+            } />
+            <Route path="/aufgaben/neu" element={
+              <ProtectedRoute>
+                <NewTask />
+              </ProtectedRoute>
+            } />
+            <Route path="/aufgaben/:id" element={
+              <ProtectedRoute>
+                <TaskDetail />
               </ProtectedRoute>
             } />
             <Route path="/documents" element={
