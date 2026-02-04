@@ -265,8 +265,10 @@ export type Database = {
           created_at: string
           email: string | null
           id: string
+          is_personal: boolean | null
           logo_url: string | null
           name: string
+          owner_user_id: string | null
           phone: string | null
           postal_code: string | null
           updated_at: string
@@ -277,8 +279,10 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          is_personal?: boolean | null
           logo_url?: string | null
           name: string
+          owner_user_id?: string | null
           phone?: string | null
           postal_code?: string | null
           updated_at?: string
@@ -289,8 +293,10 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          is_personal?: boolean | null
           logo_url?: string | null
           name?: string
+          owner_user_id?: string | null
           phone?: string | null
           postal_code?: string | null
           updated_at?: string
@@ -304,6 +310,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          onboarding_completed: boolean | null
           organization_id: string | null
           updated_at: string
           user_id: string
@@ -314,6 +321,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          onboarding_completed?: boolean | null
           organization_id?: string | null
           updated_at?: string
           user_id: string
@@ -324,6 +332,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          onboarding_completed?: boolean | null
           organization_id?: string | null
           updated_at?: string
           user_id?: string
@@ -687,6 +696,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_personal_organization: {
+        Args: { _first_name?: string; _last_name?: string; _user_id: string }
+        Returns: string
+      }
       get_user_organization_id: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {

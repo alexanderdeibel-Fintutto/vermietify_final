@@ -23,9 +23,9 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check if user needs to set up organization
-  if (profile && !profile.organization_id && location.pathname !== "/organization-setup") {
-    return <Navigate to="/organization-setup" replace />;
+  // Check if user needs to complete onboarding
+  if (profile && !profile.onboarding_completed && location.pathname !== "/onboarding") {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return <>{children}</>;

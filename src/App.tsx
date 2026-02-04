@@ -9,7 +9,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 // Auth Pages
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import OrganizationSetup from "./pages/auth/OrganizationSetup";
+import OnboardingWizard from "./pages/auth/OnboardingWizard";
 
 // App Pages
 import Dashboard from "./pages/Dashboard";
@@ -42,9 +42,9 @@ const App = () => (
             <Route path="/pricing" element={<Pricing />} />
 
             {/* Protected Routes */}
-            <Route path="/organization-setup" element={
+            <Route path="/onboarding" element={
               <ProtectedRoute>
-                <OrganizationSetup />
+                <OnboardingWizard />
               </ProtectedRoute>
             } />
             <Route path="/dashboard" element={
