@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (userId: string, userMetadata?: Record<string, unknown>) => {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -39,6 +39,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .single();
     
     if (error) {
+      // Profile doesn't exist - create one (common for OAuth users)
+      if (error.code === 'PGRST116') {
+        console.log('No profile found, creating one for OAuth user...');
+        const firstName = (userMetadata?.first_name || userMetadata?.full_name?.toString().split(' ')[0] || '') as string;
+        const lastName = (userMetadata?.last_name || userMetadata?.full_name?.toString().split(' ').slice(1).join(' ') || '') as string;
+        
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: userId,
+            first_name: firstName,
+            last_name: lastName,
+            avatar_url: (userMetadata?.avatar_url || userMetadata?.picture || null) as string | null,
+            onboarding_completed: false,
+          })
+          .select()
+          .single();
+        
+        if (createError) {
+          console.error('Error creating profile:', createError);
+          return null;
+        }
+        return newProfile as Profile;
+      }
       console.error('Error fetching profile:', error);
       return null;
     }
@@ -47,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshProfile = async () => {
     if (user) {
-      const profileData = await fetchProfile(user.id);
+      const profileData = await fetchProfile(user.id, user.user_metadata);
       setProfile(profileData);
     }
   };
@@ -62,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           // Use setTimeout to avoid potential deadlock with Supabase client
           setTimeout(async () => {
-            const profileData = await fetchProfile(session.user.id);
+            const profileData = await fetchProfile(session.user.id, session.user.user_metadata);
             setProfile(profileData);
             setIsLoading(false);
           }, 0);
@@ -79,7 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        fetchProfile(session.user.id).then((profileData) => {
+        fetchProfile(session.user.id, session.user.user_metadata).then((profileData) => {
           setProfile(profileData);
           setIsLoading(false);
         });
