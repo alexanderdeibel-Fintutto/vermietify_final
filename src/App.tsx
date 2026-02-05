@@ -112,6 +112,9 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  import AutomationDashboard from "./pages/automation/AutomationDashboard";
  import WorkflowBuilder from "./pages/automation/WorkflowBuilder";
 
+ // Notifications Pages
+ import NotificationList from "./pages/notifications/NotificationList";
+
  import { AIAssistant } from "./components/ai/AIAssistant";
 
 const queryClient = new QueryClient();
@@ -405,6 +408,11 @@ const App = () => (
             <Route path="/automatisierung/:id" element={
               <ProtectedRoute>
                 <WorkflowBuilder />
+              </ProtectedRoute>
+            } />
+            <Route path="/benachrichtigungen" element={
+              <ProtectedRoute>
+                <NotificationList />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
