@@ -47,3 +47,12 @@ verify_jwt = false
 
 [functions.sync-auto-events]
 verify_jwt = false
+
+[functions.fetch-vpi-index]
+verify_jwt = false
+
+[functions.calculate-index-rent]
+verify_jwt = false
+
+[functions.check-index-adjustments]
+verify_jwt = false

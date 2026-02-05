@@ -76,6 +76,9 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  import HandoverList from "./pages/handover/HandoverList";
  import NewHandover from "./pages/handover/NewHandover";
  import HandoverProtocol from "./pages/handover/HandoverProtocol";
+
+ // Rent Adjustment Pages
+ import RentAdjustments from "./pages/rent/RentAdjustments";
  import HandoverPDF from "./pages/handover/HandoverPDF";
  
  // Admin Pages
@@ -334,6 +337,11 @@ const App = () => (
                  <HandoverPDF />
                </ProtectedRoute>
              } />
+            <Route path="/miete/anpassungen" element={
+              <ProtectedRoute>
+                <RentAdjustments />
+              </ProtectedRoute>
+            } />
             <Route path="/analytics" element={
               <ProtectedRoute>
                 <Analytics />

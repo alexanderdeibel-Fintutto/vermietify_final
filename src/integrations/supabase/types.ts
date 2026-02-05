@@ -1211,6 +1211,59 @@ export type Database = {
           },
         ]
       }
+      lease_rent_settings: {
+        Row: {
+          created_at: string
+          id: string
+          index_announcement_months: number | null
+          index_base_date: string | null
+          index_base_value: number | null
+          index_min_change_percent: number | null
+          last_adjustment_date: string | null
+          lease_id: string
+          next_adjustment_due: string | null
+          rent_type: Database["public"]["Enums"]["rent_adjustment_type"]
+          staffel_steps: Json | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          index_announcement_months?: number | null
+          index_base_date?: string | null
+          index_base_value?: number | null
+          index_min_change_percent?: number | null
+          last_adjustment_date?: string | null
+          lease_id: string
+          next_adjustment_due?: string | null
+          rent_type?: Database["public"]["Enums"]["rent_adjustment_type"]
+          staffel_steps?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          index_announcement_months?: number | null
+          index_base_date?: string | null
+          index_base_value?: number | null
+          index_min_change_percent?: number | null
+          last_adjustment_date?: string | null
+          lease_id?: string
+          next_adjustment_due?: string | null
+          rent_type?: Database["public"]["Enums"]["rent_adjustment_type"]
+          staffel_steps?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lease_rent_settings_lease_id_fkey"
+            columns: ["lease_id"]
+            isOneToOne: true
+            referencedRelation: "leases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leases: {
         Row: {
           created_at: string
@@ -1920,6 +1973,91 @@ export type Database = {
           },
         ]
       }
+      rent_adjustments: {
+        Row: {
+          announcement_document_id: string | null
+          announcement_sent_at: string | null
+          created_at: string
+          created_by: string | null
+          effective_date: string
+          id: string
+          index_change_percent: number | null
+          index_new: number | null
+          index_old: number | null
+          lease_id: string
+          new_rent_cents: number
+          notes: string | null
+          old_rent_cents: number
+          organization_id: string
+          status: Database["public"]["Enums"]["rent_adjustment_status"]
+          step_number: number | null
+          type: Database["public"]["Enums"]["rent_adjustment_type"]
+          updated_at: string
+        }
+        Insert: {
+          announcement_document_id?: string | null
+          announcement_sent_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_date: string
+          id?: string
+          index_change_percent?: number | null
+          index_new?: number | null
+          index_old?: number | null
+          lease_id: string
+          new_rent_cents: number
+          notes?: string | null
+          old_rent_cents: number
+          organization_id: string
+          status?: Database["public"]["Enums"]["rent_adjustment_status"]
+          step_number?: number | null
+          type: Database["public"]["Enums"]["rent_adjustment_type"]
+          updated_at?: string
+        }
+        Update: {
+          announcement_document_id?: string | null
+          announcement_sent_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_date?: string
+          id?: string
+          index_change_percent?: number | null
+          index_new?: number | null
+          index_old?: number | null
+          lease_id?: string
+          new_rent_cents?: number
+          notes?: string | null
+          old_rent_cents?: number
+          organization_id?: string
+          status?: Database["public"]["Enums"]["rent_adjustment_status"]
+          step_number?: number | null
+          type?: Database["public"]["Enums"]["rent_adjustment_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rent_adjustments_announcement_document_id_fkey"
+            columns: ["announcement_document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rent_adjustments_lease_id_fkey"
+            columns: ["lease_id"]
+            isOneToOne: false
+            referencedRelation: "leases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rent_adjustments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       task_activities: {
         Row: {
           action: string
@@ -2555,6 +2693,36 @@ export type Database = {
           },
         ]
       }
+      vpi_index: {
+        Row: {
+          change_yoy_percent: number | null
+          created_at: string
+          fetched_at: string
+          id: string
+          month: number
+          value: number
+          year: number
+        }
+        Insert: {
+          change_yoy_percent?: number | null
+          created_at?: string
+          fetched_at?: string
+          id?: string
+          month: number
+          value: number
+          year: number
+        }
+        Update: {
+          change_yoy_percent?: number | null
+          created_at?: string
+          fetched_at?: string
+          id?: string
+          month?: number
+          value?: number
+          year?: number
+        }
+        Relationships: []
+      }
       whatsapp_broadcasts: {
         Row: {
           completed_at: string | null
@@ -2958,6 +3126,8 @@ export type Database = {
         | "contract"
         | "handover"
       reminder_channel: "app" | "email" | "push"
+      rent_adjustment_status: "pending" | "announced" | "active" | "cancelled"
+      rent_adjustment_type: "index" | "staffel" | "vergleichsmiete"
       signer_type: "landlord" | "tenant" | "witness" | "caretaker"
       task_category: "water_damage" | "heating" | "electrical" | "other"
       task_source: "tenant" | "landlord" | "caretaker"
@@ -3172,6 +3342,8 @@ export const Constants = {
         "handover",
       ],
       reminder_channel: ["app", "email", "push"],
+      rent_adjustment_status: ["pending", "announced", "active", "cancelled"],
+      rent_adjustment_type: ["index", "staffel", "vergleichsmiete"],
       signer_type: ["landlord", "tenant", "witness", "caretaker"],
       task_category: ["water_damage", "heating", "electrical", "other"],
       task_source: ["tenant", "landlord", "caretaker"],
