@@ -80,6 +80,9 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  // Rent Adjustment Pages
  import RentAdjustments from "./pages/rent/RentAdjustments";
  import HandoverPDF from "./pages/handover/HandoverPDF";
+
+ // CO2 Pages
+ import CO2Dashboard from "./pages/co2/CO2Dashboard";
  
  // Admin Pages
  import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -340,6 +343,11 @@ const App = () => (
             <Route path="/miete/anpassungen" element={
               <ProtectedRoute>
                 <RentAdjustments />
+              </ProtectedRoute>
+            } />
+            <Route path="/co2" element={
+              <ProtectedRoute>
+                <CO2Dashboard />
               </ProtectedRoute>
             } />
             <Route path="/analytics" element={

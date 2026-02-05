@@ -408,6 +408,109 @@ export type Database = {
           },
         ]
       }
+      co2_calculations: {
+        Row: {
+          applied_to_billing_id: string | null
+          building_id: string
+          calculation_details: Json | null
+          co2_emission_factor: number
+          co2_emissions_kg: number
+          co2_per_sqm_year: number
+          created_at: string
+          created_by: string | null
+          energy_certificate_id: string | null
+          energy_consumption_kwh: number
+          energy_source: string
+          heated_area_sqm: number
+          id: string
+          landlord_cost_cents: number
+          landlord_share_percent: number
+          organization_id: string
+          period_end: string
+          period_start: string
+          stage: number
+          status: string
+          tenant_cost_cents: number
+          tenant_share_percent: number
+          total_co2_cost_cents: number
+          updated_at: string
+        }
+        Insert: {
+          applied_to_billing_id?: string | null
+          building_id: string
+          calculation_details?: Json | null
+          co2_emission_factor: number
+          co2_emissions_kg: number
+          co2_per_sqm_year: number
+          created_at?: string
+          created_by?: string | null
+          energy_certificate_id?: string | null
+          energy_consumption_kwh: number
+          energy_source?: string
+          heated_area_sqm: number
+          id?: string
+          landlord_cost_cents?: number
+          landlord_share_percent: number
+          organization_id: string
+          period_end: string
+          period_start: string
+          stage: number
+          status?: string
+          tenant_cost_cents?: number
+          tenant_share_percent: number
+          total_co2_cost_cents?: number
+          updated_at?: string
+        }
+        Update: {
+          applied_to_billing_id?: string | null
+          building_id?: string
+          calculation_details?: Json | null
+          co2_emission_factor?: number
+          co2_emissions_kg?: number
+          co2_per_sqm_year?: number
+          created_at?: string
+          created_by?: string | null
+          energy_certificate_id?: string | null
+          energy_consumption_kwh?: number
+          energy_source?: string
+          heated_area_sqm?: number
+          id?: string
+          landlord_cost_cents?: number
+          landlord_share_percent?: number
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          stage?: number
+          status?: string
+          tenant_cost_cents?: number
+          tenant_share_percent?: number
+          total_co2_cost_cents?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co2_calculations_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co2_calculations_energy_certificate_id_fkey"
+            columns: ["energy_certificate_id"]
+            isOneToOne: false
+            referencedRelation: "energy_certificates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co2_calculations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cost_types: {
         Row: {
           category: string
@@ -779,6 +882,69 @@ export type Database = {
           },
           {
             foreignKeyName: "elster_submissions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      energy_certificates: {
+        Row: {
+          building_id: string
+          certificate_type: string
+          co2_emission_factor: number | null
+          created_at: string
+          energy_demand_kwh_sqm: number | null
+          energy_source: string
+          id: string
+          notes: string | null
+          organization_id: string
+          pdf_path: string | null
+          primary_energy_demand: number | null
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          building_id: string
+          certificate_type: string
+          co2_emission_factor?: number | null
+          created_at?: string
+          energy_demand_kwh_sqm?: number | null
+          energy_source?: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          pdf_path?: string | null
+          primary_energy_demand?: number | null
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          building_id?: string
+          certificate_type?: string
+          co2_emission_factor?: number | null
+          created_at?: string
+          energy_demand_kwh_sqm?: number | null
+          energy_source?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          pdf_path?: string | null
+          primary_energy_demand?: number | null
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "energy_certificates_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "energy_certificates_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"

@@ -19,7 +19,8 @@ import {
    PenTool,
    MessageCircle,
    CalendarDays,
-   TrendingUp
+   TrendingUp,
+   Leaf
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -67,6 +68,7 @@ const navigationItems = [
   { title: "Verträge", url: "/vertraege", icon: FileSignature },
   { title: "Zahlungen", url: "/zahlungen", icon: CreditCard },
   { title: "Mietanpassungen", url: "/miete/anpassungen", icon: TrendingUp },
+  { title: "CO2-Kosten", url: "/co2", icon: Leaf },
   { title: "Betriebskosten", url: "/betriebskosten", icon: Receipt },
   { title: "Zähler", url: "/zaehler", icon: Gauge },
   { title: "Aufgaben", url: "/aufgaben", icon: CheckSquare },
