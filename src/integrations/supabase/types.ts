@@ -2323,6 +2323,62 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          is_read: boolean
+          link: string | null
+          message: string | null
+          organization_id: string
+          read_at: string | null
+          related_id: string | null
+          related_type: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          message?: string | null
+          organization_id: string
+          read_at?: string | null
+          related_id?: string | null
+          related_type?: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          message?: string | null
+          organization_id?: string
+          read_at?: string | null
+          related_id?: string | null
+          related_type?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       operating_cost_items: {
         Row: {
           amount: number
@@ -3921,6 +3977,30 @@ export type Database = {
       listing_status: "draft" | "active" | "paused" | "rented"
       meter_status: "current" | "reading_due" | "overdue"
       meter_type: "electricity" | "gas" | "water" | "heating"
+      notification_type:
+        | "payment_received"
+        | "payment_overdue"
+        | "payment_reminder"
+        | "contract_ending"
+        | "contract_created"
+        | "contract_terminated"
+        | "tenant_created"
+        | "tenant_document"
+        | "task_assigned"
+        | "task_due"
+        | "task_completed"
+        | "meter_reading_due"
+        | "meter_reading_submitted"
+        | "document_uploaded"
+        | "document_signed"
+        | "message_received"
+        | "inquiry_received"
+        | "billing_created"
+        | "billing_sent"
+        | "workflow_completed"
+        | "workflow_failed"
+        | "system_alert"
+        | "system_info"
       portal_status: "pending" | "published" | "error" | "removed"
       portal_type: "immoscout" | "immowelt" | "ebay" | "website"
       related_entity_type:
@@ -4166,6 +4246,31 @@ export const Constants = {
       listing_status: ["draft", "active", "paused", "rented"],
       meter_status: ["current", "reading_due", "overdue"],
       meter_type: ["electricity", "gas", "water", "heating"],
+      notification_type: [
+        "payment_received",
+        "payment_overdue",
+        "payment_reminder",
+        "contract_ending",
+        "contract_created",
+        "contract_terminated",
+        "tenant_created",
+        "tenant_document",
+        "task_assigned",
+        "task_due",
+        "task_completed",
+        "meter_reading_due",
+        "meter_reading_submitted",
+        "document_uploaded",
+        "document_signed",
+        "message_received",
+        "inquiry_received",
+        "billing_created",
+        "billing_sent",
+        "workflow_completed",
+        "workflow_failed",
+        "system_alert",
+        "system_info",
+      ],
       portal_status: ["pending", "published", "error", "removed"],
       portal_type: ["immoscout", "immowelt", "ebay", "website"],
       related_entity_type: [

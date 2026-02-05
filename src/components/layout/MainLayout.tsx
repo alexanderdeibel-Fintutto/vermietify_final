@@ -10,6 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -54,7 +55,10 @@ interface MainLayoutProps {
               </BreadcrumbList>
             </Breadcrumb>
             </div>
-            {actions && <div className="flex items-center gap-2">{actions}</div>}
+            <div className="flex items-center gap-2">
+              <NotificationCenter />
+              {actions}
+            </div>
           </header>
           <main className="flex-1 overflow-auto p-6">
             {children}
