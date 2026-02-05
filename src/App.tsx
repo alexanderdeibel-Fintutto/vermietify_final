@@ -50,6 +50,13 @@ import NewTask from "./pages/tasks/NewTask";
  import TaxDocuments from "./pages/taxes/TaxDocuments";
  import AITaxAdvisor from "./pages/taxes/AITaxAdvisor";
 
+ // Admin Pages
+ import AdminDashboard from "./pages/admin/AdminDashboard";
+ import UserManagement from "./pages/admin/UserManagement";
+ import OrgManagement from "./pages/admin/OrgManagement";
+ import Analytics from "./pages/Analytics";
+ import { AdminProtectedRoute } from "./components/admin/AdminProtectedRoute";
+
  // Tenant Portal Pages
  import MieterDashboard from "./pages/tenant-portal/MieterDashboard";
  import DefectReport from "./pages/tenant-portal/DefectReport";
@@ -219,6 +226,11 @@ const App = () => (
                  <AITaxAdvisor />
                </ProtectedRoute>
              } />
+            <Route path="/analytics" element={
+              <ProtectedRoute>
+                <Analytics />
+              </ProtectedRoute>
+            } />
             <Route path="/communication" element={
               <ProtectedRoute>
                 <Communication />
@@ -233,6 +245,23 @@ const App = () => (
               <ProtectedRoute>
                 <PaymentSuccess />
               </ProtectedRoute>
+            } />
+
+            {/* Admin Routes */}
+            <Route path="/admin" element={
+              <AdminProtectedRoute>
+                <AdminDashboard />
+              </AdminProtectedRoute>
+            } />
+            <Route path="/admin/benutzer" element={
+              <AdminProtectedRoute>
+                <UserManagement />
+              </AdminProtectedRoute>
+            } />
+            <Route path="/admin/organisationen" element={
+              <AdminProtectedRoute>
+                <OrgManagement />
+              </AdminProtectedRoute>
             } />
 
              {/* Tenant Portal Routes */}
