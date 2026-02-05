@@ -37,6 +37,7 @@ import PaymentList from "./pages/payments/PaymentList";
 import OperatingCosts from "./pages/operating-costs/OperatingCosts";
 import NewBilling from "./pages/operating-costs/NewBilling";
 import OperatingCostDetail from "./pages/operating-costs/OperatingCostDetail";
+import CostTypes from "./pages/operating-costs/CostTypes";
 import MeterDashboard from "./pages/meters/MeterDashboard";
 import MeterDetail from "./pages/meters/MeterDetail";
 import TaskList from "./pages/tasks/TaskList";
@@ -133,6 +134,11 @@ const App = () => (
             <Route path="/betriebskosten/:id" element={
               <ProtectedRoute>
                 <OperatingCostDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/betriebskosten/kostenarten" element={
+              <ProtectedRoute>
+                <CostTypes />
               </ProtectedRoute>
             } />
             <Route path="/zaehler" element={
