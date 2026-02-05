@@ -114,6 +114,50 @@ export type Database = {
           },
         ]
       }
+      document_requests: {
+        Row: {
+          created_at: string
+          document_type: string
+          id: string
+          notes: string | null
+          processed_at: string | null
+          processed_by: string | null
+          status: string
+          tenant_id: string
+          tenant_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_type: string
+          id?: string
+          notes?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          status?: string
+          tenant_id: string
+          tenant_user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_type?: string
+          id?: string
+          notes?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          status?: string
+          tenant_id?: string
+          tenant_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_requests_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       documents: {
         Row: {
           building_id: string | null
@@ -849,6 +893,55 @@ export type Database = {
           },
         ]
       }
+      tenant_unit_access: {
+        Row: {
+          granted_at: string
+          id: string
+          lease_id: string | null
+          tenant_id: string
+          tenant_user_id: string
+          unit_id: string
+        }
+        Insert: {
+          granted_at?: string
+          id?: string
+          lease_id?: string | null
+          tenant_id: string
+          tenant_user_id: string
+          unit_id: string
+        }
+        Update: {
+          granted_at?: string
+          id?: string
+          lease_id?: string | null
+          tenant_id?: string
+          tenant_user_id?: string
+          unit_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_unit_access_lease_id_fkey"
+            columns: ["lease_id"]
+            isOneToOne: false
+            referencedRelation: "leases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_unit_access_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_unit_access_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenants: {
         Row: {
           address: string | null
@@ -1148,7 +1241,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "member"
+      app_role: "admin" | "member" | "tenant"
       building_type: "apartment" | "house" | "commercial" | "mixed"
       document_type:
         | "contract"
@@ -1300,7 +1393,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "member"],
+      app_role: ["admin", "member", "tenant"],
       building_type: ["apartment", "house", "commercial", "mixed"],
       document_type: [
         "contract",

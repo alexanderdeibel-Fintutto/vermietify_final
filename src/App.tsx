@@ -45,6 +45,15 @@ import TaskList from "./pages/tasks/TaskList";
 import TaskDetail from "./pages/tasks/TaskDetail";
 import NewTask from "./pages/tasks/NewTask";
 
+ // Tenant Portal Pages
+ import MieterDashboard from "./pages/tenant-portal/MieterDashboard";
+ import DefectReport from "./pages/tenant-portal/DefectReport";
+ import TenantMeterReading from "./pages/tenant-portal/TenantMeterReading";
+ import TenantDocuments from "./pages/tenant-portal/TenantDocuments";
+ import TenantFinances from "./pages/tenant-portal/TenantFinances";
+ import TenantUnit from "./pages/tenant-portal/TenantUnit";
+ import { TenantProtectedRoute } from "./components/tenant-portal/TenantProtectedRoute";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -203,8 +212,40 @@ const App = () => (
               </ProtectedRoute>
             } />
 
-            {/* Catch-all */}
-            <Route path="*" element={<NotFound />} />
+             {/* Tenant Portal Routes */}
+             <Route path="/mieter-portal" element={
+               <TenantProtectedRoute>
+                 <MieterDashboard />
+               </TenantProtectedRoute>
+             } />
+             <Route path="/mieter-portal/mangel-melden" element={
+               <TenantProtectedRoute>
+                 <DefectReport />
+               </TenantProtectedRoute>
+             } />
+             <Route path="/mieter-portal/zaehler" element={
+               <TenantProtectedRoute>
+                 <TenantMeterReading />
+               </TenantProtectedRoute>
+             } />
+             <Route path="/mieter-portal/dokumente" element={
+               <TenantProtectedRoute>
+                 <TenantDocuments />
+               </TenantProtectedRoute>
+             } />
+             <Route path="/mieter-portal/finanzen" element={
+               <TenantProtectedRoute>
+                 <TenantFinances />
+               </TenantProtectedRoute>
+             } />
+             <Route path="/mieter-portal/wohnung" element={
+               <TenantProtectedRoute>
+                 <TenantUnit />
+               </TenantProtectedRoute>
+             } />
+
+             {/* Catch-all */}
+             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
