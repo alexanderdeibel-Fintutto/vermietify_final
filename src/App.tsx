@@ -105,6 +105,9 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  import ComposeEmail from "./pages/communication/ComposeEmail";
  import EmailHistory from "./pages/communication/EmailHistory";
 
+ // Listings Pages
+ import ListingsManagement from "./pages/listings/ListingsManagement";
+
  import { AIAssistant } from "./components/ai/AIAssistant";
 
 const queryClient = new QueryClient();
@@ -378,6 +381,11 @@ const App = () => (
             <Route path="/kommunikation/verlauf" element={
               <ProtectedRoute>
                 <EmailHistory />
+              </ProtectedRoute>
+            } />
+            <Route path="/inserate" element={
+              <ProtectedRoute>
+                <ListingsManagement />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={

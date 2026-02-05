@@ -1928,6 +1928,262 @@ export type Database = {
           },
         ]
       }
+      listing_inquiries: {
+        Row: {
+          contacted_at: string | null
+          created_at: string
+          email: string | null
+          id: string
+          listing_id: string
+          message: string | null
+          name: string
+          notes: string | null
+          organization_id: string
+          phone: string | null
+          portal_source: Database["public"]["Enums"]["portal_type"] | null
+          status: Database["public"]["Enums"]["inquiry_status"]
+          updated_at: string
+          viewing_at: string | null
+        }
+        Insert: {
+          contacted_at?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          listing_id: string
+          message?: string | null
+          name: string
+          notes?: string | null
+          organization_id: string
+          phone?: string | null
+          portal_source?: Database["public"]["Enums"]["portal_type"] | null
+          status?: Database["public"]["Enums"]["inquiry_status"]
+          updated_at?: string
+          viewing_at?: string | null
+        }
+        Update: {
+          contacted_at?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          listing_id?: string
+          message?: string | null
+          name?: string
+          notes?: string | null
+          organization_id?: string
+          phone?: string | null
+          portal_source?: Database["public"]["Enums"]["portal_type"] | null
+          status?: Database["public"]["Enums"]["inquiry_status"]
+          updated_at?: string
+          viewing_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_inquiries_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_inquiries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listing_portals: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          external_id: string | null
+          id: string
+          last_sync_at: string | null
+          listing_id: string
+          portal: Database["public"]["Enums"]["portal_type"]
+          published_at: string | null
+          status: Database["public"]["Enums"]["portal_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          last_sync_at?: string | null
+          listing_id: string
+          portal: Database["public"]["Enums"]["portal_type"]
+          published_at?: string | null
+          status?: Database["public"]["Enums"]["portal_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          last_sync_at?: string | null
+          listing_id?: string
+          portal?: Database["public"]["Enums"]["portal_type"]
+          published_at?: string | null
+          status?: Database["public"]["Enums"]["portal_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_portals_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listing_settings: {
+        Row: {
+          auto_deactivate_on_rental: boolean | null
+          auto_reply_enabled: boolean | null
+          auto_reply_message: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          default_description: string | null
+          id: string
+          notify_on_inquiry: boolean | null
+          organization_id: string
+          updated_at: string
+          viewing_time_slots: Json | null
+        }
+        Insert: {
+          auto_deactivate_on_rental?: boolean | null
+          auto_reply_enabled?: boolean | null
+          auto_reply_message?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          default_description?: string | null
+          id?: string
+          notify_on_inquiry?: boolean | null
+          organization_id: string
+          updated_at?: string
+          viewing_time_slots?: Json | null
+        }
+        Update: {
+          auto_deactivate_on_rental?: boolean | null
+          auto_reply_enabled?: boolean | null
+          auto_reply_message?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          default_description?: string | null
+          id?: string
+          notify_on_inquiry?: boolean | null
+          organization_id?: string
+          updated_at?: string
+          viewing_time_slots?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listings: {
+        Row: {
+          available_from: string | null
+          commission: string | null
+          created_at: string
+          deposit: number | null
+          description: string | null
+          energy_certificate_type: string | null
+          energy_class: string | null
+          energy_value: number | null
+          features: Json | null
+          heating_costs: number | null
+          heating_included: boolean | null
+          id: string
+          main_photo_index: number | null
+          organization_id: string
+          photos: string[] | null
+          rent_additional: number | null
+          rent_cold: number
+          status: Database["public"]["Enums"]["listing_status"]
+          title: string
+          unit_id: string
+          updated_at: string
+        }
+        Insert: {
+          available_from?: string | null
+          commission?: string | null
+          created_at?: string
+          deposit?: number | null
+          description?: string | null
+          energy_certificate_type?: string | null
+          energy_class?: string | null
+          energy_value?: number | null
+          features?: Json | null
+          heating_costs?: number | null
+          heating_included?: boolean | null
+          id?: string
+          main_photo_index?: number | null
+          organization_id: string
+          photos?: string[] | null
+          rent_additional?: number | null
+          rent_cold?: number
+          status?: Database["public"]["Enums"]["listing_status"]
+          title: string
+          unit_id: string
+          updated_at?: string
+        }
+        Update: {
+          available_from?: string | null
+          commission?: string | null
+          created_at?: string
+          deposit?: number | null
+          description?: string | null
+          energy_certificate_type?: string | null
+          energy_class?: string | null
+          energy_value?: number | null
+          features?: Json | null
+          heating_costs?: number | null
+          heating_included?: boolean | null
+          id?: string
+          main_photo_index?: number | null
+          organization_id?: string
+          photos?: string[] | null
+          rent_additional?: number | null
+          rent_cold?: number
+          status?: Database["public"]["Enums"]["listing_status"]
+          title?: string
+          unit_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listings_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string
@@ -2294,6 +2550,56 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      portal_connections: {
+        Row: {
+          active_listings_count: number | null
+          api_credentials: Json | null
+          created_at: string
+          error_message: string | null
+          id: string
+          is_connected: boolean | null
+          last_sync_at: string | null
+          organization_id: string
+          portal: Database["public"]["Enums"]["portal_type"]
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          active_listings_count?: number | null
+          api_credentials?: Json | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_connected?: boolean | null
+          last_sync_at?: string | null
+          organization_id: string
+          portal: Database["public"]["Enums"]["portal_type"]
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active_listings_count?: number | null
+          api_credentials?: Json | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_connected?: boolean | null
+          last_sync_at?: string | null
+          organization_id?: string
+          portal?: Database["public"]["Enums"]["portal_type"]
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portal_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -3468,6 +3774,7 @@ export type Database = {
         | "cancelled"
       handover_status: "planned" | "in_progress" | "completed" | "signed"
       handover_type: "move_in" | "move_out"
+      inquiry_status: "new" | "contacted" | "viewing" | "cancelled" | "rented"
       key_type:
         | "front_door"
         | "apartment"
@@ -3483,8 +3790,11 @@ export type Database = {
         | "delivered"
         | "error"
         | "cancelled"
+      listing_status: "draft" | "active" | "paused" | "rented"
       meter_status: "current" | "reading_due" | "overdue"
       meter_type: "electricity" | "gas" | "water" | "heating"
+      portal_status: "pending" | "published" | "error" | "removed"
+      portal_type: "immoscout" | "immowelt" | "ebay" | "website"
       related_entity_type:
         | "building"
         | "unit"
@@ -3681,6 +3991,7 @@ export const Constants = {
       ],
       handover_status: ["planned", "in_progress", "completed", "signed"],
       handover_type: ["move_in", "move_out"],
+      inquiry_status: ["new", "contacted", "viewing", "cancelled", "rented"],
       key_type: [
         "front_door",
         "apartment",
@@ -3698,8 +4009,11 @@ export const Constants = {
         "error",
         "cancelled",
       ],
+      listing_status: ["draft", "active", "paused", "rented"],
       meter_status: ["current", "reading_due", "overdue"],
       meter_type: ["electricity", "gas", "water", "heating"],
+      portal_status: ["pending", "published", "error", "removed"],
+      portal_type: ["immoscout", "immowelt", "ebay", "website"],
       related_entity_type: [
         "building",
         "unit",
