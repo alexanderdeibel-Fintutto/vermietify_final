@@ -27,7 +27,7 @@ import NotFound from "./pages/NotFound";
 
 // New Detail Pages
 import BuildingDetail from "./pages/buildings/BuildingDetail";
-import UnitDetail from "./pages/units/UnitDetail";
+import UnitDetail from "./pages/einheiten/UnitDetail";
 import TenantDetail from "./pages/tenants/TenantDetail";
 import ContractList from "./pages/contracts/ContractList";
 import ContractDetail from "./pages/contracts/ContractDetail";
