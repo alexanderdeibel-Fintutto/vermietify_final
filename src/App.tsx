@@ -53,6 +53,9 @@ import NewTask from "./pages/tasks/NewTask";
  // Signature Pages
  import SignatureManagement from "./pages/signatures/SignatureManagement";
 
+ // WhatsApp Pages
+ import WhatsAppDashboard from "./pages/whatsapp/WhatsAppDashboard";
+
  // Tax Pages
  import AnlageVWizard from "./pages/taxes/AnlageVWizard";
  import TaxDocuments from "./pages/taxes/TaxDocuments";
@@ -224,6 +227,11 @@ const App = () => (
                  <SignatureManagement />
                </ProtectedRoute>
              } />
+            <Route path="/whatsapp" element={
+              <ProtectedRoute>
+                <WhatsAppDashboard />
+              </ProtectedRoute>
+            } />
             <Route path="/documents" element={
               <ProtectedRoute>
                 <Documents />

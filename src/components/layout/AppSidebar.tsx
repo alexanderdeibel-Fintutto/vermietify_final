@@ -16,7 +16,8 @@ import {
    ChevronRight,
    Mail,
    Calculator,
-   PenTool
+   PenTool,
+   MessageCircle
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -67,6 +68,7 @@ const navigationItems = [
   { title: "Aufgaben", url: "/aufgaben", icon: CheckSquare },
    { title: "Briefversand", url: "/briefe", icon: Mail },
    { title: "Unterschriften", url: "/unterschriften", icon: PenTool },
+   { title: "WhatsApp", url: "/whatsapp", icon: MessageCircle },
   { title: "Dokumente", url: "/documents", icon: FileText },
    { title: "Steuern", url: "/taxes", icon: Calculator },
   { title: "Kommunikation", url: "/communication", icon: MessageSquare },
