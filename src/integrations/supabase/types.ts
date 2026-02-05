@@ -665,42 +665,162 @@ export type Database = {
           },
         ]
       }
+      task_activities: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          new_value: string | null
+          old_value: string | null
+          task_id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          task_id: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          task_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_activities_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      task_attachments: {
+        Row: {
+          created_at: string
+          file_path: string
+          file_type: string
+          id: string
+          task_id: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_path: string
+          file_type?: string
+          id?: string
+          task_id: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_path?: string
+          file_type?: string
+          id?: string
+          task_id?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_attachments_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      task_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_comments_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tasks: {
         Row: {
+          assigned_to: string | null
           building_id: string | null
+          category: Database["public"]["Enums"]["task_category"] | null
           created_at: string
+          created_by: string | null
           description: string | null
           due_date: string | null
           id: string
           is_completed: boolean | null
           organization_id: string
           priority: string | null
+          source: Database["public"]["Enums"]["task_source"] | null
+          status: Database["public"]["Enums"]["task_status"] | null
           title: string
           unit_id: string | null
           updated_at: string
         }
         Insert: {
+          assigned_to?: string | null
           building_id?: string | null
+          category?: Database["public"]["Enums"]["task_category"] | null
           created_at?: string
+          created_by?: string | null
           description?: string | null
           due_date?: string | null
           id?: string
           is_completed?: boolean | null
           organization_id: string
           priority?: string | null
+          source?: Database["public"]["Enums"]["task_source"] | null
+          status?: Database["public"]["Enums"]["task_status"] | null
           title: string
           unit_id?: string | null
           updated_at?: string
         }
         Update: {
+          assigned_to?: string | null
           building_id?: string | null
+          category?: Database["public"]["Enums"]["task_category"] | null
           created_at?: string
+          created_by?: string | null
           description?: string | null
           due_date?: string | null
           id?: string
           is_completed?: boolean | null
           organization_id?: string
           priority?: string | null
+          source?: Database["public"]["Enums"]["task_source"] | null
+          status?: Database["public"]["Enums"]["task_status"] | null
           title?: string
           unit_id?: string | null
           updated_at?: string
@@ -1040,6 +1160,9 @@ export type Database = {
         | "other"
       meter_status: "current" | "reading_due" | "overdue"
       meter_type: "electricity" | "gas" | "water" | "heating"
+      task_category: "water_damage" | "heating" | "electrical" | "other"
+      task_source: "tenant" | "landlord" | "caretaker"
+      task_status: "open" | "in_progress" | "completed" | "cancelled"
       transaction_type:
         | "rent"
         | "deposit"
@@ -1190,6 +1313,9 @@ export const Constants = {
       ],
       meter_status: ["current", "reading_due", "overdue"],
       meter_type: ["electricity", "gas", "water", "heating"],
+      task_category: ["water_damage", "heating", "electrical", "other"],
+      task_source: ["tenant", "landlord", "caretaker"],
+      task_status: ["open", "in_progress", "completed", "cancelled"],
       transaction_type: [
         "rent",
         "deposit",
