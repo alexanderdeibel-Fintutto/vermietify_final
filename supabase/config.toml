@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.analyze-document]
 verify_jwt = false
+
+[functions.send-letter]
+verify_jwt = false
+
+[functions.letterxpress-webhook]
+verify_jwt = false

@@ -45,6 +45,11 @@ import TaskList from "./pages/tasks/TaskList";
 import TaskDetail from "./pages/tasks/TaskDetail";
 import NewTask from "./pages/tasks/NewTask";
 
+ // Letter Pages
+ import LetterManagement from "./pages/letters/LetterManagement";
+ import LetterSettings from "./pages/letters/LetterSettings";
+ import LetterTemplates from "./pages/letters/LetterTemplates";
+
  // Tax Pages
  import AnlageVWizard from "./pages/taxes/AnlageVWizard";
  import TaxDocuments from "./pages/taxes/TaxDocuments";
@@ -196,6 +201,21 @@ const App = () => (
                 <TaskDetail />
               </ProtectedRoute>
             } />
+             <Route path="/briefe" element={
+               <ProtectedRoute>
+                 <LetterManagement />
+               </ProtectedRoute>
+             } />
+             <Route path="/briefe/einstellungen" element={
+               <ProtectedRoute>
+                 <LetterSettings />
+               </ProtectedRoute>
+             } />
+             <Route path="/briefe/vorlagen" element={
+               <ProtectedRoute>
+                 <LetterTemplates />
+               </ProtectedRoute>
+             } />
             <Route path="/documents" element={
               <ProtectedRoute>
                 <Documents />

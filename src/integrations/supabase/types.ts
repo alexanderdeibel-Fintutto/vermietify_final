@@ -339,6 +339,238 @@ export type Database = {
           },
         ]
       }
+      letter_automation_rules: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          last_run_at: string | null
+          name: string
+          organization_id: string
+          template_id: string | null
+          trigger_config: Json | null
+          trigger_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          last_run_at?: string | null
+          name: string
+          organization_id: string
+          template_id?: string | null
+          trigger_config?: Json | null
+          trigger_type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          last_run_at?: string | null
+          name?: string
+          organization_id?: string
+          template_id?: string | null
+          trigger_config?: Json | null
+          trigger_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "letter_automation_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "letter_automation_rules_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "letter_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      letter_orders: {
+        Row: {
+          content_pdf_path: string | null
+          cost_cents: number | null
+          created_at: string
+          created_by: string | null
+          delivered_at: string | null
+          error_message: string | null
+          id: string
+          letterxpress_id: string | null
+          options: Json | null
+          organization_id: string
+          pages: number | null
+          recipient_address: Json
+          recipient_id: string | null
+          recipient_type: string
+          scheduled_at: string | null
+          sent_at: string | null
+          status: Database["public"]["Enums"]["letter_status"] | null
+          subject: string
+          template_id: string | null
+          tracking_code: string | null
+          updated_at: string
+        }
+        Insert: {
+          content_pdf_path?: string | null
+          cost_cents?: number | null
+          created_at?: string
+          created_by?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          letterxpress_id?: string | null
+          options?: Json | null
+          organization_id: string
+          pages?: number | null
+          recipient_address: Json
+          recipient_id?: string | null
+          recipient_type?: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["letter_status"] | null
+          subject: string
+          template_id?: string | null
+          tracking_code?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content_pdf_path?: string | null
+          cost_cents?: number | null
+          created_at?: string
+          created_by?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          letterxpress_id?: string | null
+          options?: Json | null
+          organization_id?: string
+          pages?: number | null
+          recipient_address?: Json
+          recipient_id?: string | null
+          recipient_type?: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["letter_status"] | null
+          subject?: string
+          template_id?: string | null
+          tracking_code?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "letter_orders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "letter_orders_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "letter_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      letter_settings: {
+        Row: {
+          api_key_encrypted: string | null
+          created_at: string
+          default_sender: Json | null
+          id: string
+          letterhead_pdf_path: string | null
+          organization_id: string
+          test_mode: boolean | null
+          updated_at: string
+          webhook_secret: string | null
+        }
+        Insert: {
+          api_key_encrypted?: string | null
+          created_at?: string
+          default_sender?: Json | null
+          id?: string
+          letterhead_pdf_path?: string | null
+          organization_id: string
+          test_mode?: boolean | null
+          updated_at?: string
+          webhook_secret?: string | null
+        }
+        Update: {
+          api_key_encrypted?: string | null
+          created_at?: string
+          default_sender?: Json | null
+          id?: string
+          letterhead_pdf_path?: string | null
+          organization_id?: string
+          test_mode?: boolean | null
+          updated_at?: string
+          webhook_secret?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "letter_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      letter_templates: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          is_system: boolean | null
+          name: string
+          organization_id: string | null
+          placeholders: Json | null
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          content: string
+          created_at?: string
+          id?: string
+          is_system?: boolean | null
+          name: string
+          organization_id?: string | null
+          placeholders?: Json | null
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_system?: boolean | null
+          name?: string
+          organization_id?: string | null
+          placeholders?: Json | null
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "letter_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string
@@ -1358,6 +1590,14 @@ export type Database = {
         | "tax"
         | "correspondence"
         | "other"
+      letter_status:
+        | "draft"
+        | "submitted"
+        | "printing"
+        | "sent"
+        | "delivered"
+        | "error"
+        | "cancelled"
       meter_status: "current" | "reading_due" | "overdue"
       meter_type: "electricity" | "gas" | "water" | "heating"
       task_category: "water_damage" | "heating" | "electrical" | "other"
@@ -1510,6 +1750,15 @@ export const Constants = {
         "tax",
         "correspondence",
         "other",
+      ],
+      letter_status: [
+        "draft",
+        "submitted",
+        "printing",
+        "sent",
+        "delivered",
+        "error",
+        "cancelled",
       ],
       meter_status: ["current", "reading_due", "overdue"],
       meter_type: ["electricity", "gas", "water", "heating"],
