@@ -45,6 +45,11 @@ import TaskList from "./pages/tasks/TaskList";
 import TaskDetail from "./pages/tasks/TaskDetail";
 import NewTask from "./pages/tasks/NewTask";
 
+ // Tax Pages
+ import AnlageVWizard from "./pages/taxes/AnlageVWizard";
+ import TaxDocuments from "./pages/taxes/TaxDocuments";
+ import AITaxAdvisor from "./pages/taxes/AITaxAdvisor";
+
  // Tenant Portal Pages
  import MieterDashboard from "./pages/tenant-portal/MieterDashboard";
  import DefectReport from "./pages/tenant-portal/DefectReport";
@@ -53,6 +58,8 @@ import NewTask from "./pages/tasks/NewTask";
  import TenantFinances from "./pages/tenant-portal/TenantFinances";
  import TenantUnit from "./pages/tenant-portal/TenantUnit";
  import { TenantProtectedRoute } from "./components/tenant-portal/TenantProtectedRoute";
+
+ import { AIAssistant } from "./components/ai/AIAssistant";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +70,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+           <AIAssistant />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -196,6 +204,21 @@ const App = () => (
                 <Taxes />
               </ProtectedRoute>
             } />
+             <Route path="/steuern/anlage-v" element={
+               <ProtectedRoute>
+                 <AnlageVWizard />
+               </ProtectedRoute>
+             } />
+             <Route path="/steuern/belege" element={
+               <ProtectedRoute>
+                 <TaxDocuments />
+               </ProtectedRoute>
+             } />
+             <Route path="/steuern/ki-berater" element={
+               <ProtectedRoute>
+                 <AITaxAdvisor />
+               </ProtectedRoute>
+             } />
             <Route path="/communication" element={
               <ProtectedRoute>
                 <Communication />

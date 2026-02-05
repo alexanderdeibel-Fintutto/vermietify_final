@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_conversations: {
+        Row: {
+          context: string | null
+          created_at: string
+          id: string
+          messages: Json
+          organization_id: string | null
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          context?: string | null
+          created_at?: string
+          id?: string
+          messages?: Json
+          organization_id?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          context?: string | null
+          created_at?: string
+          id?: string
+          messages?: Json
+          organization_id?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_conversations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       buildings: {
         Row: {
           address: string
@@ -889,6 +930,72 @@ export type Database = {
             columns: ["unit_id"]
             isOneToOne: false
             referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tax_documents: {
+        Row: {
+          amount: number | null
+          building_id: string | null
+          category: string
+          created_at: string
+          document_date: string | null
+          file_size: number | null
+          file_url: string
+          id: string
+          notes: string | null
+          ocr_data: Json | null
+          organization_id: string
+          title: string
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          amount?: number | null
+          building_id?: string | null
+          category: string
+          created_at?: string
+          document_date?: string | null
+          file_size?: number | null
+          file_url: string
+          id?: string
+          notes?: string | null
+          ocr_data?: Json | null
+          organization_id: string
+          title: string
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          amount?: number | null
+          building_id?: string | null
+          category?: string
+          created_at?: string
+          document_date?: string | null
+          file_size?: number | null
+          file_url?: string
+          id?: string
+          notes?: string | null
+          ocr_data?: Json | null
+          organization_id?: string
+          title?: string
+          updated_at?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tax_documents_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tax_documents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
