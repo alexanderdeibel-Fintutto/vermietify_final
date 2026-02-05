@@ -44,6 +44,7 @@ import Auswertung from "./pages/zaehler/Auswertung";
 import TaskList from "./pages/tasks/TaskList";
 import TaskDetail from "./pages/tasks/TaskDetail";
 import NewTask from "./pages/tasks/NewTask";
+import CalendarPage from "./pages/calendar/CalendarPage";
 
  // Letter Pages
  import LetterManagement from "./pages/letters/LetterManagement";
@@ -221,6 +222,11 @@ const App = () => (
             <Route path="/aufgaben/:id" element={
               <ProtectedRoute>
                 <TaskDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/kalender" element={
+              <ProtectedRoute>
+                <CalendarPage />
               </ProtectedRoute>
             } />
              <Route path="/briefe" element={

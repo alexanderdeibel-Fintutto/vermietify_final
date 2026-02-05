@@ -17,7 +17,8 @@ import {
    Mail,
    Calculator,
    PenTool,
-   MessageCircle
+   MessageCircle,
+   CalendarDays
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -52,6 +53,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const navigationItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Kalender", url: "/kalender", icon: CalendarDays },
   { 
     title: "Immobilien", 
     icon: Building2,

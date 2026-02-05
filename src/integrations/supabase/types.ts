@@ -252,6 +252,162 @@ export type Database = {
           },
         ]
       }
+      calendar_events: {
+        Row: {
+          all_day: boolean
+          category: Database["public"]["Enums"]["calendar_category"]
+          color: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          end_at: string | null
+          id: string
+          is_auto_generated: boolean
+          location: string | null
+          organization_id: string
+          recurrence_rule: Json | null
+          related_id: string | null
+          related_type:
+            | Database["public"]["Enums"]["related_entity_type"]
+            | null
+          reminder_minutes: number[] | null
+          start_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          all_day?: boolean
+          category?: Database["public"]["Enums"]["calendar_category"]
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          is_auto_generated?: boolean
+          location?: string | null
+          organization_id: string
+          recurrence_rule?: Json | null
+          related_id?: string | null
+          related_type?:
+            | Database["public"]["Enums"]["related_entity_type"]
+            | null
+          reminder_minutes?: number[] | null
+          start_at: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          all_day?: boolean
+          category?: Database["public"]["Enums"]["calendar_category"]
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          is_auto_generated?: boolean
+          location?: string | null
+          organization_id?: string
+          recurrence_rule?: Json | null
+          related_id?: string | null
+          related_type?:
+            | Database["public"]["Enums"]["related_entity_type"]
+            | null
+          reminder_minutes?: number[] | null
+          start_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      calendar_ical_tokens: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          last_accessed_at: string | null
+          organization_id: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_accessed_at?: string | null
+          organization_id: string
+          token?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_accessed_at?: string | null
+          organization_id?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_ical_tokens_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      calendar_reminders: {
+        Row: {
+          channel: Database["public"]["Enums"]["reminder_channel"]
+          created_at: string
+          event_id: string
+          id: string
+          remind_at: string
+          sent: boolean
+          sent_at: string | null
+          user_id: string
+        }
+        Insert: {
+          channel?: Database["public"]["Enums"]["reminder_channel"]
+          created_at?: string
+          event_id: string
+          id?: string
+          remind_at: string
+          sent?: boolean
+          sent_at?: string | null
+          user_id: string
+        }
+        Update: {
+          channel?: Database["public"]["Enums"]["reminder_channel"]
+          created_at?: string
+          event_id?: string
+          id?: string
+          remind_at?: string
+          sent?: boolean
+          sent_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_reminders_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cost_types: {
         Row: {
           category: string
@@ -2739,6 +2895,13 @@ export type Database = {
     Enums: {
       app_role: "admin" | "member" | "tenant"
       building_type: "apartment" | "house" | "commercial" | "mixed"
+      calendar_category:
+        | "viewing"
+        | "handover"
+        | "deadline"
+        | "payment"
+        | "maintenance"
+        | "other"
       defect_severity: "light" | "medium" | "severe"
       document_type:
         | "contract"
@@ -2788,6 +2951,13 @@ export type Database = {
         | "cancelled"
       meter_status: "current" | "reading_due" | "overdue"
       meter_type: "electricity" | "gas" | "water" | "heating"
+      related_entity_type:
+        | "building"
+        | "unit"
+        | "tenant"
+        | "contract"
+        | "handover"
+      reminder_channel: "app" | "email" | "push"
       signer_type: "landlord" | "tenant" | "witness" | "caretaker"
       task_category: "water_damage" | "heating" | "electrical" | "other"
       task_source: "tenant" | "landlord" | "caretaker"
@@ -2931,6 +3101,14 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "member", "tenant"],
       building_type: ["apartment", "house", "commercial", "mixed"],
+      calendar_category: [
+        "viewing",
+        "handover",
+        "deadline",
+        "payment",
+        "maintenance",
+        "other",
+      ],
       defect_severity: ["light", "medium", "severe"],
       document_type: [
         "contract",
@@ -2986,6 +3164,14 @@ export const Constants = {
       ],
       meter_status: ["current", "reading_due", "overdue"],
       meter_type: ["electricity", "gas", "water", "heating"],
+      related_entity_type: [
+        "building",
+        "unit",
+        "tenant",
+        "contract",
+        "handover",
+      ],
+      reminder_channel: ["app", "email", "push"],
       signer_type: ["landlord", "tenant", "witness", "caretaker"],
       task_category: ["water_damage", "heating", "electrical", "other"],
       task_source: ["tenant", "landlord", "caretaker"],
