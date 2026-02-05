@@ -127,10 +127,10 @@ export interface LeaseContractUpdate extends Partial<LeaseContractInsert> {}
 // Task Types (matches Supabase schema)
 // ===========================================
 
-export type TaskCategory = 'damage' | 'maintenance' | 'request' | 'other';
-export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
+ export type TaskCategory = 'water_damage' | 'heating' | 'electrical' | 'other';
+ export type TaskPriority = 'low' | 'normal' | 'high' | 'urgent';
 export type TaskStatus = 'open' | 'in_progress' | 'completed' | 'cancelled';
-export type TaskSource = 'tenant' | 'landlord' | 'caretaker' | 'system';
+ export type TaskSource = 'tenant' | 'landlord' | 'caretaker';
 
 export interface Task {
   id: string;
@@ -139,8 +139,12 @@ export interface Task {
   unit_id?: string;
   title: string;
   description?: string;
-  priority?: string;
-  is_completed?: boolean;
+   priority?: TaskPriority;
+   category?: TaskCategory;
+   status?: TaskStatus;
+   source?: TaskSource;
+   created_by?: string;
+   assigned_to?: string;
   due_date?: string;
   created_at: string;
   updated_at: string;
@@ -157,12 +161,29 @@ export interface TaskUpdate extends Partial<TaskInsert> {}
 export interface TaskAttachment {
   id: string;
   task_id: string;
-  file_url: string;
-  file_name: string;
+   file_path: string;
   file_type: string;
-  file_size: number;
+   uploaded_by?: string | null;
   created_at: string;
 }
+ 
+ export interface TaskComment {
+   id: string;
+   task_id: string;
+   user_id: string;
+   content: string;
+   created_at: string;
+ }
+ 
+ export interface TaskActivity {
+   id: string;
+   task_id: string;
+   user_id: string | null;
+   action: string;
+   old_value: string | null;
+   new_value: string | null;
+   created_at: string;
+ }
 
 // ===========================================
 // Meter Types (for future implementation)
@@ -415,7 +436,11 @@ export interface TaskFormData {
   unit_id?: string;
   title: string;
   description?: string;
-  priority?: string;
+   priority?: TaskPriority;
+   category?: TaskCategory;
+   status?: TaskStatus;
+   source?: TaskSource;
+   assigned_to?: string;
   due_date?: string;
 }
 

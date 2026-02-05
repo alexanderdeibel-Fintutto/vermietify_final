@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import type { TaskFormData, TaskStatus } from "@/types/database";
+ import type { TaskFormData, TaskStatus, TaskCategory, TaskPriority, TaskSource } from "@/types/database";
 import type { Database } from "@/integrations/supabase/types";
 
 type TaskRow = Database["public"]["Tables"]["tasks"]["Row"];
@@ -16,7 +16,8 @@ interface TaskFilters {
   priority?: string;
   buildingId?: string;
   unitId?: string;
-  isCompleted?: boolean;
+   category?: TaskCategory;
+   source?: TaskSource;
 }
 
 export interface TaskComment {
@@ -46,8 +47,12 @@ export function useTasks() {
           `)
           .order("created_at", { ascending: false });
 
-        if (filters?.isCompleted !== undefined) {
-          query = query.eq("is_completed", filters.isCompleted);
+         if (filters?.status) {
+           if (Array.isArray(filters.status)) {
+             query = query.in("status", filters.status);
+           } else {
+             query = query.eq("status", filters.status);
+           }
         }
 
         if (filters?.priority) {
@@ -61,6 +66,14 @@ export function useTasks() {
         if (filters?.unitId) {
           query = query.eq("unit_id", filters.unitId);
         }
+ 
+         if (filters?.category) {
+           query = query.eq("category", filters.category);
+         }
+ 
+         if (filters?.source) {
+           query = query.eq("source", filters.source);
+         }
 
         const { data, error } = await query;
 
@@ -109,20 +122,26 @@ export function useTasks() {
         throw new Error("No organization found");
       }
 
-      const insertData: TaskInsert = {
+       // Use raw insert since auto-generated types may not have new columns yet
+       const insertData: Record<string, any> = {
         organization_id: profile.organization_id,
         building_id: data.building_id || null,
         unit_id: data.unit_id || null,
         title: data.title,
         description: data.description,
-        priority: data.priority || 'medium',
+         priority: data.priority || 'normal',
+         category: data.category || 'other',
+         status: data.status || 'open',
+         source: data.source || 'landlord',
+         assigned_to: data.assigned_to || null,
+         created_by: user?.id || null,
         due_date: data.due_date,
-        is_completed: false,
+         is_completed: data.status === 'completed' ? true : false,
       };
 
       const { data: task, error } = await supabase
         .from("tasks")
-        .insert(insertData)
+         .insert(insertData as any)
         .select()
         .single();
 
@@ -147,8 +166,9 @@ export function useTasks() {
 
   // Update task mutation
   const updateTask = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<TaskFormData & { is_completed: boolean }> }) => {
-      const updateData: TaskUpdate = {};
+     mutationFn: async ({ id, data }: { id: string; data: Partial<TaskFormData & { is_completed?: boolean }> }) => {
+       // Use raw update since auto-generated types may not have new columns yet
+       const updateData: Record<string, any> = {};
       
       if (data.title !== undefined) updateData.title = data.title;
       if (data.description !== undefined) updateData.description = data.description;
@@ -157,10 +177,14 @@ export function useTasks() {
       if (data.building_id !== undefined) updateData.building_id = data.building_id;
       if (data.unit_id !== undefined) updateData.unit_id = data.unit_id;
       if (data.is_completed !== undefined) updateData.is_completed = data.is_completed;
+       if (data.category !== undefined) updateData.category = data.category;
+       if (data.status !== undefined) updateData.status = data.status;
+       if (data.source !== undefined) updateData.source = data.source;
+       if (data.assigned_to !== undefined) updateData.assigned_to = data.assigned_to;
 
       const { data: task, error } = await supabase
         .from("tasks")
-        .update(updateData)
+         .update(updateData as any)
         .eq("id", id)
         .select()
         .single();
@@ -197,7 +221,7 @@ export function useTasks() {
     mutationFn: async (id: string) => {
       const { data: task, error } = await supabase
         .from("tasks")
-        .update({ is_completed: true })
+         .update({ status: 'completed', is_completed: true } as any)
         .eq("id", id)
         .select()
         .single();
