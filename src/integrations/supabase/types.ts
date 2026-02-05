@@ -309,6 +309,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          image_url: string | null
           meter_id: string
           notes: string | null
           reading_date: string
@@ -318,6 +319,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          image_url?: string | null
           meter_id: string
           notes?: string | null
           reading_date: string
@@ -327,6 +329,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          image_url?: string | null
           meter_id?: string
           notes?: string | null
           reading_date?: string
