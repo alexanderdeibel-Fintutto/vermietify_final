@@ -345,6 +345,7 @@ export type Database = {
       }
       meters: {
         Row: {
+          calibration_valid_until: string | null
           created_at: string
           id: string
           installation_date: string | null
@@ -356,6 +357,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          calibration_valid_until?: string | null
           created_at?: string
           id?: string
           installation_date?: string | null
@@ -367,6 +369,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          calibration_valid_until?: string | null
           created_at?: string
           id?: string
           installation_date?: string | null
