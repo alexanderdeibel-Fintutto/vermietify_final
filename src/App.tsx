@@ -71,6 +71,12 @@ import NewTask from "./pages/tasks/NewTask";
  import ElsterDashboard from "./pages/elster/ElsterDashboard";
  import ElsterSubmit from "./pages/elster/ElsterSubmit";
 
+ // Handover Pages
+ import HandoverList from "./pages/handover/HandoverList";
+ import NewHandover from "./pages/handover/NewHandover";
+ import HandoverProtocol from "./pages/handover/HandoverProtocol";
+ import HandoverPDF from "./pages/handover/HandoverPDF";
+ 
  // Admin Pages
  import AdminDashboard from "./pages/admin/AdminDashboard";
  import UserManagement from "./pages/admin/UserManagement";
@@ -302,6 +308,26 @@ const App = () => (
                 <ElsterSubmit />
               </ProtectedRoute>
             } />
+             <Route path="/uebergaben" element={
+               <ProtectedRoute>
+                 <HandoverList />
+               </ProtectedRoute>
+             } />
+             <Route path="/uebergaben/neu" element={
+               <ProtectedRoute>
+                 <NewHandover />
+               </ProtectedRoute>
+             } />
+             <Route path="/uebergaben/:id" element={
+               <ProtectedRoute>
+                 <HandoverProtocol />
+               </ProtectedRoute>
+             } />
+             <Route path="/uebergaben/:id/pdf" element={
+               <ProtectedRoute>
+                 <HandoverPDF />
+               </ProtectedRoute>
+             } />
             <Route path="/analytics" element={
               <ProtectedRoute>
                 <Analytics />

@@ -808,6 +808,253 @@ export type Database = {
           },
         ]
       }
+      handover_defects: {
+        Row: {
+          created_at: string
+          description: string
+          estimated_cost_cents: number | null
+          id: string
+          is_tenant_responsible: boolean
+          photo_paths: string[] | null
+          protocol_id: string
+          resolved_at: string | null
+          room_id: string | null
+          severity: Database["public"]["Enums"]["defect_severity"]
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          estimated_cost_cents?: number | null
+          id?: string
+          is_tenant_responsible?: boolean
+          photo_paths?: string[] | null
+          protocol_id: string
+          resolved_at?: string | null
+          room_id?: string | null
+          severity?: Database["public"]["Enums"]["defect_severity"]
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          estimated_cost_cents?: number | null
+          id?: string
+          is_tenant_responsible?: boolean
+          photo_paths?: string[] | null
+          protocol_id?: string
+          resolved_at?: string | null
+          room_id?: string | null
+          severity?: Database["public"]["Enums"]["defect_severity"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "handover_defects_protocol_id_fkey"
+            columns: ["protocol_id"]
+            isOneToOne: false
+            referencedRelation: "handover_protocols"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "handover_defects_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "handover_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      handover_keys: {
+        Row: {
+          created_at: string
+          handed_over: boolean
+          id: string
+          key_label: string | null
+          key_type: Database["public"]["Enums"]["key_type"]
+          notes: string | null
+          protocol_id: string
+          quantity: number
+        }
+        Insert: {
+          created_at?: string
+          handed_over?: boolean
+          id?: string
+          key_label?: string | null
+          key_type: Database["public"]["Enums"]["key_type"]
+          notes?: string | null
+          protocol_id: string
+          quantity?: number
+        }
+        Update: {
+          created_at?: string
+          handed_over?: boolean
+          id?: string
+          key_label?: string | null
+          key_type?: Database["public"]["Enums"]["key_type"]
+          notes?: string | null
+          protocol_id?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "handover_keys_protocol_id_fkey"
+            columns: ["protocol_id"]
+            isOneToOne: false
+            referencedRelation: "handover_protocols"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      handover_protocols: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          notes: string | null
+          organization_id: string
+          participants: Json
+          pdf_path: string | null
+          scheduled_at: string
+          status: Database["public"]["Enums"]["handover_status"]
+          tenant_id: string | null
+          type: Database["public"]["Enums"]["handover_type"]
+          unit_id: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          organization_id: string
+          participants?: Json
+          pdf_path?: string | null
+          scheduled_at: string
+          status?: Database["public"]["Enums"]["handover_status"]
+          tenant_id?: string | null
+          type: Database["public"]["Enums"]["handover_type"]
+          unit_id: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          participants?: Json
+          pdf_path?: string | null
+          scheduled_at?: string
+          status?: Database["public"]["Enums"]["handover_status"]
+          tenant_id?: string | null
+          type?: Database["public"]["Enums"]["handover_type"]
+          unit_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "handover_protocols_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "handover_protocols_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "handover_protocols_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      handover_rooms: {
+        Row: {
+          created_at: string
+          id: string
+          items: Json
+          notes: string | null
+          order_index: number
+          overall_status: string | null
+          photos: string[] | null
+          protocol_id: string
+          room_name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          items?: Json
+          notes?: string | null
+          order_index?: number
+          overall_status?: string | null
+          photos?: string[] | null
+          protocol_id: string
+          room_name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          items?: Json
+          notes?: string | null
+          order_index?: number
+          overall_status?: string | null
+          photos?: string[] | null
+          protocol_id?: string
+          room_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "handover_rooms_protocol_id_fkey"
+            columns: ["protocol_id"]
+            isOneToOne: false
+            referencedRelation: "handover_protocols"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      handover_signatures: {
+        Row: {
+          id: string
+          protocol_id: string
+          signature_path: string
+          signed_at: string
+          signer_name: string
+          signer_type: Database["public"]["Enums"]["signer_type"]
+        }
+        Insert: {
+          id?: string
+          protocol_id: string
+          signature_path: string
+          signed_at?: string
+          signer_name: string
+          signer_type: Database["public"]["Enums"]["signer_type"]
+        }
+        Update: {
+          id?: string
+          protocol_id?: string
+          signature_path?: string
+          signed_at?: string
+          signer_name?: string
+          signer_type?: Database["public"]["Enums"]["signer_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "handover_signatures_protocol_id_fkey"
+            columns: ["protocol_id"]
+            isOneToOne: false
+            referencedRelation: "handover_protocols"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leases: {
         Row: {
           created_at: string
@@ -2492,6 +2739,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "member" | "tenant"
       building_type: "apartment" | "house" | "commercial" | "mixed"
+      defect_severity: "light" | "medium" | "severe"
       document_type:
         | "contract"
         | "protocol"
@@ -2521,6 +2769,15 @@ export type Database = {
         | "declined"
         | "expired"
         | "cancelled"
+      handover_status: "planned" | "in_progress" | "completed" | "signed"
+      handover_type: "move_in" | "move_out"
+      key_type:
+        | "front_door"
+        | "apartment"
+        | "basement"
+        | "mailbox"
+        | "garage"
+        | "other"
       letter_status:
         | "draft"
         | "submitted"
@@ -2531,6 +2788,7 @@ export type Database = {
         | "cancelled"
       meter_status: "current" | "reading_due" | "overdue"
       meter_type: "electricity" | "gas" | "water" | "heating"
+      signer_type: "landlord" | "tenant" | "witness" | "caretaker"
       task_category: "water_damage" | "heating" | "electrical" | "other"
       task_source: "tenant" | "landlord" | "caretaker"
       task_status: "open" | "in_progress" | "completed" | "cancelled"
@@ -2673,6 +2931,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "member", "tenant"],
       building_type: ["apartment", "house", "commercial", "mixed"],
+      defect_severity: ["light", "medium", "severe"],
       document_type: [
         "contract",
         "protocol",
@@ -2706,6 +2965,16 @@ export const Constants = {
         "expired",
         "cancelled",
       ],
+      handover_status: ["planned", "in_progress", "completed", "signed"],
+      handover_type: ["move_in", "move_out"],
+      key_type: [
+        "front_door",
+        "apartment",
+        "basement",
+        "mailbox",
+        "garage",
+        "other",
+      ],
       letter_status: [
         "draft",
         "submitted",
@@ -2717,6 +2986,7 @@ export const Constants = {
       ],
       meter_status: ["current", "reading_due", "overdue"],
       meter_type: ["electricity", "gas", "water", "heating"],
+      signer_type: ["landlord", "tenant", "witness", "caretaker"],
       task_category: ["water_damage", "heating", "electrical", "other"],
       task_source: ["tenant", "landlord", "caretaker"],
       task_status: ["open", "in_progress", "completed", "cancelled"],
