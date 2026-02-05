@@ -3714,6 +3714,134 @@ export type Database = {
           },
         ]
       }
+      workflow_executions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_step: number | null
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          organization_id: string
+          status: Database["public"]["Enums"]["workflow_execution_status"]
+          steps: Json | null
+          trigger_data: Json | null
+          triggered_at: string
+          workflow_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_step?: number | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          organization_id: string
+          status?: Database["public"]["Enums"]["workflow_execution_status"]
+          steps?: Json | null
+          trigger_data?: Json | null
+          triggered_at?: string
+          workflow_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_step?: number | null
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          organization_id?: string
+          status?: Database["public"]["Enums"]["workflow_execution_status"]
+          steps?: Json | null
+          trigger_data?: Json | null
+          triggered_at?: string
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_executions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_executions_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflows: {
+        Row: {
+          actions: Json
+          conditions: Json | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          error_count: number
+          execution_count: number
+          id: string
+          is_active: boolean
+          is_template: boolean
+          last_executed_at: string | null
+          name: string
+          organization_id: string | null
+          template_category: string | null
+          trigger_config: Json
+          trigger_type: Database["public"]["Enums"]["workflow_trigger_type"]
+          updated_at: string
+        }
+        Insert: {
+          actions?: Json
+          conditions?: Json | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          error_count?: number
+          execution_count?: number
+          id?: string
+          is_active?: boolean
+          is_template?: boolean
+          last_executed_at?: string | null
+          name: string
+          organization_id?: string | null
+          template_category?: string | null
+          trigger_config?: Json
+          trigger_type: Database["public"]["Enums"]["workflow_trigger_type"]
+          updated_at?: string
+        }
+        Update: {
+          actions?: Json
+          conditions?: Json | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          error_count?: number
+          execution_count?: number
+          id?: string
+          is_active?: boolean
+          is_template?: boolean
+          last_executed_at?: string | null
+          name?: string
+          organization_id?: string | null
+          template_category?: string | null
+          trigger_config?: Json
+          trigger_type?: Database["public"]["Enums"]["workflow_trigger_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflows_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -3818,6 +3946,32 @@ export type Database = {
         | "other_income"
         | "other_expense"
       unit_status: "rented" | "vacant" | "renovating"
+      workflow_action_type:
+        | "send_email"
+        | "create_notification"
+        | "create_task"
+        | "send_letter"
+        | "send_whatsapp"
+        | "update_field"
+        | "call_webhook"
+        | "wait"
+      workflow_execution_status: "running" | "completed" | "failed"
+      workflow_trigger_type:
+        | "time_daily"
+        | "time_weekly"
+        | "time_monthly"
+        | "time_yearly"
+        | "event_tenant_created"
+        | "event_contract_created"
+        | "event_contract_terminated"
+        | "event_payment_overdue"
+        | "event_payment_received"
+        | "event_meter_reading_due"
+        | "event_document_uploaded"
+        | "event_task_created"
+        | "event_contract_ending"
+        | "event_building_created"
+        | "event_unit_created"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -4039,6 +4193,34 @@ export const Constants = {
         "other_expense",
       ],
       unit_status: ["rented", "vacant", "renovating"],
+      workflow_action_type: [
+        "send_email",
+        "create_notification",
+        "create_task",
+        "send_letter",
+        "send_whatsapp",
+        "update_field",
+        "call_webhook",
+        "wait",
+      ],
+      workflow_execution_status: ["running", "completed", "failed"],
+      workflow_trigger_type: [
+        "time_daily",
+        "time_weekly",
+        "time_monthly",
+        "time_yearly",
+        "event_tenant_created",
+        "event_contract_created",
+        "event_contract_terminated",
+        "event_payment_overdue",
+        "event_payment_received",
+        "event_meter_reading_due",
+        "event_document_uploaded",
+        "event_task_created",
+        "event_contract_ending",
+        "event_building_created",
+        "event_unit_created",
+      ],
     },
   },
 } as const

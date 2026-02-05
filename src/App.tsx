@@ -108,6 +108,10 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  // Listings Pages
  import ListingsManagement from "./pages/listings/ListingsManagement";
 
+ // Automation Pages
+ import AutomationDashboard from "./pages/automation/AutomationDashboard";
+ import WorkflowBuilder from "./pages/automation/WorkflowBuilder";
+
  import { AIAssistant } from "./components/ai/AIAssistant";
 
 const queryClient = new QueryClient();
@@ -386,6 +390,21 @@ const App = () => (
             <Route path="/inserate" element={
               <ProtectedRoute>
                 <ListingsManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/automatisierung" element={
+              <ProtectedRoute>
+                <AutomationDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/automatisierung/neu" element={
+              <ProtectedRoute>
+                <WorkflowBuilder />
+              </ProtectedRoute>
+            } />
+            <Route path="/automatisierung/:id" element={
+              <ProtectedRoute>
+                <WorkflowBuilder />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
