@@ -50,6 +50,9 @@ import NewTask from "./pages/tasks/NewTask";
  import LetterSettings from "./pages/letters/LetterSettings";
  import LetterTemplates from "./pages/letters/LetterTemplates";
 
+ // Signature Pages
+ import SignatureManagement from "./pages/signatures/SignatureManagement";
+
  // Tax Pages
  import AnlageVWizard from "./pages/taxes/AnlageVWizard";
  import TaxDocuments from "./pages/taxes/TaxDocuments";
@@ -214,6 +217,11 @@ const App = () => (
              <Route path="/briefe/vorlagen" element={
                <ProtectedRoute>
                  <LetterTemplates />
+               </ProtectedRoute>
+             } />
+             <Route path="/unterschriften" element={
+               <ProtectedRoute>
+                 <SignatureManagement />
                </ProtectedRoute>
              } />
             <Route path="/documents" element={

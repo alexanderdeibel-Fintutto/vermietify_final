@@ -11,3 +11,9 @@ verify_jwt = false
 
 [functions.letterxpress-webhook]
 verify_jwt = false
+
+[functions.create-signature-request]
+verify_jwt = false
+
+[functions.esignature-webhook]
+verify_jwt = false

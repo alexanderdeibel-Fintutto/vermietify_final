@@ -273,6 +273,131 @@ export type Database = {
           },
         ]
       }
+      esignature_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          order_id: string
+          signer_email: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          order_id: string
+          signer_email?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          order_id?: string
+          signer_email?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "esignature_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "esignature_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      esignature_orders: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          document_id: string | null
+          document_name: string
+          document_path: string | null
+          document_type: string
+          expires_at: string | null
+          id: string
+          last_reminder_at: string | null
+          message: string | null
+          organization_id: string
+          provider: string
+          provider_order_id: string | null
+          reminder_days: number[] | null
+          signature_fields: Json | null
+          signed_document_path: string | null
+          signers: Json
+          status: Database["public"]["Enums"]["esignature_status"]
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          document_id?: string | null
+          document_name: string
+          document_path?: string | null
+          document_type?: string
+          expires_at?: string | null
+          id?: string
+          last_reminder_at?: string | null
+          message?: string | null
+          organization_id: string
+          provider?: string
+          provider_order_id?: string | null
+          reminder_days?: number[] | null
+          signature_fields?: Json | null
+          signed_document_path?: string | null
+          signers?: Json
+          status?: Database["public"]["Enums"]["esignature_status"]
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          document_id?: string | null
+          document_name?: string
+          document_path?: string | null
+          document_type?: string
+          expires_at?: string | null
+          id?: string
+          last_reminder_at?: string | null
+          message?: string | null
+          organization_id?: string
+          provider?: string
+          provider_order_id?: string | null
+          reminder_days?: number[] | null
+          signature_fields?: Json | null
+          signed_document_path?: string | null
+          signers?: Json
+          status?: Database["public"]["Enums"]["esignature_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "esignature_orders_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "esignature_orders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leases: {
         Row: {
           created_at: string
@@ -1590,6 +1715,14 @@ export type Database = {
         | "tax"
         | "correspondence"
         | "other"
+      esignature_status:
+        | "draft"
+        | "sent"
+        | "viewed"
+        | "signed"
+        | "declined"
+        | "expired"
+        | "cancelled"
       letter_status:
         | "draft"
         | "submitted"
@@ -1750,6 +1883,15 @@ export const Constants = {
         "tax",
         "correspondence",
         "other",
+      ],
+      esignature_status: [
+        "draft",
+        "sent",
+        "viewed",
+        "signed",
+        "declined",
+        "expired",
+        "cancelled",
       ],
       letter_status: [
         "draft",
