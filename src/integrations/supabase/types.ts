@@ -67,6 +67,53 @@ export type Database = {
           },
         ]
       }
+      cost_types: {
+        Row: {
+          category: string
+          created_at: string
+          default_distribution_key: string
+          description: string | null
+          id: string
+          is_chargeable: boolean
+          is_system: boolean
+          name: string
+          organization_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          default_distribution_key?: string
+          description?: string | null
+          id?: string
+          is_chargeable?: boolean
+          is_system?: boolean
+          name: string
+          organization_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          default_distribution_key?: string
+          description?: string | null
+          id?: string
+          is_chargeable?: boolean
+          is_system?: boolean
+          name?: string
+          organization_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cost_types_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       documents: {
         Row: {
           building_id: string | null
