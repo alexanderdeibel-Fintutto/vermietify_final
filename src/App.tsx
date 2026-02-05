@@ -32,6 +32,7 @@ import TenantDetail from "./pages/tenants/TenantDetail";
 import TenantDetailNew from "./pages/mieter/TenantDetail";
 import ContractList from "./pages/contracts/ContractList";
 import ContractDetail from "./pages/contracts/ContractDetail";
+import NewContract from "./pages/contracts/NewContract";
 import PaymentList from "./pages/payments/PaymentList";
 import OperatingCosts from "./pages/operating-costs/OperatingCosts";
 import NewBilling from "./pages/operating-costs/NewBilling";
@@ -96,6 +97,11 @@ const App = () => (
             <Route path="/vertraege" element={
               <ProtectedRoute>
                 <ContractList />
+              </ProtectedRoute>
+            } />
+            <Route path="/vertraege/neu" element={
+              <ProtectedRoute>
+                <NewContract />
               </ProtectedRoute>
             } />
             <Route path="/vertraege/:id" element={
