@@ -15,6 +15,7 @@
  import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
  import { useTaxData, calculateAfA } from "@/hooks/useTaxData";
  import { LoadingState } from "@/components/shared";
+import { ElsterStatusWidget } from "@/components/elster/ElsterStatusWidget";
  import {
    Calculator,
    FileText,
@@ -27,6 +28,7 @@
    Bot,
    Upload,
    Building2,
+  Send,
  } from "lucide-react";
  
  const currentYear = new Date().getFullYear();
@@ -257,13 +259,18 @@ export default function Taxes() {
                      <span>KI-Steuerberater</span>
                    </Link>
                  </Button>
-                 <Button variant="outline" className="h-auto py-4 flex-col gap-2" disabled>
-                   <Building2 className="h-6 w-6" />
-                   <span>ELSTER Export</span>
+                <Button variant="outline" className="h-auto py-4 flex-col gap-2" asChild>
+                  <Link to="/steuern/elster">
+                    <Send className="h-6 w-6" />
+                    <span>ELSTER Übertragung</span>
+                  </Link>
                  </Button>
               </div>
             </CardContent>
           </Card>
+
+          {/* ELSTER Status Widget */}
+          <ElsterStatusWidget />
            </>
          )}
 

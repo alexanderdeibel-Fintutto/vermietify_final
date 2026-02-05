@@ -67,6 +67,10 @@ import NewTask from "./pages/tasks/NewTask";
  import TaxDocuments from "./pages/taxes/TaxDocuments";
  import AITaxAdvisor from "./pages/taxes/AITaxAdvisor";
 
+ // ELSTER Pages
+ import ElsterDashboard from "./pages/elster/ElsterDashboard";
+ import ElsterSubmit from "./pages/elster/ElsterSubmit";
+
  // Admin Pages
  import AdminDashboard from "./pages/admin/AdminDashboard";
  import UserManagement from "./pages/admin/UserManagement";
@@ -288,6 +292,16 @@ const App = () => (
                  <AITaxAdvisor />
                </ProtectedRoute>
              } />
+            <Route path="/steuern/elster" element={
+              <ProtectedRoute>
+                <ElsterDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/steuern/elster/senden" element={
+              <ProtectedRoute>
+                <ElsterSubmit />
+              </ProtectedRoute>
+            } />
             <Route path="/analytics" element={
               <ProtectedRoute>
                 <Analytics />

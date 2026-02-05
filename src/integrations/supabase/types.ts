@@ -417,6 +417,219 @@ export type Database = {
           },
         ]
       }
+      elster_certificates: {
+        Row: {
+          certificate_fingerprint: string
+          certificate_name: string
+          created_at: string
+          id: string
+          is_active: boolean
+          organization_id: string
+          updated_at: string
+          valid_from: string
+          valid_until: string
+        }
+        Insert: {
+          certificate_fingerprint: string
+          certificate_name: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          organization_id: string
+          updated_at?: string
+          valid_from: string
+          valid_until: string
+        }
+        Update: {
+          certificate_fingerprint?: string
+          certificate_name?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          organization_id?: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "elster_certificates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      elster_notices: {
+        Row: {
+          assessed_tax_cents: number
+          created_at: string
+          declared_tax_cents: number
+          difference_cents: number
+          fetched_at: string
+          id: string
+          notes: string | null
+          notice_date: string
+          notice_pdf_path: string | null
+          submission_id: string
+        }
+        Insert: {
+          assessed_tax_cents?: number
+          created_at?: string
+          declared_tax_cents?: number
+          difference_cents?: number
+          fetched_at?: string
+          id?: string
+          notes?: string | null
+          notice_date: string
+          notice_pdf_path?: string | null
+          submission_id: string
+        }
+        Update: {
+          assessed_tax_cents?: number
+          created_at?: string
+          declared_tax_cents?: number
+          difference_cents?: number
+          fetched_at?: string
+          id?: string
+          notes?: string | null
+          notice_date?: string
+          notice_pdf_path?: string | null
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "elster_notices_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "elster_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      elster_settings: {
+        Row: {
+          auto_fetch_notices: boolean
+          created_at: string
+          id: string
+          notification_email: string | null
+          organization_id: string
+          tax_number: string | null
+          tax_office_id: string | null
+          tax_office_name: string | null
+          test_mode: boolean
+          updated_at: string
+        }
+        Insert: {
+          auto_fetch_notices?: boolean
+          created_at?: string
+          id?: string
+          notification_email?: string | null
+          organization_id: string
+          tax_number?: string | null
+          tax_office_id?: string | null
+          tax_office_name?: string | null
+          test_mode?: boolean
+          updated_at?: string
+        }
+        Update: {
+          auto_fetch_notices?: boolean
+          created_at?: string
+          id?: string
+          notification_email?: string | null
+          organization_id?: string
+          tax_number?: string | null
+          tax_office_id?: string | null
+          tax_office_name?: string | null
+          test_mode?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "elster_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      elster_submissions: {
+        Row: {
+          building_ids: string[] | null
+          certificate_id: string | null
+          created_at: string
+          created_by: string | null
+          data_json: Json
+          error_message: string | null
+          form_type: Database["public"]["Enums"]["elster_form_type"]
+          id: string
+          organization_id: string
+          protocol_pdf_path: string | null
+          response_xml: string | null
+          status: Database["public"]["Enums"]["elster_status"]
+          submitted_at: string | null
+          tax_year: number
+          transfer_ticket: string | null
+          updated_at: string
+          xml_content: string | null
+        }
+        Insert: {
+          building_ids?: string[] | null
+          certificate_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_json?: Json
+          error_message?: string | null
+          form_type: Database["public"]["Enums"]["elster_form_type"]
+          id?: string
+          organization_id: string
+          protocol_pdf_path?: string | null
+          response_xml?: string | null
+          status?: Database["public"]["Enums"]["elster_status"]
+          submitted_at?: string | null
+          tax_year: number
+          transfer_ticket?: string | null
+          updated_at?: string
+          xml_content?: string | null
+        }
+        Update: {
+          building_ids?: string[] | null
+          certificate_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_json?: Json
+          error_message?: string | null
+          form_type?: Database["public"]["Enums"]["elster_form_type"]
+          id?: string
+          organization_id?: string
+          protocol_pdf_path?: string | null
+          response_xml?: string | null
+          status?: Database["public"]["Enums"]["elster_status"]
+          submitted_at?: string | null
+          tax_year?: number
+          transfer_ticket?: string | null
+          updated_at?: string
+          xml_content?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "elster_submissions_certificate_id_fkey"
+            columns: ["certificate_id"]
+            isOneToOne: false
+            referencedRelation: "elster_certificates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "elster_submissions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       esignature_events: {
         Row: {
           created_at: string
@@ -2287,6 +2500,19 @@ export type Database = {
         | "tax"
         | "correspondence"
         | "other"
+      elster_form_type:
+        | "anlage_v"
+        | "anlage_kap"
+        | "anlage_so"
+        | "ust_va"
+        | "ust_jahreserklaerung"
+      elster_status:
+        | "draft"
+        | "validating"
+        | "submitted"
+        | "accepted"
+        | "rejected"
+        | "notice_received"
       esignature_status:
         | "draft"
         | "sent"
@@ -2455,6 +2681,21 @@ export const Constants = {
         "tax",
         "correspondence",
         "other",
+      ],
+      elster_form_type: [
+        "anlage_v",
+        "anlage_kap",
+        "anlage_so",
+        "ust_va",
+        "ust_jahreserklaerung",
+      ],
+      elster_status: [
+        "draft",
+        "validating",
+        "submitted",
+        "accepted",
+        "rejected",
+        "notice_received",
       ],
       esignature_status: [
         "draft",

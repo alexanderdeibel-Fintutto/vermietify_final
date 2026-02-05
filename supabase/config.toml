@@ -23,3 +23,15 @@ verify_jwt = false
 
 [functions.whatsapp-webhook]
 verify_jwt = false
+
+[functions.validate-elster-data]
+verify_jwt = false
+
+[functions.generate-elster-xml]
+verify_jwt = false
+
+[functions.submit-to-elster]
+verify_jwt = false
+
+[functions.fetch-elster-notices]
+verify_jwt = false
