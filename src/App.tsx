@@ -114,6 +114,7 @@ import CalendarPage from "./pages/calendar/CalendarPage";
 
  // Notifications Pages
  import NotificationList from "./pages/notifications/NotificationList";
+ import NotificationSettings from "./pages/notifications/NotificationSettings";
 
  import { AIAssistant } from "./components/ai/AIAssistant";
 
@@ -413,6 +414,11 @@ const App = () => (
             <Route path="/benachrichtigungen" element={
               <ProtectedRoute>
                 <NotificationList />
+              </ProtectedRoute>
+            } />
+            <Route path="/einstellungen/benachrichtigungen" element={
+              <ProtectedRoute>
+                <NotificationSettings />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={

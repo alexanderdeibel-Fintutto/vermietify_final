@@ -163,7 +163,7 @@ export function NotificationCenter() {
             size="sm"
             onClick={() => {
               setOpen(false);
-              navigate("/settings");
+              navigate("/einstellungen/benachrichtigungen");
             }}
           >
             <Settings className="h-4 w-4" />

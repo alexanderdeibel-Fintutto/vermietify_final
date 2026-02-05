@@ -166,7 +166,7 @@ export default function NotificationList() {
             <Check className="h-4 w-4 mr-2" />
             Alle als gelesen
           </Button>
-          <Button variant="outline" onClick={() => navigate("/settings")}>
+          <Button variant="outline" onClick={() => navigate("/einstellungen/benachrichtigungen")}>
             <Settings className="h-4 w-4 mr-2" />
             Einstellungen
           </Button>
