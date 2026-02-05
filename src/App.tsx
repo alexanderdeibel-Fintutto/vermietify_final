@@ -100,6 +100,11 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  import TenantUnit from "./pages/tenant-portal/TenantUnit";
  import { TenantProtectedRoute } from "./components/tenant-portal/TenantProtectedRoute";
 
+ // Communication Pages
+ import EmailTemplates from "./pages/communication/EmailTemplates";
+ import ComposeEmail from "./pages/communication/ComposeEmail";
+ import EmailHistory from "./pages/communication/EmailHistory";
+
  import { AIAssistant } from "./components/ai/AIAssistant";
 
 const queryClient = new QueryClient();
@@ -358,6 +363,21 @@ const App = () => (
             <Route path="/communication" element={
               <ProtectedRoute>
                 <Communication />
+              </ProtectedRoute>
+            } />
+            <Route path="/kommunikation/vorlagen" element={
+              <ProtectedRoute>
+                <EmailTemplates />
+              </ProtectedRoute>
+            } />
+            <Route path="/kommunikation/senden" element={
+              <ProtectedRoute>
+                <ComposeEmail />
+              </ProtectedRoute>
+            } />
+            <Route path="/kommunikation/verlauf" element={
+              <ProtectedRoute>
+                <EmailHistory />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={

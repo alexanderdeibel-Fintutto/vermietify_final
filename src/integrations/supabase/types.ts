@@ -969,6 +969,126 @@ export type Database = {
           },
         ]
       }
+      email_log: {
+        Row: {
+          attachments: Json | null
+          body_html: string
+          created_at: string
+          error_message: string | null
+          id: string
+          opened_at: string | null
+          organization_id: string
+          recipient_email: string
+          recipient_tenant_id: string | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          template_id: string | null
+        }
+        Insert: {
+          attachments?: Json | null
+          body_html: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          opened_at?: string | null
+          organization_id: string
+          recipient_email: string
+          recipient_tenant_id?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          template_id?: string | null
+        }
+        Update: {
+          attachments?: Json | null
+          body_html?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          opened_at?: string | null
+          organization_id?: string
+          recipient_email?: string
+          recipient_tenant_id?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          template_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_log_recipient_tenant_id_fkey"
+            columns: ["recipient_tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_log_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "email_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_templates: {
+        Row: {
+          body_html: string
+          category: string
+          created_at: string
+          default_attachments: Json | null
+          id: string
+          is_system: boolean
+          name: string
+          organization_id: string | null
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          body_html: string
+          category?: string
+          created_at?: string
+          default_attachments?: Json | null
+          id?: string
+          is_system?: boolean
+          name: string
+          organization_id?: string | null
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string
+          category?: string
+          created_at?: string
+          default_attachments?: Json | null
+          id?: string
+          is_system?: boolean
+          name?: string
+          organization_id?: string | null
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       energy_certificates: {
         Row: {
           building_id: string

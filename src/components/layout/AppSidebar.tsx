@@ -72,12 +72,20 @@ const navigationItems = [
   { title: "Betriebskosten", url: "/betriebskosten", icon: Receipt },
   { title: "Zähler", url: "/zaehler", icon: Gauge },
   { title: "Aufgaben", url: "/aufgaben", icon: CheckSquare },
-   { title: "Briefversand", url: "/briefe", icon: Mail },
-   { title: "Unterschriften", url: "/unterschriften", icon: PenTool },
-   { title: "WhatsApp", url: "/whatsapp", icon: MessageCircle },
+  { title: "Briefversand", url: "/briefe", icon: Mail },
+  { title: "Unterschriften", url: "/unterschriften", icon: PenTool },
+  { title: "WhatsApp", url: "/whatsapp", icon: MessageCircle },
   { title: "Dokumente", url: "/documents", icon: FileText },
-   { title: "Steuern", url: "/taxes", icon: Calculator },
-  { title: "Kommunikation", url: "/communication", icon: MessageSquare },
+  { title: "Steuern", url: "/taxes", icon: Calculator },
+  { 
+    title: "Kommunikation", 
+    icon: MessageSquare,
+    subItems: [
+      { title: "E-Mail verfassen", url: "/kommunikation/senden" },
+      { title: "E-Mail-Vorlagen", url: "/kommunikation/vorlagen" },
+      { title: "E-Mail-Verlauf", url: "/kommunikation/verlauf" },
+    ]
+  },
 ];
 
 export function AppSidebar() {
