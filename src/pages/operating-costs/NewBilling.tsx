@@ -6,6 +6,7 @@ import { StepBuildingPeriod } from "@/components/operating-costs/wizard/StepBuil
 import { StepCostTypes } from "@/components/operating-costs/wizard/StepCostTypes";
 import { StepUnitsDistribution } from "@/components/operating-costs/wizard/StepUnitsDistribution";
 import { StepCalculation } from "@/components/operating-costs/wizard/StepCalculation";
+import { StepSummary } from "@/components/operating-costs/wizard/StepSummary";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import {
@@ -61,11 +62,7 @@ function WizardContent() {
        case 4:
          return <StepCalculation />;
        case 5:
-         return (
-           <div className="flex items-center justify-center h-64 text-muted-foreground">
-             Schritt 5: Zusammenfassung (Coming Soon)
-           </div>
-         );
+        return <StepSummary />;
        default:
          return null;
      }

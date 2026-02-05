@@ -50,6 +50,11 @@ export interface CalculationResult {
   vacancyCostsToLandlord: boolean;
   // Step 4 - calculated
   calculationResults: CalculationResult[];
+  // Step 5 - options
+  optionsGeneratePdf: boolean;
+  optionsIndividualStatements: boolean;
+  optionsSendEmail: boolean;
+  paymentDeadline: Date | null;
  }
  
  const DEFAULT_COST_TYPES: Omit<CostItem, "amount">[] = [
@@ -76,6 +81,8 @@ export interface CalculationResult {
  
  const getDefaultWizardData = (): WizardData => {
    const lastYear = new Date().getFullYear() - 1;
+  const defaultDeadline = new Date();
+  defaultDeadline.setDate(defaultDeadline.getDate() + 28); // 4 weeks from now
    return {
      buildingId: "",
      periodStart: new Date(lastYear, 0, 1),
@@ -84,6 +91,10 @@ export interface CalculationResult {
     unitDistributions: [],
     vacancyCostsToLandlord: true,
     calculationResults: [],
+    optionsGeneratePdf: true,
+    optionsIndividualStatements: true,
+    optionsSendEmail: false,
+    paymentDeadline: defaultDeadline,
    };
  };
  

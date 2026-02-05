@@ -258,6 +258,189 @@ export type Database = {
           },
         ]
       }
+      operating_cost_items: {
+        Row: {
+          amount: number
+          cost_name: string
+          cost_type: string
+          created_at: string
+          distribution_key: string
+          id: string
+          is_custom: boolean
+          statement_id: string
+        }
+        Insert: {
+          amount?: number
+          cost_name: string
+          cost_type: string
+          created_at?: string
+          distribution_key: string
+          id?: string
+          is_custom?: boolean
+          statement_id: string
+        }
+        Update: {
+          amount?: number
+          cost_name?: string
+          cost_type?: string
+          created_at?: string
+          distribution_key?: string
+          id?: string
+          is_custom?: boolean
+          statement_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_cost_items_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "operating_cost_statements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operating_cost_statements: {
+        Row: {
+          building_id: string
+          created_at: string
+          id: string
+          options_generate_pdf: boolean
+          options_individual_statements: boolean
+          options_send_email: boolean
+          organization_id: string
+          payment_deadline: string | null
+          period_end: string
+          period_start: string
+          status: string
+          total_costs: number
+          updated_at: string
+          vacancy_costs_to_landlord: boolean
+        }
+        Insert: {
+          building_id: string
+          created_at?: string
+          id?: string
+          options_generate_pdf?: boolean
+          options_individual_statements?: boolean
+          options_send_email?: boolean
+          organization_id: string
+          payment_deadline?: string | null
+          period_end: string
+          period_start: string
+          status?: string
+          total_costs?: number
+          updated_at?: string
+          vacancy_costs_to_landlord?: boolean
+        }
+        Update: {
+          building_id?: string
+          created_at?: string
+          id?: string
+          options_generate_pdf?: boolean
+          options_individual_statements?: boolean
+          options_send_email?: boolean
+          organization_id?: string
+          payment_deadline?: string | null
+          period_end?: string
+          period_start?: string
+          status?: string
+          total_costs?: number
+          updated_at?: string
+          vacancy_costs_to_landlord?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_cost_statements_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_cost_statements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operating_cost_tenant_results: {
+        Row: {
+          area: number
+          cost_breakdown: Json | null
+          cost_share: number
+          created_at: string
+          heating_share: number
+          id: string
+          is_vacant: boolean
+          persons: number
+          prepayments: number
+          result: number
+          statement_id: string
+          tenant_id: string | null
+          tenant_name: string | null
+          unit_id: string
+          unit_number: string
+        }
+        Insert: {
+          area?: number
+          cost_breakdown?: Json | null
+          cost_share?: number
+          created_at?: string
+          heating_share?: number
+          id?: string
+          is_vacant?: boolean
+          persons?: number
+          prepayments?: number
+          result?: number
+          statement_id: string
+          tenant_id?: string | null
+          tenant_name?: string | null
+          unit_id: string
+          unit_number: string
+        }
+        Update: {
+          area?: number
+          cost_breakdown?: Json | null
+          cost_share?: number
+          created_at?: string
+          heating_share?: number
+          id?: string
+          is_vacant?: boolean
+          persons?: number
+          prepayments?: number
+          result?: number
+          statement_id?: string
+          tenant_id?: string | null
+          tenant_name?: string | null
+          unit_id?: string
+          unit_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operating_cost_tenant_results_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "operating_cost_statements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_cost_tenant_results_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operating_cost_tenant_results_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           address: string | null
