@@ -40,6 +40,7 @@ import OperatingCostDetail from "./pages/operating-costs/OperatingCostDetail";
 import CostTypes from "./pages/operating-costs/CostTypes";
 import MeterList from "./pages/meters/MeterList";
 import MeterDetail from "./pages/meters/MeterDetail";
+import Auswertung from "./pages/zaehler/Auswertung";
 import TaskList from "./pages/tasks/TaskList";
 import TaskDetail from "./pages/tasks/TaskDetail";
 import NewTask from "./pages/tasks/NewTask";
@@ -144,6 +145,11 @@ const App = () => (
             <Route path="/zaehler" element={
               <ProtectedRoute>
                 <MeterList />
+              </ProtectedRoute>
+            } />
+            <Route path="/zaehler/auswertung" element={
+              <ProtectedRoute>
+                <Auswertung />
               </ProtectedRoute>
             } />
             <Route path="/zaehler/:id" element={
