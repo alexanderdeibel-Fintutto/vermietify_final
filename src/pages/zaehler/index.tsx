@@ -31,9 +31,9 @@
    DropdownMenuItem,
    DropdownMenuTrigger,
  } from "@/components/ui/dropdown-menu";
- import { QuickReadingDialog } from "@/components/meters/QuickReadingDialog";
- import { MeterFormDialog } from "@/components/meters/MeterFormDialog";
- import { useMeters, MeterWithStatus, MeterType, MeterStatus, MeterInsert } from "@/hooks/useMeters";
+import { QuickReadingDialog } from "@/components/zaehler/QuickReadingDialog";
+import { MeterFormDialog } from "@/components/zaehler/MeterFormDialog";
+ import { useMeters, MeterWithStatus, MeterType, MeterStatus } from "@/hooks/useMeters";
  import { useBuildings } from "@/hooks/useBuildings";
  import { format } from "date-fns";
  import { de } from "date-fns/locale";
@@ -154,23 +154,15 @@
      setMeterFormOpen(true);
    };
  
-   const handleSaveReading = (data: { meter_id: string; reading_value: number; reading_date: string; notes?: string }) => {
-     addReading(data, {
-       onSuccess: () => {
-         setReadingDialogOpen(false);
-         setSelectedMeterForReading(null);
-       },
-     });
-   };
- 
-   const handleSaveMeter = (data: MeterInsert) => {
-     createMeter(data, {
-       onSuccess: () => {
-         setMeterFormOpen(false);
-         setEditingMeter(null);
-       },
-     });
-   };
+    const handleReadingSuccess = () => {
+      setReadingDialogOpen(false);
+      setSelectedMeterForReading(null);
+    };
+
+    const handleMeterFormSuccess = () => {
+      setMeterFormOpen(false);
+      setEditingMeter(null);
+    };
  
    return (
      <MainLayout title="Zählerverwaltung" breadcrumbs={[{ label: "Zähler" }]}>
@@ -426,21 +418,19 @@
          )}
        </div>
  
-       <QuickReadingDialog
-         open={readingDialogOpen}
-         onOpenChange={setReadingDialogOpen}
-         meter={selectedMeterForReading}
-         onSave={handleSaveReading}
-         isSaving={isAddingReading}
-       />
- 
-       <MeterFormDialog
-         open={meterFormOpen}
-         onOpenChange={setMeterFormOpen}
-         meter={editingMeter}
-         onSave={handleSaveMeter}
-         isSaving={isCreating}
-       />
+        <QuickReadingDialog
+          open={readingDialogOpen}
+          onOpenChange={setReadingDialogOpen}
+          meter={selectedMeterForReading}
+          onSuccess={handleReadingSuccess}
+        />
+
+        <MeterFormDialog
+          open={meterFormOpen}
+          onOpenChange={setMeterFormOpen}
+          meter={editingMeter}
+          onSuccess={handleMeterFormSuccess}
+        />
      </MainLayout>
    );
  }

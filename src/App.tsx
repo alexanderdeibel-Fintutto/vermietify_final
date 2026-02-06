@@ -39,7 +39,7 @@ import OperatingCosts from "./pages/betriebskosten";
 import NewBilling from "./pages/betriebskosten/neu";
 import OperatingCostDetail from "./pages/betriebskosten/[id]";
 import CostTypes from "./pages/betriebskosten/kostenarten";
-import MeterList from "./pages/meters/MeterList";
+import MeterList from "./pages/zaehler";
 import MeterDetail from "./pages/meters/MeterDetail";
 import Auswertung from "./pages/zaehler/Auswertung";
 import TaskList from "./pages/tasks/TaskList";
