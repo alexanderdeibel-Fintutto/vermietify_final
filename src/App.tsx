@@ -36,7 +36,7 @@ import ContractDetail from "./pages/contracts/ContractDetail";
 import NewContract from "./pages/contracts/NewContract";
 import PaymentList from "./pages/payments/PaymentList";
 import OperatingCosts from "./pages/betriebskosten";
-import NewBilling from "./pages/operating-costs/NewBilling";
+import NewBilling from "./pages/betriebskosten/neu";
 import OperatingCostDetail from "./pages/betriebskosten/[id]";
 import CostTypes from "./pages/operating-costs/CostTypes";
 import MeterList from "./pages/meters/MeterList";
