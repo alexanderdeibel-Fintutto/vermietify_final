@@ -48,6 +48,7 @@ const unitFormSchema = z.object({
   rooms: z.coerce.number().positive().optional().nullable().or(z.literal("")),
   rent_cold: z.coerce.number().positive("Kaltmiete muss größer als 0 sein"),
   additional_costs: z.coerce.number().min(0).optional().nullable().or(z.literal("")),
+  deposit: z.coerce.number().min(0).optional().nullable().or(z.literal("")),
   features: z.array(z.string()).optional(),
   notes: z.string().optional().nullable(),
 });
@@ -88,20 +89,37 @@ export function UnitFormDialog({
     return [];
   };
 
-  // Combine notes text with features for storage
-  const combineNotesAndFeatures = (
+  // Parse deposit from notes JSON
+  const parseDeposit = (notes: string | null): number | "" => {
+    if (!notes) return "";
+    try {
+      const parsed = JSON.parse(notes);
+      if (typeof parsed.deposit === "number") {
+        return parsed.deposit / 100; // Convert from cents to Euro
+      }
+    } catch {
+      // Not JSON
+    }
+    return "";
+  };
+
+  // Combine notes text with features and deposit for storage
+  const combineNotesAndExtras = (
     notesText: string | null | undefined,
-    features: string[] | undefined
+    features: string[] | undefined,
+    depositEuro: number | "" | undefined
   ): string | null => {
     const hasFeatures = features && features.length > 0;
     const hasNotes = notesText && notesText.trim().length > 0;
+    const hasDeposit = typeof depositEuro === "number" && depositEuro > 0;
     
-    if (!hasFeatures && !hasNotes) return null;
+    if (!hasFeatures && !hasNotes && !hasDeposit) return null;
     
-    if (hasFeatures) {
+    if (hasFeatures || hasDeposit) {
       return JSON.stringify({
         text: notesText || "",
-        features: features,
+        features: features || [],
+        deposit: hasDeposit ? Math.round(depositEuro * 100) : undefined, // Store in cents
       });
     }
     
@@ -128,6 +146,7 @@ export function UnitFormDialog({
       rooms: "",
       rent_cold: 0,
       additional_costs: "",
+      deposit: "",
       features: [],
       notes: "",
     },
@@ -144,6 +163,7 @@ export function UnitFormDialog({
           rooms: unit.rooms || "",
           rent_cold: unit.rent_amount / 100, // Convert from cents to Euro
           additional_costs: unit.utility_advance ? unit.utility_advance / 100 : "",
+          deposit: parseDeposit(unit.notes),
           features: parseFeatures(unit.notes),
           notes: parseNotesText(unit.notes),
         });
@@ -155,6 +175,7 @@ export function UnitFormDialog({
           rooms: "",
           rent_cold: 0,
           additional_costs: "",
+          deposit: "",
           features: [],
           notes: "",
         });
@@ -165,7 +186,7 @@ export function UnitFormDialog({
   const onSubmit = async (values: UnitFormValues) => {
     setIsSubmitting(true);
     try {
-      const combinedNotes = combineNotesAndFeatures(values.notes, values.features);
+      const combinedNotes = combineNotesAndExtras(values.notes, values.features, values.deposit);
       
       const unitData = {
         building_id: buildingId,
@@ -332,6 +353,26 @@ export function UnitFormDialog({
                       type="number"
                       step="0.01"
                       placeholder="z.B. 200"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="deposit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kaution (€)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder="z.B. 2550"
                       {...field}
                       value={field.value ?? ""}
                     />
