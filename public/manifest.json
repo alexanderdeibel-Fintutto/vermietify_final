@@ -1,0 +1,50 @@
+{
+  "name": "Vermietify - Immobilienverwaltung",
+  "short_name": "Vermietify",
+  "description": "Die moderne Immobilienverwaltungs-Plattform für deutsche Vermieter",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563EB",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "de-DE",
+  "dir": "ltr",
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "description": "Zum Dashboard"
+    },
+    {
+      "name": "Immobilien",
+      "url": "/immobilien",
+      "description": "Immobilien verwalten"
+    },
+    {
+      "name": "Mieter",
+      "url": "/mieter",
+      "description": "Mieter verwalten"
+    }
+  ]
+}

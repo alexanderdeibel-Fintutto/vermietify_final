@@ -1,0 +1,174 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "skip": "Skip",
+    "finish": "Finish",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "close": "Close",
+    "actions": "Actions",
+    "status": "Status",
+    "date": "Date",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "notes": "Notes",
+    "details": "Details"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "properties": "Properties",
+    "tenants": "Tenants",
+    "contracts": "Contracts",
+    "finances": "Finances",
+    "documents": "Documents",
+    "settings": "Settings",
+    "help": "Help",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email Address",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "firstName": "First Name",
+    "lastName": "Last Name"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "overview": "Overview",
+    "recentActivity": "Recent Activity",
+    "quickActions": "Quick Actions",
+    "stats": {
+      "buildings": "Buildings",
+      "units": "Units",
+      "tenants": "Tenants",
+      "revenue": "Revenue"
+    }
+  },
+  "buildings": {
+    "title": "Properties",
+    "new": "New Building",
+    "name": "Building Name",
+    "type": "Building Type",
+    "types": {
+      "apartment": "Apartment Building",
+      "house": "Single Family Home",
+      "commercial": "Commercial",
+      "mixed": "Mixed Use"
+    },
+    "units": "Units",
+    "area": "Area"
+  },
+  "tenants": {
+    "title": "Tenants",
+    "new": "New Tenant",
+    "active": "Active",
+    "inactive": "Inactive",
+    "contact": "Contact"
+  },
+  "contracts": {
+    "title": "Contracts",
+    "new": "New Contract",
+    "active": "Active",
+    "ending": "Ending Soon",
+    "terminated": "Terminated",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "rent": "Rent"
+  },
+  "payments": {
+    "title": "Payments",
+    "received": "Received",
+    "pending": "Pending",
+    "overdue": "Overdue",
+    "amount": "Amount"
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "organization": "Organization",
+    "notifications": "Notifications",
+    "security": "Security",
+    "privacy": "Privacy",
+    "appearance": "Appearance",
+    "language": "Language",
+    "theme": "Theme",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
+  },
+  "help": {
+    "title": "Help",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "videos": "Video Tutorials",
+    "changelog": "What's New",
+    "searchPlaceholder": "How can we help?",
+    "categories": {
+      "getting_started": "Getting Started",
+      "payments": "Payments",
+      "contracts": "Contracts",
+      "billing": "Billing",
+      "account": "Account"
+    }
+  },
+  "audit": {
+    "title": "Activity Log",
+    "actions": {
+      "create": "Created",
+      "update": "Updated",
+      "delete": "Deleted",
+      "login": "Login",
+      "logout": "Logout",
+      "export": "Export",
+      "import": "Import"
+    }
+  },
+  "gdpr": {
+    "title": "Privacy",
+    "export": "Export Data",
+    "delete": "Delete Data",
+    "consents": "Consents",
+    "requests": "Requests"
+  },
+  "onboarding": {
+    "welcome": "Welcome to Vermietify",
+    "steps": {
+      "profile": "Profile",
+      "type": "Account Type",
+      "organization": "Organization",
+      "building": "First Building",
+      "unit": "First Unit",
+      "tenant": "First Tenant",
+      "complete": "Complete"
+    }
+  }
+}

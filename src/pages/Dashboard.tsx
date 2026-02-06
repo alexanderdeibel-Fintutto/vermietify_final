@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { format, subMonths } from "date-fns";
 import { de } from "date-fns/locale";
+import { OnboardingChecklist } from "@/components/onboarding/OnboardingChecklist";
 
 interface DashboardStats {
   totalRent: number;
@@ -160,6 +161,9 @@ export default function Dashboard() {
             Willkommen zurück! Hier ist die Übersicht Ihrer Immobilien.
           </p>
         </div>
+
+        {/* Onboarding Checklist */}
+        <OnboardingChecklist />
 
         {/* KPI Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
