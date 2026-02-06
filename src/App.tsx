@@ -10,6 +10,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import OnboardingWizard from "./pages/auth/OnboardingWizard";
+import OnboardingWizardPage from "./pages/onboarding/OnboardingWizardPage";
 
 // App Pages
 import Dashboard from "./pages/Dashboard";
@@ -143,7 +144,7 @@ const App = () => (
             {/* Protected Routes */}
             <Route path="/onboarding" element={
               <ProtectedRoute>
-                <OnboardingWizard />
+                <OnboardingWizardPage />
               </ProtectedRoute>
             } />
             <Route path="/dashboard" element={
