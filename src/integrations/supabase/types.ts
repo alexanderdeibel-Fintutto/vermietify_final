@@ -55,6 +55,59 @@ export type Database = {
           },
         ]
       }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          entity_id: string | null
+          entity_name: string | null
+          entity_type: string
+          id: string
+          ip_address: unknown
+          new_data: Json | null
+          old_data: Json | null
+          organization_id: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          entity_id?: string | null
+          entity_name?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: unknown
+          new_data?: Json | null
+          old_data?: Json | null
+          organization_id: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_name?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: unknown
+          new_data?: Json | null
+          old_data?: Json | null
+          organization_id?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bank_accounts: {
         Row: {
           account_name: string
@@ -507,6 +560,63 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consent_records: {
+        Row: {
+          consent_date: string | null
+          consent_given: boolean
+          consent_type: string
+          created_at: string
+          id: string
+          ip_address: unknown
+          notes: string | null
+          organization_id: string
+          revoked_date: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          consent_date?: string | null
+          consent_given?: boolean
+          consent_type: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown
+          notes?: string | null
+          organization_id: string
+          revoked_date?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          consent_date?: string | null
+          consent_given?: boolean
+          consent_type?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown
+          notes?: string | null
+          organization_id?: string
+          revoked_date?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consent_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consent_records_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -1277,6 +1387,45 @@ export type Database = {
           },
         ]
       }
+      faq_articles: {
+        Row: {
+          answer: string
+          category: string
+          created_at: string
+          id: string
+          is_published: boolean
+          order_index: number
+          question: string
+          tags: string[] | null
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          answer: string
+          category: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          order_index?: number
+          question: string
+          tags?: string[] | null
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          answer?: string
+          category?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          order_index?: number
+          question?: string
+          tags?: string[] | null
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       finapi_connections: {
         Row: {
           bank_bic: string | null
@@ -1326,6 +1475,63 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gdpr_requests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          organization_id: string
+          request_type: string
+          requester_id: string
+          result_file_path: string | null
+          status: string
+          tenant_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          request_type: string
+          requester_id: string
+          result_file_path?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          request_type?: string
+          requester_id?: string
+          result_file_path?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gdpr_requests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gdpr_requests_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]
@@ -2448,6 +2654,45 @@ export type Database = {
           },
         ]
       }
+      onboarding_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          first_building_created: boolean
+          first_contract_created: boolean
+          first_tenant_created: boolean
+          first_unit_created: boolean
+          id: string
+          profile_completed: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          first_building_created?: boolean
+          first_contract_created?: boolean
+          first_tenant_created?: boolean
+          first_unit_created?: boolean
+          id?: string
+          profile_completed?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          first_building_created?: boolean
+          first_contract_created?: boolean
+          first_tenant_created?: boolean
+          first_unit_created?: boolean
+          id?: string
+          profile_completed?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       operating_cost_items: {
         Row: {
           amount: number
@@ -2627,6 +2872,50 @@ export type Database = {
             columns: ["unit_id"]
             isOneToOne: false
             referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      org_memberships: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          id: string
+          invited_at: string
+          invited_by: string | null
+          organization_id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          id?: string
+          invited_at?: string
+          invited_by?: string | null
+          organization_id: string
+          role?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          id?: string
+          invited_at?: string
+          invited_by?: string | null
+          organization_id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_memberships_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]

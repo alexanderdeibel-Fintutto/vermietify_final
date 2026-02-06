@@ -11,6 +11,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -55,7 +57,9 @@ interface MainLayoutProps {
               </BreadcrumbList>
             </Breadcrumb>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <LanguageSwitcher />
+              <ThemeToggle />
               <NotificationCenter />
               {actions}
             </div>

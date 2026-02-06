@@ -22,7 +22,10 @@ import {
    TrendingUp,
    Leaf,
    Home,
-   Zap
+   Zap,
+   HelpCircle,
+   History,
+   Shield,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -195,6 +198,14 @@ export function AppSidebar() {
 
       <SidebarFooter className="p-2">
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive={location.pathname === '/hilfe'}>
+              <NavLink to="/hilfe" className="flex items-center gap-3">
+                <HelpCircle className="h-5 w-5" />
+                <span>Hilfe</span>
+              </NavLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild isActive={location.pathname === '/settings'}>
               <NavLink to="/settings" className="flex items-center gap-3">

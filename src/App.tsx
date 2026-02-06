@@ -116,6 +116,11 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  import NotificationList from "./pages/notifications/NotificationList";
  import NotificationSettings from "./pages/notifications/NotificationSettings";
 
+ // Help & Settings Pages
+ import HelpCenter from "./pages/help/HelpCenter";
+ import AuditLog from "./pages/settings/AuditLog";
+ import PrivacySettings from "./pages/settings/PrivacySettings";
+
  import { AIAssistant } from "./components/ai/AIAssistant";
 
 const queryClient = new QueryClient();
@@ -429,6 +434,23 @@ const App = () => (
             <Route path="/payment-success" element={
               <ProtectedRoute>
                 <PaymentSuccess />
+              </ProtectedRoute>
+            } />
+
+            {/* Help & Additional Settings Routes */}
+            <Route path="/hilfe" element={
+              <ProtectedRoute>
+                <HelpCenter />
+              </ProtectedRoute>
+            } />
+            <Route path="/einstellungen/aktivitaeten" element={
+              <ProtectedRoute>
+                <AuditLog />
+              </ProtectedRoute>
+            } />
+            <Route path="/einstellungen/datenschutz" element={
+              <ProtectedRoute>
+                <PrivacySettings />
               </ProtectedRoute>
             } />
 

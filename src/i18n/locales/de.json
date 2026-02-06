@@ -1,0 +1,174 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "export": "Exportieren",
+    "import": "Importieren",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "confirm": "Bestätigen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "skip": "Überspringen",
+    "finish": "Fertig",
+    "yes": "Ja",
+    "no": "Nein",
+    "all": "Alle",
+    "none": "Keine",
+    "close": "Schließen",
+    "actions": "Aktionen",
+    "status": "Status",
+    "date": "Datum",
+    "name": "Name",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "city": "Stadt",
+    "postalCode": "PLZ",
+    "notes": "Notizen",
+    "details": "Details"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "properties": "Immobilien",
+    "tenants": "Mieter",
+    "contracts": "Verträge",
+    "finances": "Finanzen",
+    "documents": "Dokumente",
+    "settings": "Einstellungen",
+    "help": "Hilfe",
+    "logout": "Abmelden"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "logout": "Abmelden",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "rememberMe": "Angemeldet bleiben",
+    "noAccount": "Noch kein Konto?",
+    "hasAccount": "Bereits ein Konto?",
+    "firstName": "Vorname",
+    "lastName": "Nachname"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Willkommen zurück",
+    "overview": "Übersicht",
+    "recentActivity": "Letzte Aktivität",
+    "quickActions": "Schnellaktionen",
+    "stats": {
+      "buildings": "Gebäude",
+      "units": "Einheiten",
+      "tenants": "Mieter",
+      "revenue": "Einnahmen"
+    }
+  },
+  "buildings": {
+    "title": "Immobilien",
+    "new": "Neues Gebäude",
+    "name": "Objektbezeichnung",
+    "type": "Gebäudetyp",
+    "types": {
+      "apartment": "Mehrfamilienhaus",
+      "house": "Einfamilienhaus",
+      "commercial": "Gewerbe",
+      "mixed": "Gemischt"
+    },
+    "units": "Einheiten",
+    "area": "Fläche"
+  },
+  "tenants": {
+    "title": "Mieter",
+    "new": "Neuer Mieter",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "contact": "Kontakt"
+  },
+  "contracts": {
+    "title": "Verträge",
+    "new": "Neuer Vertrag",
+    "active": "Aktiv",
+    "ending": "Läuft aus",
+    "terminated": "Gekündigt",
+    "startDate": "Beginn",
+    "endDate": "Ende",
+    "rent": "Miete"
+  },
+  "payments": {
+    "title": "Zahlungen",
+    "received": "Eingegangen",
+    "pending": "Ausstehend",
+    "overdue": "Überfällig",
+    "amount": "Betrag"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "profile": "Profil",
+    "organization": "Organisation",
+    "notifications": "Benachrichtigungen",
+    "security": "Sicherheit",
+    "privacy": "Datenschutz",
+    "appearance": "Darstellung",
+    "language": "Sprache",
+    "theme": "Farbschema",
+    "themes": {
+      "light": "Hell",
+      "dark": "Dunkel",
+      "system": "System"
+    }
+  },
+  "help": {
+    "title": "Hilfe",
+    "faq": "Häufige Fragen",
+    "contact": "Kontakt",
+    "videos": "Video-Tutorials",
+    "changelog": "Neuigkeiten",
+    "searchPlaceholder": "Wie können wir helfen?",
+    "categories": {
+      "getting_started": "Erste Schritte",
+      "payments": "Zahlungen",
+      "contracts": "Verträge",
+      "billing": "Abrechnung",
+      "account": "Konto"
+    }
+  },
+  "audit": {
+    "title": "Aktivitäten",
+    "actions": {
+      "create": "Erstellt",
+      "update": "Aktualisiert",
+      "delete": "Gelöscht",
+      "login": "Anmeldung",
+      "logout": "Abmeldung",
+      "export": "Export",
+      "import": "Import"
+    }
+  },
+  "gdpr": {
+    "title": "Datenschutz",
+    "export": "Daten exportieren",
+    "delete": "Daten löschen",
+    "consents": "Einwilligungen",
+    "requests": "Anfragen"
+  },
+  "onboarding": {
+    "welcome": "Willkommen bei Vermietify",
+    "steps": {
+      "profile": "Profil",
+      "type": "Kontotyp",
+      "organization": "Organisation",
+      "building": "Erstes Gebäude",
+      "unit": "Erste Einheit",
+      "tenant": "Erster Mieter",
+      "complete": "Fertig"
+    }
+  }
+}

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Building2, User, Bell, Shield, Loader2 } from "lucide-react";
+import { Building2, User, Bell, Shield, Loader2, History, ShieldCheck, ChevronRight } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
@@ -28,6 +29,7 @@ interface Organization {
 export default function Settings() {
   const { profile, user, refreshProfile } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -383,33 +385,78 @@ export default function Settings() {
 
           {/* Security Tab */}
           <TabsContent value="security">
-            <Card>
-              <CardHeader>
-                <CardTitle>Sicherheitseinstellungen</CardTitle>
-                <CardDescription>
-                  Verwalten Sie Ihre Kontozugriff und Sicherheit
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium mb-2">Passwort ändern</h4>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Aktualisieren Sie Ihr Passwort regelmäßig für mehr Sicherheit
-                    </p>
-                    <Button variant="outline">Passwort ändern</Button>
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Sicherheitseinstellungen</CardTitle>
+                  <CardDescription>
+                    Verwalten Sie Ihre Kontozugriff und Sicherheit
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium mb-2">Passwort ändern</h4>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Aktualisieren Sie Ihr Passwort regelmäßig für mehr Sicherheit
+                      </p>
+                      <Button variant="outline">Passwort ändern</Button>
+                    </div>
+                    <Separator />
+                    <div>
+                      <h4 className="font-medium mb-2">Aktive Sitzungen</h4>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Verwalten Sie Ihre aktiven Anmeldungen
+                      </p>
+                      <Button variant="outline">Sitzungen verwalten</Button>
+                    </div>
                   </div>
-                  <Separator />
-                  <div>
-                    <h4 className="font-medium mb-2">Aktive Sitzungen</h4>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Verwalten Sie Ihre aktiven Anmeldungen
-                    </p>
-                    <Button variant="outline">Sitzungen verwalten</Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+
+              {/* Quick Links */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <Card 
+                  className="cursor-pointer hover:border-primary/50 transition-colors"
+                  onClick={() => navigate("/einstellungen/aktivitaeten")}
+                >
+                  <CardContent className="flex items-center justify-between p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <History className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Aktivitätenprotokoll</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Alle Änderungen nachvollziehen
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  </CardContent>
+                </Card>
+
+                <Card 
+                  className="cursor-pointer hover:border-primary/50 transition-colors"
+                  onClick={() => navigate("/einstellungen/datenschutz")}
+                >
+                  <CardContent className="flex items-center justify-between p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <ShieldCheck className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">Datenschutz (DSGVO)</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Datenexport & Löschung
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
