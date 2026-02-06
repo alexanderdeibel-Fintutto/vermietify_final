@@ -21,8 +21,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { QuickReadingDialog } from "@/components/meters/QuickReadingDialog";
-import { MeterFormDialog } from "@/components/meters/MeterFormDialog";
+import { QuickReadingDialog } from "@/components/zaehler/QuickReadingDialog";
+import { MeterFormDialog } from "@/components/zaehler/MeterFormDialog";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useMeters, MeterType, MeterReading } from "@/hooks/useMeters";
@@ -94,7 +94,7 @@ interface MeterWithDetails {
 
 export default function MeterDetail() {
   const { id } = useParams<{ id: string }>();
-  const { useMeterReadings, addReading, isAddingReading, deleteMeter, isDeleting } = useMeters();
+  const { useMeterReadings, deleteMeter, isDeleting } = useMeters();
 
   const [readingDialogOpen, setReadingDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -250,13 +250,14 @@ export default function MeterDetail() {
     return null;
   }, [consumptionData, stats.avgPerMonth]);
 
-  const handleSaveReading = (data: { meter_id: string; reading_value: number; reading_date: string; notes?: string }) => {
-    addReading(data, {
-      onSuccess: () => {
-        setReadingDialogOpen(false);
-        refetchMeter();
-      },
-    });
+  const handleReadingSuccess = () => {
+    setReadingDialogOpen(false);
+    refetchMeter();
+  };
+
+  const handleMeterEditSuccess = () => {
+    setEditDialogOpen(false);
+    refetchMeter();
   };
 
   const handleExport = () => {
@@ -674,16 +675,14 @@ export default function MeterDetail() {
         open={readingDialogOpen}
         onOpenChange={setReadingDialogOpen}
         meter={meter ? { ...meter, status: "current", last_reading_value: latestReading?.reading_value ?? null, last_reading_date: latestReading?.reading_date ?? null } : null}
-        onSave={handleSaveReading}
-        isSaving={isAddingReading}
+        onSuccess={handleReadingSuccess}
       />
 
       <MeterFormDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
-        meter={meter ? { ...meter, status: "current", last_reading_value: latestReading?.reading_value ?? null, last_reading_date: latestReading?.reading_date ?? null } : null}
-        onSave={() => {}}
-        isSaving={false}
+        meter={meter}
+        onSuccess={handleMeterEditSuccess}
       />
 
       <ConfirmDialog
