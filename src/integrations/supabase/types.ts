@@ -4292,6 +4292,7 @@ export type Database = {
         Args: { _first_name?: string; _last_name?: string; _user_id: string }
         Returns: string
       }
+      get_user_building_ids: { Args: { _user_id: string }; Returns: string[] }
       get_user_organization_id: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
