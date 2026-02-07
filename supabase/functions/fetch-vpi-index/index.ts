@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,12 +12,35 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate the user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Use service role for data operations
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // In production, this would fetch from Destatis API
-    // For now, we simulate with realistic data
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
@@ -37,12 +60,10 @@ serve(async (req) => {
 
     // Check if we need to add a new month
     if (!latestVpi || latestVpi.year < year || (latestVpi.year === year && latestVpi.month < month)) {
-      // Simulate VPI growth (typically 2-4% per year)
       const baseValue = latestVpi?.value || 124.5;
-      const monthlyGrowth = 0.002 + (Math.random() * 0.002); // 0.2-0.4% per month
+      const monthlyGrowth = 0.002 + (Math.random() * 0.002);
       const newValue = parseFloat((baseValue * (1 + monthlyGrowth)).toFixed(2));
 
-      // Get value from same month last year for YoY calculation
       const { data: lastYearValue } = await supabase
         .from('vpi_index')
         .select('value')
@@ -54,7 +75,6 @@ serve(async (req) => {
         ? parseFloat((((newValue - lastYearValue.value) / lastYearValue.value) * 100).toFixed(2))
         : null;
 
-      // Insert new VPI value (using service role to bypass RLS)
       const { error: insertError } = await supabase.rpc('insert_vpi_index', {
         p_year: year,
         p_month: month,
@@ -62,7 +82,6 @@ serve(async (req) => {
         p_change_yoy: changeYoy
       });
 
-      // If RPC doesn't exist, the data is already seeded
       if (insertError && !insertError.message.includes('does not exist')) {
         console.log('VPI insert note:', insertError.message);
       }
@@ -76,7 +95,6 @@ serve(async (req) => {
       .order('month', { ascending: false })
       .limit(12);
 
-    // Calculate latest YoY change
     const latest = currentVpi?.[0];
     const lastYear = currentVpi?.find(v => v.year === latest?.year - 1 && v.month === latest?.month);
     const currentYoyChange = latest && lastYear 

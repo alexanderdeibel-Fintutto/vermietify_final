@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,12 +12,33 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    // Authenticate the user
     const authHeader = req.headers.get('Authorization');
-    
-    const supabase = createClient(supabaseUrl, supabaseKey, {
-      global: { headers: { Authorization: authHeader || '' } }
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Use authenticated client for RLS-scoped queries
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
     });
 
     const { organizationId } = await req.json();
@@ -84,7 +105,6 @@ serve(async (req) => {
       const baseIndex = lastAdjustment?.index_new || settings.index_base_value;
       const baseRent = lastAdjustment?.new_rent_cents || lease.rent_amount * 100;
       
-      // Check if 12 months have passed since last adjustment
       const lastAdjDate = lastAdjustment?.effective_date 
         ? new Date(lastAdjustment.effective_date)
         : settings.index_base_date 
@@ -94,10 +114,8 @@ serve(async (req) => {
       const monthsSinceLastAdj = (today.getFullYear() - lastAdjDate.getFullYear()) * 12 
         + (today.getMonth() - lastAdjDate.getMonth());
 
-      // Index adjustment typically allowed after 12 months
       if (monthsSinceLastAdj < 12) continue;
 
-      // Calculate new rent
       const indexChange = ((latestVpi.value - baseIndex) / baseIndex) * 100;
       const minChange = settings.index_min_change_percent || 0;
       
@@ -106,7 +124,6 @@ serve(async (req) => {
       const newRentCents = Math.round(baseRent * (latestVpi.value / baseIndex));
       const differenceCents = newRentCents - baseRent;
 
-      // Determine status
       let status: 'due' | 'recently_adjusted' | 'not_eligible' = 'due';
       if (monthsSinceLastAdj < 15) {
         status = 'recently_adjusted';
@@ -135,14 +152,12 @@ serve(async (req) => {
       });
     }
 
-    // Sort by status (due first) then by difference amount
     eligibleAdjustments.sort((a, b) => {
       if (a.status === 'due' && b.status !== 'due') return -1;
       if (a.status !== 'due' && b.status === 'due') return 1;
       return b.differenceCents - a.differenceCents;
     });
 
-    // Calculate summary stats
     const dueCount = eligibleAdjustments.filter(a => a.status === 'due').length;
     const totalPotentialIncrease = eligibleAdjustments
       .filter(a => a.status === 'due')

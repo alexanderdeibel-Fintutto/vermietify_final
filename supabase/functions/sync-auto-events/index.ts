@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,7 +12,31 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate the user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Use service role for creating events
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -56,7 +80,6 @@ serve(async (req) => {
       const reminderDate = new Date(endDate);
       reminderDate.setMonth(reminderDate.getMonth() - 3);
 
-      // Only create if reminder date is in the future and no event exists
       if (reminderDate > now) {
         const { data: existing } = await supabase
           .from('calendar_events')
@@ -81,7 +104,7 @@ serve(async (req) => {
               related_type: 'contract',
               related_id: lease.id,
               is_auto_generated: true,
-              reminder_minutes: [1440, 10080] // 1 day, 1 week
+              reminder_minutes: [1440, 10080]
             })
             .select()
             .single();
@@ -117,7 +140,6 @@ serve(async (req) => {
       .eq('tenant.organization_id', organization_id)
       .eq('is_active', true);
 
-    // Create payment events for next 3 months
     for (const lease of activeLeases || []) {
       const paymentDay = lease.payment_day || 1;
       
@@ -155,7 +177,7 @@ serve(async (req) => {
                 related_type: 'contract',
                 related_id: lease.id,
                 is_auto_generated: true,
-                reminder_minutes: [1440] // 1 day before
+                reminder_minutes: [1440]
               })
               .select()
               .single();
@@ -216,7 +238,7 @@ serve(async (req) => {
             related_type: 'handover',
             related_id: handover.id,
             is_auto_generated: true,
-            reminder_minutes: [60, 1440] // 1 hour, 1 day
+            reminder_minutes: [60, 1440]
           })
           .select()
           .single();

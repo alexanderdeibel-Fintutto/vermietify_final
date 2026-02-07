@@ -1,6 +1,7 @@
- import { useState, useCallback } from "react";
- import { supabase } from "@/integrations/supabase/client";
- import { useToast } from "@/hooks/use-toast";
+import { useState, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
  
  type Message = {
    role: "user" | "assistant";
@@ -12,34 +13,41 @@
    userData?: Record<string, any>;
  }
  
- export function useAIChat(options: UseAIChatOptions = {}) {
-   const [messages, setMessages] = useState<Message[]>([]);
-   const [isLoading, setIsLoading] = useState(false);
-   const { toast } = useToast();
- 
-   const sendMessage = useCallback(async (userMessage: string) => {
-     const userMsg: Message = { role: "user", content: userMessage };
-     setMessages((prev) => [...prev, userMsg]);
-     setIsLoading(true);
- 
-     let assistantContent = "";
- 
-     try {
-       const response = await fetch(
-         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`,
-         {
-           method: "POST",
-           headers: {
-             "Content-Type": "application/json",
-             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-           },
-           body: JSON.stringify({
-             messages: [...messages, userMsg],
-             context: options.context,
-             userData: options.userData,
-           }),
-         }
-       );
+export function useAIChat(options: UseAIChatOptions = {}) {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
+  
+    const sendMessage = useCallback(async (userMessage: string) => {
+      const userMsg: Message = { role: "user", content: userMessage };
+      setMessages((prev) => [...prev, userMsg]);
+      setIsLoading(true);
+  
+      let assistantContent = "";
+  
+      try {
+        // Get the current session token for authentication
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+        if (!token) {
+          throw new Error("Nicht angemeldet. Bitte melden Sie sich an.");
+        }
+
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              messages: [...messages, userMsg],
+              context: options.context,
+              userData: options.userData,
+            }),
+          }
+        );
  
        if (!response.ok) {
          const error = await response.json();
