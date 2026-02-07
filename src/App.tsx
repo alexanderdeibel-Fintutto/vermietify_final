@@ -432,6 +432,11 @@ const App = () => (
                 <Settings />
               </ProtectedRoute>
             } />
+            <Route path="/einstellungen" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
             <Route path="/payment-success" element={
               <ProtectedRoute>
                 <PaymentSuccess />
