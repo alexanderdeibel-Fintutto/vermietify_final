@@ -202,7 +202,7 @@
   body {
     @apply text-foreground font-sans antialiased;
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(160deg, hsl(250 50% 14%) 0%, hsl(270 45% 28%) 30%, hsl(280 55% 38%) 50%, hsl(15 70% 48%) 80%, hsl(20 85% 58%) 100%);
+    background: linear-gradient(170deg, hsl(260 50% 12%) 0%, hsl(265 45% 18%) 25%, hsl(270 40% 26%) 50%, hsl(280 50% 35%) 75%, hsl(15 65% 45%) 100%);
     background-attachment: fixed;
     min-height: 100vh;
   }
