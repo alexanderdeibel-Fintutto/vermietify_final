@@ -57,6 +57,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import vermietifyLogo from "@/assets/vermietify-logo.svg";
 
 const navigationItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -121,10 +122,8 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r-0 [&_[data-sidebar=sidebar]]:!bg-[linear-gradient(180deg,hsl(250_50%_18%)_0%,hsl(280_55%_38%)_55%,hsl(20_80%_55%)_100%)] dark:[&_[data-sidebar=sidebar]]:!bg-[linear-gradient(180deg,hsl(260_45%_10%)_0%,hsl(270_40%_20%)_55%,hsl(20_60%_30%)_100%)]">
       <SidebarHeader className="p-4">
-        <div className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
-            <Building2 className="h-6 w-6 text-white" />
-          </div>
+        <div className="flex items-center gap-3">
+          <img src={vermietifyLogo} alt="Vermietify Logo" className="h-10 w-10 rounded-lg" />
           <div className="flex flex-col">
             <span className="text-lg font-bold text-white">Vermietify</span>
             <span className="text-xs text-white/70">Immobilienverwaltung</span>
