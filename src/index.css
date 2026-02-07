@@ -61,15 +61,15 @@
 
     --radius: 0.5rem;
 
-    /* Sidebar - Darker theme */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 200 98% 39%;
-    --sidebar-primary-foreground: 204 100% 97%;
-    --sidebar-accent: 215 24% 26%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 212 26% 83%;
-    --sidebar-ring: 200 98% 39%;
+    /* Sidebar - Gradient theme */
+    --sidebar-background: 217 91% 53%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 217 91% 53%;
+    --sidebar-accent: 217 91% 60%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 243 75% 65%;
+    --sidebar-ring: 0 0% 100%;
 
     /* Gradient */
     --gradient-primary: linear-gradient(135deg, hsl(217 91% 53%) 0%, hsl(243 75% 59%) 100%);
@@ -155,14 +155,14 @@
     --input: 215 19% 34%;
     --ring: 198 93% 59%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 198 93% 59%;
-    --sidebar-primary-foreground: 204 80% 15%;
-    --sidebar-accent: 215 20% 65%;
-    --sidebar-accent-foreground: 228 84% 4%;
-    --sidebar-border: 215 19% 34%;
-    --sidebar-ring: 198 93% 59%;
+    --sidebar-background: 230 50% 18%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 230 50% 18%;
+    --sidebar-accent: 243 50% 30%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 243 40% 35%;
+    --sidebar-ring: 0 0% 100%;
     --primary-glow: 45 100% 60%;
     --secondary-glow: 20 100% 60%;
     --glass-bg: 25 15% 12% / 0.8;

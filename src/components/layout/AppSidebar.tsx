@@ -119,20 +119,20 @@ export function AppSidebar() {
     subItems.some(item => location.pathname === item.url || location.pathname.startsWith(item.url.split('#')[0]));
 
   return (
-    <Sidebar className="border-r-0">
+    <Sidebar className="border-r-0 [&_[data-sidebar=sidebar]]:!bg-[linear-gradient(180deg,hsl(217_91%_53%)_0%,hsl(243_75%_59%)_100%)] dark:[&_[data-sidebar=sidebar]]:!bg-[linear-gradient(180deg,hsl(230_50%_22%)_0%,hsl(243_40%_18%)_100%)]">
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-primary">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
             <Building2 className="h-6 w-6 text-white" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-bold text-sidebar-foreground">Vermietify</span>
-            <span className="text-xs text-sidebar-foreground/60">Immobilienverwaltung</span>
+            <span className="text-lg font-bold text-white">Vermietify</span>
+            <span className="text-xs text-white/70">Immobilienverwaltung</span>
           </div>
         </div>
       </SidebarHeader>
 
-      <SidebarSeparator />
+      <SidebarSeparator className="bg-white/20" />
 
       <SidebarContent>
         <SidebarGroup>
@@ -194,7 +194,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarSeparator />
+      <SidebarSeparator className="bg-white/20" />
 
       <SidebarFooter className="p-2">
         <SidebarMenu>
@@ -216,26 +216,26 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        <SidebarSeparator className="my-2" />
+        <SidebarSeparator className="my-2 bg-white/20" />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-sidebar-accent">
+            <button className="flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-white/10">
               <Avatar className="h-9 w-9">
                 <AvatarImage src={profile?.avatar_url || undefined} />
-                <AvatarFallback className="bg-primary text-primary-foreground">
+                <AvatarFallback className="bg-white/20 text-white">
                   {getInitials()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 overflow-hidden">
-                <p className="truncate text-sm font-medium text-sidebar-foreground">
+                <p className="truncate text-sm font-medium text-white">
                   {getUserName()}
                 </p>
-                <p className="truncate text-xs text-sidebar-foreground/60">
+                <p className="truncate text-xs text-white/60">
                   {user?.email}
                 </p>
               </div>
-              <ChevronDown className="h-4 w-4 text-sidebar-foreground/60" />
+              <ChevronDown className="h-4 w-4 text-white/60" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="top" align="start" className="w-56">
