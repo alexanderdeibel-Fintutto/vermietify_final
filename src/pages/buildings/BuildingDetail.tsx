@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useBuildings } from "@/hooks/useBuildings";
 import { UnitFormDialog } from "@/components/buildings/UnitFormDialog";
+import { BuildingEditDialog } from "@/components/buildings/BuildingEditDialog";
 import { BuildingOverviewTab } from "@/components/buildings/BuildingOverviewTab";
 import { BuildingUnitsTab } from "@/components/buildings/BuildingUnitsTab";
 import { BuildingDocumentsTab } from "@/components/buildings/BuildingDocumentsTab";
@@ -19,6 +20,7 @@ export default function BuildingDetail() {
   const { useBuilding } = useBuildings();
   const { data: building, isLoading, error } = useBuilding(id);
   const [unitDialogOpen, setUnitDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
   if (isLoading) {
@@ -79,7 +81,7 @@ export default function BuildingDetail() {
           subtitle={fullAddress}
           actions={
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => navigate(`/gebaeude/${id}/bearbeiten`)}>
+              <Button variant="outline" onClick={() => setEditDialogOpen(true)}>
                 <Edit className="h-4 w-4 mr-2" />
                 Bearbeiten
               </Button>
@@ -124,6 +126,12 @@ export default function BuildingDetail() {
         open={unitDialogOpen}
         onOpenChange={setUnitDialogOpen}
         buildingId={building.id}
+      />
+
+      <BuildingEditDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        building={building}
       />
     </MainLayout>
   );
