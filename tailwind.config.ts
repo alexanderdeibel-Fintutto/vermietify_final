@@ -15,7 +15,7 @@ export default {
   	extend: {
   		fontFamily: {
   			sans: [
-  				'Roboto',
+  				'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'sans-serif',
@@ -25,7 +25,6 @@ export default {
   				'Noto Color Emoji'
   			],
   			mono: [
-  				'Roboto Mono',
   				'ui-monospace',
   				'SFMono-Regular',
   				'Menlo',
@@ -36,7 +35,6 @@ export default {
   				'monospace'
   			],
   			serif: [
-  				'Libre Caslon Text',
   				'ui-serif',
   				'Georgia',
   				'Cambria',
