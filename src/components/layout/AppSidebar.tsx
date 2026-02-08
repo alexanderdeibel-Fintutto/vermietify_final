@@ -92,6 +92,8 @@ const navigationItems = [
       { title: "E-Mail verfassen", url: "/kommunikation/senden" },
       { title: "E-Mail-Vorlagen", url: "/kommunikation/vorlagen" },
       { title: "E-Mail-Verlauf", url: "/kommunikation/verlauf" },
+      { title: "E-Mail-Eingang", url: "/kommunikation/eingang" },
+      { title: "Empfangsadresse", url: "/kommunikation/empfang" },
     ]
   },
 ];

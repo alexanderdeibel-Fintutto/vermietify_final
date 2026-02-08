@@ -107,6 +107,10 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  import ComposeEmail from "./pages/communication/ComposeEmail";
  import EmailHistory from "./pages/communication/EmailHistory";
 
+ // Inbound Email Pages
+ import InboundEmailSettings from "./pages/inbound/InboundEmailSettings";
+ import InboundEmailQueue from "./pages/inbound/InboundEmailQueue";
+
  // Listings Pages
  import ListingsManagement from "./pages/listings/ListingsManagement";
 
@@ -401,6 +405,16 @@ const App = () => (
             <Route path="/kommunikation/verlauf" element={
               <ProtectedRoute>
                 <EmailHistory />
+              </ProtectedRoute>
+             } />
+            <Route path="/kommunikation/eingang" element={
+              <ProtectedRoute>
+                <InboundEmailQueue />
+              </ProtectedRoute>
+            } />
+            <Route path="/kommunikation/empfang" element={
+              <ProtectedRoute>
+                <InboundEmailSettings />
               </ProtectedRoute>
             } />
             <Route path="/inserate" element={

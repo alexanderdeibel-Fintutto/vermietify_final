@@ -1783,6 +1783,138 @@ export type Database = {
           },
         ]
       }
+      inbound_email_addresses: {
+        Row: {
+          allowed_senders: string[]
+          created_at: string
+          email_prefix: string
+          full_address: string
+          id: string
+          is_active: boolean
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_senders?: string[]
+          created_at?: string
+          email_prefix: string
+          full_address: string
+          id?: string
+          is_active?: boolean
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_senders?: string[]
+          created_at?: string
+          email_prefix?: string
+          full_address?: string
+          id?: string
+          is_active?: boolean
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbound_email_addresses_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inbound_emails: {
+        Row: {
+          amount_cents: number | null
+          attachments: Json
+          body_text: string | null
+          created_at: string
+          from_email: string
+          id: string
+          invoice_date: string | null
+          invoice_number: string | null
+          matched_building_id: string | null
+          matched_cost_type_id: string | null
+          organization_id: string
+          processed_at: string | null
+          processed_by: string | null
+          processing_result: Json | null
+          received_at: string
+          review_notes: string | null
+          status: string
+          subject: string | null
+          updated_at: string
+          vendor_name: string | null
+        }
+        Insert: {
+          amount_cents?: number | null
+          attachments?: Json
+          body_text?: string | null
+          created_at?: string
+          from_email: string
+          id?: string
+          invoice_date?: string | null
+          invoice_number?: string | null
+          matched_building_id?: string | null
+          matched_cost_type_id?: string | null
+          organization_id: string
+          processed_at?: string | null
+          processed_by?: string | null
+          processing_result?: Json | null
+          received_at?: string
+          review_notes?: string | null
+          status?: string
+          subject?: string | null
+          updated_at?: string
+          vendor_name?: string | null
+        }
+        Update: {
+          amount_cents?: number | null
+          attachments?: Json
+          body_text?: string | null
+          created_at?: string
+          from_email?: string
+          id?: string
+          invoice_date?: string | null
+          invoice_number?: string | null
+          matched_building_id?: string | null
+          matched_cost_type_id?: string | null
+          organization_id?: string
+          processed_at?: string | null
+          processed_by?: string | null
+          processing_result?: Json | null
+          received_at?: string
+          review_notes?: string | null
+          status?: string
+          subject?: string | null
+          updated_at?: string
+          vendor_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbound_emails_matched_building_id_fkey"
+            columns: ["matched_building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inbound_emails_matched_cost_type_id_fkey"
+            columns: ["matched_cost_type_id"]
+            isOneToOne: false
+            referencedRelation: "cost_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inbound_emails_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lease_rent_settings: {
         Row: {
           created_at: string

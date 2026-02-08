@@ -62,3 +62,6 @@ verify_jwt = false
 
 [functions.extract-import-data]
 verify_jwt = false
+
+[functions.process-inbound-email]
+verify_jwt = false
