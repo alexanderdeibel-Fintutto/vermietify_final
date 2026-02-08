@@ -77,6 +77,7 @@ const navigationItems = [
     subItems: [
       { title: "Übersicht", url: "/tenants" },
       { title: "Verträge", url: "/vertraege" },
+      { title: "Unterschriften", url: "/unterschriften" },
       { title: "Mietanpassungen", url: "/miete/anpassungen" },
       { title: "Inserate", url: "/inserate" },
     ]
@@ -92,7 +93,7 @@ const navigationItems = [
       { title: "CO₂-Kosten", url: "/co2" },
     ]
   },
-  { title: "Unterschriften", url: "/unterschriften", icon: PenTool },
+  
   { title: "WhatsApp", url: "/whatsapp", icon: MessageCircle },
   { title: "Dokumente", url: "/documents", icon: FileText },
   { title: "Steuern", url: "/taxes", icon: Receipt },
