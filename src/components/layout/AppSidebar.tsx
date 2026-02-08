@@ -67,7 +67,7 @@ const navigationItems = [
     icon: Building2,
     subItems: [
       { title: "Gebäude", url: "/properties" },
-      { title: "Einheiten", url: "/properties#einheiten" },
+      { title: "Einheiten", url: "/einheiten" },
     ]
   },
   { title: "Mieter", url: "/tenants", icon: Users },

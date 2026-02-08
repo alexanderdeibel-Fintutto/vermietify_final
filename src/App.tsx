@@ -29,6 +29,7 @@ import NotFound from "./pages/NotFound";
 // New Detail Pages
 import BuildingDetail from "./pages/buildings/BuildingDetail";
 import UnitDetail from "./pages/einheiten/UnitDetail";
+import UnitsList from "./pages/units/UnitsList";
 import TenantDetail from "./pages/tenants/TenantDetail";
 import TenantDetailNew from "./pages/mieter/TenantDetail";
 import ContractList from "./pages/contracts/ContractList";
@@ -160,6 +161,11 @@ const App = () => (
             <Route path="/gebaeude/:id" element={
               <ProtectedRoute>
                 <BuildingDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/einheiten" element={
+              <ProtectedRoute>
+                <UnitsList />
               </ProtectedRoute>
             } />
             <Route path="/einheiten/:id" element={
