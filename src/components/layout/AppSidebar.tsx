@@ -61,26 +61,31 @@ import vermietifyLogo from "@/assets/vermietify-logo.svg";
 
 const navigationItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Kalender", url: "/kalender", icon: CalendarDays },
   { 
     title: "Immobilien", 
     icon: Building2,
     subItems: [
       { title: "Gebäude", url: "/properties" },
       { title: "Einheiten", url: "/einheiten" },
+      { title: "Betriebskosten", url: "/betriebskosten" },
+      { title: "Zähler", url: "/zaehler" },
     ]
   },
-  { title: "Mieter", url: "/tenants", icon: Users },
-  { title: "Verträge", url: "/vertraege", icon: FileSignature },
+  { 
+    title: "Mieter", 
+    icon: Users,
+    subItems: [
+      { title: "Übersicht", url: "/tenants" },
+      { title: "Verträge", url: "/vertraege" },
+      { title: "Mietanpassungen", url: "/miete/anpassungen" },
+      { title: "Inserate", url: "/inserate" },
+    ]
+  },
   { title: "Zahlungen", url: "/zahlungen", icon: CreditCard },
-  { title: "Mietanpassungen", url: "/miete/anpassungen", icon: TrendingUp },
-  { title: "Inserate", url: "/inserate", icon: Home },
+  { title: "Kalender", url: "/kalender", icon: CalendarDays },
+  { title: "Aufgaben", url: "/aufgaben", icon: CheckSquare },
   { title: "Automatisierung", url: "/automatisierung", icon: Zap },
   { title: "CO2-Kosten", url: "/co2", icon: Leaf },
-  { title: "Betriebskosten", url: "/betriebskosten", icon: Receipt },
-  { title: "Zähler", url: "/zaehler", icon: Gauge },
-  { title: "Aufgaben", url: "/aufgaben", icon: CheckSquare },
-  { title: "Briefversand", url: "/briefe", icon: Mail },
   { title: "Unterschriften", url: "/unterschriften", icon: PenTool },
   { title: "WhatsApp", url: "/whatsapp", icon: MessageCircle },
   { title: "Dokumente", url: "/documents", icon: FileText },
@@ -204,6 +209,14 @@ export function AppSidebar() {
               <NavLink to="/hilfe" className="flex items-center gap-3">
                 <HelpCircle className="h-5 w-5" />
                 <span>Hilfe</span>
+              </NavLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive={location.pathname === '/briefe' || location.pathname.startsWith('/briefe')}>
+              <NavLink to="/briefe" className="flex items-center gap-3">
+                <Mail className="h-5 w-5" />
+                <span>Briefversand</span>
               </NavLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
