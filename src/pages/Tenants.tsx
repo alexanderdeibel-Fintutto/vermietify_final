@@ -8,12 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Users, Plus, Search, Mail, Phone, Home, Loader2 } from "lucide-react";
+import { Users, Plus, Search, Mail, Phone, Home, Loader2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { tenantSchema } from "@/lib/validationSchemas";
 import { sanitizeErrorMessage } from "@/lib/errorHandler";
+import { BulkImportDialog } from "@/components/import/BulkImportDialog";
 
 interface Tenant {
   id: string;
@@ -34,6 +35,7 @@ export default function Tenants() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [newTenant, setNewTenant] = useState({
@@ -155,13 +157,18 @@ export default function Tenants() {
               Verwalten Sie Ihre Mieterdatenbank
             </p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Mieter hinzufügen
-              </Button>
-            </DialogTrigger>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setIsImportDialogOpen(true)}>
+              <Upload className="mr-2 h-4 w-4" />
+              PDF/CSV Import
+            </Button>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Mieter hinzufügen
+                </Button>
+              </DialogTrigger>
             <DialogContent className="sm:max-w-lg">
               <form onSubmit={handleCreateTenant}>
                 <DialogHeader>
@@ -255,6 +262,7 @@ export default function Tenants() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {/* Search */}
@@ -371,6 +379,14 @@ export default function Tenants() {
           </CardContent>
         </Card>
       </div>
+
+      <BulkImportDialog
+        open={isImportDialogOpen}
+        onOpenChange={setIsImportDialogOpen}
+        type="tenants"
+        organizationId={profile?.organization_id}
+        onSuccess={() => fetchTenants()}
+      />
     </MainLayout>
   );
 }

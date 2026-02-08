@@ -39,6 +39,62 @@ Wenn kein expliziter Name vorhanden ist, generiere einen aus der Adresse (z.B. "
 Antworte AUSSCHLIESSLICH mit einem JSON-Array. Kein erklärender Text.
 Beispiel: [{"name":"Musterstraße 5","address":"Musterstraße 5","postal_code":"12345","city":"Berlin","building_type":"apartment","year_built":1990,"total_area":450,"notes":null}]`;
 
+const TENANTS_PROMPT = `Du bist ein Experte für die Analyse von Immobilien- und Mieterdokumenten.
+Extrahiere aus dem folgenden Dokument eine Liste von Mietern/Personen.
+Für jeden Mieter extrahiere folgende Felder (soweit vorhanden):
+- first_name: Vorname
+- last_name: Nachname
+- email: E-Mail-Adresse
+- phone: Telefonnummer
+- address: Straße und Hausnummer (aktuelle Wohnadresse)
+- postal_code: Postleitzahl
+- city: Stadt/Ort
+- unit_reference: Falls erkennbar, die Wohnungsnummer oder Einheitsbezeichnung zu der der Mieter gehört (z.B. "Whg. 1", "3.OG rechts")
+- notes: Sonstige relevante Informationen (z.B. Einzugsdatum, Besonderheiten)
+
+Antworte AUSSCHLIESSLICH mit einem JSON-Array. Kein erklärender Text.
+Beispiel: [{"first_name":"Max","last_name":"Mustermann","email":"max@example.de","phone":"+49 170 1234567","address":"Musterstraße 5","postal_code":"12345","city":"Berlin","unit_reference":"Whg. 1","notes":"Einzug: 01.01.2023"}]`;
+
+const CONTRACTS_PROMPT = `Du bist ein Experte für die Analyse von Mietverträgen und Immobiliendokumenten.
+Extrahiere aus dem folgenden Dokument eine Liste von Mietverträgen.
+Für jeden Vertrag extrahiere folgende Felder (soweit vorhanden):
+- tenant_first_name: Vorname des Mieters
+- tenant_last_name: Nachname des Mieters
+- tenant_email: E-Mail des Mieters (falls vorhanden)
+- unit_reference: Wohnungsnummer oder Bezeichnung (z.B. "Whg. 1", "EG links")
+- building_reference: Gebäudename oder Adresse (z.B. "Musterstraße 5")
+- start_date: Vertragsbeginn im Format YYYY-MM-DD
+- end_date: Vertragsende im Format YYYY-MM-DD (null bei unbefristeten Verträgen)
+- rent_amount: Kaltmiete in Euro-Cent als Ganzzahl (z.B. 85000 für 850€). Wenn in Euro, multipliziere mit 100.
+- utility_advance: Nebenkostenvorauszahlung in Euro-Cent als Ganzzahl
+- deposit_amount: Kaution in Euro-Cent als Ganzzahl
+- payment_day: Zahltag im Monat als Zahl (z.B. 1 für den 1. des Monats)
+- notes: Sonstige relevante Informationen
+
+Antworte AUSSCHLIESSLICH mit einem JSON-Array. Kein erklärender Text.
+Beispiel: [{"tenant_first_name":"Max","tenant_last_name":"Mustermann","tenant_email":null,"unit_reference":"Whg. 1","building_reference":"Musterstraße 5","start_date":"2023-01-01","end_date":null,"rent_amount":85000,"utility_advance":15000,"deposit_amount":255000,"payment_day":1,"notes":"Unbefristet"}]`;
+
+const PROMPTS: Record<string, string> = {
+  units: UNITS_PROMPT,
+  buildings: BUILDINGS_PROMPT,
+  tenants: TENANTS_PROMPT,
+  contracts: CONTRACTS_PROMPT,
+};
+
+const ENTITY_LABELS: Record<string, string> = {
+  units: "Wohneinheiten",
+  buildings: "Gebäude",
+  tenants: "Mieter",
+  contracts: "Mietverträge",
+};
+
+const ENTITY_HINTS: Record<string, string> = {
+  units: "Wohnungsliste (Nummern, Flächen, Mieten)",
+  buildings: "Gebäudeliste (Adressen, Städte)",
+  tenants: "Mieterliste (Namen, Kontaktdaten)",
+  contracts: "Mietvertragsdaten (Mieter, Einheiten, Mieten, Laufzeiten)",
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -77,12 +133,18 @@ serve(async (req) => {
       );
     }
 
+    const systemPrompt = PROMPTS[type];
+    if (!systemPrompt) {
+      return new Response(
+        JSON.stringify({ error: `Unbekannter Typ: ${type}. Erlaubt: units, buildings, tenants, contracts` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
-
-    const systemPrompt = type === "units" ? UNITS_PROMPT : BUILDINGS_PROMPT;
 
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
@@ -144,11 +206,12 @@ serve(async (req) => {
     const parsed = JSON.parse(jsonMatch[0]);
 
     if (!Array.isArray(parsed) || parsed.length === 0) {
-      const entityLabel = type === "units" ? "Wohneinheiten" : "Gebäude";
+      const label = ENTITY_LABELS[type] || type;
+      const hint = ENTITY_HINTS[type] || "";
       return new Response(
         JSON.stringify({
           success: false,
-          error: `Es konnten keine ${entityLabel} aus dem Dokument extrahiert werden. Bitte stellen Sie sicher, dass die Datei eine ${entityLabel === "Wohneinheiten" ? "Wohnungsliste (Nummern, Flächen, Mieten)" : "Gebäudeliste (Adressen, Städte)"} enthält.`,
+          error: `Es konnten keine ${label} aus dem Dokument extrahiert werden. Bitte stellen Sie sicher, dass die Datei ${hint} enthält.`,
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );

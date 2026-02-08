@@ -23,13 +23,16 @@ import {
   AlertTriangle,
   XCircle,
   Building2,
+  Upload,
 } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useContracts } from "@/hooks/useContracts";
 import { useBuildings } from "@/hooks/useBuildings";
+import { useAuth } from "@/hooks/useAuth";
 import { format, addMonths, isWithinInterval, startOfMonth, endOfMonth } from "date-fns";
 import { de } from "date-fns/locale";
 import { formatCurrency } from "@/lib/utils";
+import { BulkImportDialog } from "@/components/import/BulkImportDialog";
 
 type ContractStatus = "active" | "terminated" | "expiring" | "expired";
 
@@ -55,15 +58,17 @@ function getContractStatus(contract: any): ContractStatus {
 
 export default function ContractList() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const { useContractsList } = useContracts();
   const { useBuildingsList } = useBuildings();
   
-  const { data: contracts, isLoading } = useContractsList();
+  const { data: contracts, isLoading, refetch } = useContractsList();
   const { data: buildings } = useBuildingsList();
   
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [buildingFilter, setBuildingFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
   // Calculate statistics
   const stats = useMemo(() => {
@@ -218,12 +223,18 @@ export default function ContractList() {
         <PageHeader
           title="Mietverträge"
           actions={
-            <Button asChild>
-              <Link to="/vertraege/neu">
-                <Plus className="h-4 w-4 mr-2" />
-                Neuer Vertrag
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setIsImportDialogOpen(true)}>
+                <Upload className="h-4 w-4 mr-2" />
+                PDF/CSV Import
+              </Button>
+              <Button asChild>
+                <Link to="/vertraege/neu">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Neuer Vertrag
+                </Link>
+              </Button>
+            </div>
           }
         />
 
@@ -344,6 +355,14 @@ export default function ContractList() {
           </Card>
         )}
       </div>
+
+      <BulkImportDialog
+        open={isImportDialogOpen}
+        onOpenChange={setIsImportDialogOpen}
+        type="contracts"
+        organizationId={profile?.organization_id}
+        onSuccess={() => refetch()}
+      />
     </MainLayout>
   );
 }
