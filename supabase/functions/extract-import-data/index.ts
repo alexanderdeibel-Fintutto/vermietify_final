@@ -143,6 +143,17 @@ serve(async (req) => {
 
     const parsed = JSON.parse(jsonMatch[0]);
 
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      const entityLabel = type === "units" ? "Wohneinheiten" : "Gebäude";
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `Es konnten keine ${entityLabel} aus dem Dokument extrahiert werden. Bitte stellen Sie sicher, dass die Datei eine ${entityLabel === "Wohneinheiten" ? "Wohnungsliste (Nummern, Flächen, Mieten)" : "Gebäudeliste (Adressen, Städte)"} enthält.`,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     return new Response(
       JSON.stringify({ success: true, data: parsed }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }

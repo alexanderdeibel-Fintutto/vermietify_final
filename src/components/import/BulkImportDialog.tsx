@@ -186,7 +186,7 @@ export function BulkImportDialog({
       );
 
       if (error) throw new Error(error.message);
-      if (!data?.success) throw new Error(data?.error || "Extraktion fehlgeschlagen");
+      if (!data?.success) throw new Error(data?.error || "Extraktion fehlgeschlagen. Bitte prüfen Sie, ob die Datei relevante Immobiliendaten enthält.");
 
       if (type === "units") {
         const units = (data.data as ExtractedUnit[]).map((u) => ({
