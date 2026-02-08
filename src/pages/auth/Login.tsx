@@ -67,15 +67,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Decorative half-circle gradient at bottom center */}
-      <div
-        className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-40"
-        style={{
-          background: 'radial-gradient(circle, hsl(20 85% 58%) 0%, hsl(280 60% 45%) 40%, hsl(250 50% 20%) 70%, transparent 100%)',
-        }}
-      />
-      <div className="w-full max-w-md relative z-10">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-3">
             <img src={vermietifyLogo} alt="Vermietify Logo" className="h-12 w-12 rounded-xl" />
