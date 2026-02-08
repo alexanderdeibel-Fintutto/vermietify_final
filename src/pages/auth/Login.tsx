@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { Building2, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import vermietifyLogo from "@/assets/vermietify-logo.svg";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -70,9 +71,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl gradient-primary">
-              <Building2 className="h-7 w-7 text-white" />
-            </div>
+            <img src={vermietifyLogo} alt="Vermietify Logo" className="h-12 w-12 rounded-xl" />
             <div>
               <h1 className="text-2xl font-bold">Vermietify</h1>
               <p className="text-sm text-muted-foreground">Immobilienverwaltung</p>
