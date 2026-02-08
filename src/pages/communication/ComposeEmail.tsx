@@ -108,7 +108,7 @@ export default function ComposeEmail() {
 
   // Load template
   useEffect(() => {
-    if (selectedTemplate) {
+    if (selectedTemplate && selectedTemplate !== "none") {
       const template = templates.find((t) => t.id === selectedTemplate);
       if (template) {
         setSubject(template.subject);
@@ -144,7 +144,7 @@ export default function ComposeEmail() {
     }
 
     sendEmail.mutate({
-      templateId: selectedTemplate || undefined,
+      templateId: selectedTemplate && selectedTemplate !== "none" ? selectedTemplate : undefined,
       recipientIds: finalRecipients,
       subject,
       body_html: bodyHtml,
@@ -214,7 +214,7 @@ export default function ComposeEmail() {
                     <SelectValue placeholder="Vorlage auswählen (optional)" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Keine Vorlage</SelectItem>
+                    <SelectItem value="none">Keine Vorlage</SelectItem>
                     {templates.map((t) => (
                       <SelectItem key={t.id} value={t.id}>
                         <span className="flex items-center gap-2">
