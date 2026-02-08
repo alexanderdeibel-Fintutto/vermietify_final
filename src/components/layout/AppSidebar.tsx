@@ -82,7 +82,17 @@ const navigationItems = [
       { title: "Inserate", url: "/inserate" },
     ]
   },
-  { title: "Zahlungen", url: "/zahlungen", icon: CreditCard },
+  { 
+    title: "Finanzen", 
+    icon: CreditCard,
+    subItems: [
+      { title: "Zahlungen", url: "/zahlungen" },
+      { title: "Banking", url: "/banking" },
+      { title: "Transaktionen", url: "/banking/transaktionen" },
+      { title: "Konto verbinden", url: "/banking/verbinden" },
+      { title: "Zuordnungsregeln", url: "/banking/regeln" },
+    ]
+  },
   { title: "Kalender", url: "/kalender", icon: CalendarDays },
   { title: "Aufgaben", url: "/aufgaben", icon: CheckSquare },
   { title: "Automatisierung", url: "/automatisierung", icon: Zap },

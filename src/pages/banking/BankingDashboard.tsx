@@ -1,28 +1,31 @@
- import { useState } from "react";
- import { MainLayout } from "@/components/layout/MainLayout";
- import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
- import { Button } from "@/components/ui/button";
- import { Badge } from "@/components/ui/badge";
- import { 
-   Building2, 
-   CreditCard, 
-   RefreshCw, 
-   Plus, 
-   ArrowUpRight, 
-   ArrowDownRight,
-   AlertCircle,
-   CheckCircle,
-   Clock,
-   ExternalLink,
-   Trash2,
-   List
- } from "lucide-react";
- import { useBanking } from "@/hooks/useBanking";
- import { LoadingState } from "@/components/shared/LoadingState";
- import { Link } from "react-router-dom";
- import { format } from "date-fns";
- import { de } from "date-fns/locale";
- import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { useState } from "react";
+import { MainLayout } from "@/components/layout/MainLayout";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Building2, 
+  CreditCard, 
+  RefreshCw, 
+  Plus, 
+  ArrowUpRight, 
+  ArrowDownRight,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  ExternalLink,
+  Trash2,
+  List,
+  Upload,
+} from "lucide-react";
+import { useBanking } from "@/hooks/useBanking";
+import { LoadingState } from "@/components/shared/LoadingState";
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import { de } from "date-fns/locale";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { ManualAccountDialog } from "@/components/banking/ManualAccountDialog";
+import { TransactionImportDialog } from "@/components/banking/TransactionImportDialog";
  
  const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline"; icon: React.ReactNode }> = {
    connected: { label: "Verbunden", variant: "default", icon: <CheckCircle className="h-3 w-3" /> },
@@ -42,8 +45,9 @@
      syncTransactions, 
      deleteConnection 
    } = useBanking();
-   const [deleteConnectionId, setDeleteConnectionId] = useState<string | null>(null);
- 
+  const [deleteConnectionId, setDeleteConnectionId] = useState<string | null>(null);
+  const [showManualDialog, setShowManualDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
    const { data: transactions = [] } = useTransactions({});
    
    // Stats calculations
@@ -85,20 +89,28 @@
              <h1 className="text-3xl font-bold tracking-tight">Banking & Konten</h1>
              <p className="text-muted-foreground">Verwalten Sie Ihre Bankverbindungen und Transaktionen</p>
            </div>
-           <div className="flex gap-2">
-             <Button variant="outline" asChild>
-               <Link to="/banking/transaktionen">
-                 <List className="h-4 w-4 mr-2" />
-                 Transaktionen
-               </Link>
-             </Button>
-             <Button asChild>
-               <Link to="/banking/verbinden">
-                 <Plus className="h-4 w-4 mr-2" />
-                 Konto verbinden
-               </Link>
-             </Button>
-           </div>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" asChild>
+                <Link to="/banking/transaktionen">
+                  <List className="h-4 w-4 mr-2" />
+                  Transaktionen
+                </Link>
+              </Button>
+              <Button variant="outline" onClick={() => setShowImportDialog(true)}>
+                <Upload className="h-4 w-4 mr-2" />
+                CSV/PDF Import
+              </Button>
+              <Button variant="outline" onClick={() => setShowManualDialog(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Konto anlegen
+              </Button>
+              <Button asChild>
+                <Link to="/banking/verbinden">
+                  <Building2 className="h-4 w-4 mr-2" />
+                  API verbinden
+                </Link>
+              </Button>
+            </div>
          </div>
  
          {/* Stats */}
@@ -214,21 +226,27 @@
            </div>
  
            {accounts.length === 0 ? (
-             <Card>
-               <CardContent className="p-12 text-center">
-                 <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                 <h3 className="text-lg font-medium mb-2">Noch keine Konten verbunden</h3>
-                 <p className="text-muted-foreground mb-4">
-                   Verbinden Sie Ihr Bankkonto, um Transaktionen automatisch zu importieren
-                 </p>
-                 <Button asChild>
-                   <Link to="/banking/verbinden">
-                     <Plus className="h-4 w-4 mr-2" />
-                     Konto verbinden
-                   </Link>
-                 </Button>
-               </CardContent>
-             </Card>
+              <Card>
+                <CardContent className="p-12 text-center">
+                  <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-medium mb-2">Noch keine Konten eingerichtet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Verbinden Sie per API oder legen Sie ein Konto manuell an, um Transaktionen zu importieren
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    <Button asChild>
+                      <Link to="/banking/verbinden">
+                        <Building2 className="h-4 w-4 mr-2" />
+                        Per API verbinden
+                      </Link>
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowManualDialog(true)}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Konto manuell anlegen
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
            ) : (
              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                {accounts.map((account) => {
@@ -305,19 +323,32 @@
            )}
          </div>
  
-         {/* Confirm Delete Dialog */}
-         <ConfirmDialog
-           open={!!deleteConnectionId}
-           onOpenChange={() => setDeleteConnectionId(null)}
-           title="Bankverbindung trennen"
-           description="Möchten Sie diese Bankverbindung wirklich trennen? Alle zugehörigen Konten und Transaktionen bleiben erhalten."
-           onConfirm={() => {
-             if (deleteConnectionId) {
-               deleteConnection.mutate(deleteConnectionId);
-               setDeleteConnectionId(null);
-             }
-           }}
-         />
+          {/* Confirm Delete Dialog */}
+          <ConfirmDialog
+            open={!!deleteConnectionId}
+            onOpenChange={() => setDeleteConnectionId(null)}
+            title="Bankverbindung trennen"
+            description="Möchten Sie diese Bankverbindung wirklich trennen? Alle zugehörigen Konten und Transaktionen bleiben erhalten."
+            onConfirm={() => {
+              if (deleteConnectionId) {
+                deleteConnection.mutate(deleteConnectionId);
+                setDeleteConnectionId(null);
+              }
+            }}
+          />
+
+          {/* Manual Account Dialog */}
+          <ManualAccountDialog
+            open={showManualDialog}
+            onOpenChange={setShowManualDialog}
+          />
+
+          {/* Transaction Import Dialog */}
+          <TransactionImportDialog
+            open={showImportDialog}
+            onOpenChange={setShowImportDialog}
+            accounts={accounts}
+          />
        </div>
      </MainLayout>
    );

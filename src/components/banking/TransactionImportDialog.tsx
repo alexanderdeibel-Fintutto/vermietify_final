@@ -1,0 +1,622 @@
+import { useState, useRef } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Upload,
+  FileText,
+  CheckCircle,
+  AlertCircle,
+  ArrowUpRight,
+  ArrowDownRight,
+  Loader2,
+} from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { BankAccount } from "@/hooks/useBanking";
+import { read, utils } from "xlsx";
+
+interface Props {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  accounts: BankAccount[];
+}
+
+interface ParsedTransaction {
+  booking_date: string;
+  value_date?: string;
+  amount_cents: number;
+  counterpart_name?: string;
+  counterpart_iban?: string;
+  purpose?: string;
+  booking_text?: string;
+}
+
+const HEADER_MAP: Record<string, string> = {
+  // Date fields
+  buchungstag: "booking_date",
+  buchungsdatum: "booking_date",
+  datum: "booking_date",
+  date: "booking_date",
+  valuta: "value_date",
+  wertstellungstag: "value_date",
+  wertstellung: "value_date",
+  "wert": "value_date",
+  // Amount
+  betrag: "amount",
+  "betrag (eur)": "amount",
+  amount: "amount",
+  umsatz: "amount",
+  "umsatz in eur": "amount",
+  // Counterpart
+  "auftraggeber / begünstigter": "counterpart_name",
+  "auftraggeber/begünstigter": "counterpart_name",
+  auftraggeber: "counterpart_name",
+  "begünstigter": "counterpart_name",
+  empfänger: "counterpart_name",
+  name: "counterpart_name",
+  "beguenstigter/zahlungspflichtiger": "counterpart_name",
+  "name zahlungsbeteiligter": "counterpart_name",
+  counterpart: "counterpart_name",
+  // IBAN
+  "kontonummer/iban": "counterpart_iban",
+  iban: "counterpart_iban",
+  "iban des auftraggebers": "counterpart_iban",
+  // Purpose
+  verwendungszweck: "purpose",
+  "verwendungszweck/kundenreferenz": "purpose",
+  betreff: "purpose",
+  purpose: "purpose",
+  "info": "purpose",
+  // Booking text
+  buchungstext: "booking_text",
+  "buchungsart": "booking_text",
+  typ: "booking_text",
+  umsatzart: "booking_text",
+};
+
+function parseGermanNumber(value: string): number {
+  if (!value) return 0;
+  const cleaned = value
+    .replace(/[€\s]/g, "")
+    .replace(/\./g, "")
+    .replace(",", ".");
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? 0 : Math.round(num * 100);
+}
+
+function parseGermanDate(value: string): string {
+  if (!value) return "";
+  // Try DD.MM.YYYY or DD.MM.YY
+  const dotMatch = value.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
+  if (dotMatch) {
+    const [, d, m, y] = dotMatch;
+    const year = y.length === 2 ? `20${y}` : y;
+    return `${year}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+  }
+  // Try YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  // Try MM/DD/YYYY
+  const slashMatch = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (slashMatch) {
+    const [, m, d, y] = slashMatch;
+    return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+  }
+  return "";
+}
+
+function parseCSV(buffer: ArrayBuffer): ParsedTransaction[] {
+  const workbook = read(buffer, { type: "array" });
+  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  const rows = utils.sheet_to_json<Record<string, string>>(sheet, {
+    raw: false,
+    defval: "",
+  });
+
+  if (rows.length === 0) return [];
+
+  // Map headers
+  const firstRow = rows[0];
+  const headerMapping: Record<string, string> = {};
+  for (const key of Object.keys(firstRow)) {
+    const normalized = key.toLowerCase().trim();
+    if (HEADER_MAP[normalized]) {
+      headerMapping[key] = HEADER_MAP[normalized];
+    }
+  }
+
+  return rows
+    .map((row) => {
+      const mapped: Record<string, string> = {};
+      for (const [origKey, mappedKey] of Object.entries(headerMapping)) {
+        if (row[origKey]) mapped[mappedKey] = row[origKey];
+      }
+
+      const bookingDate = parseGermanDate(mapped.booking_date || "");
+      if (!bookingDate) return null;
+
+      const amountCents = parseGermanNumber(mapped.amount || "");
+      if (amountCents === 0) return null;
+
+      return {
+        booking_date: bookingDate,
+        value_date: parseGermanDate(mapped.value_date || "") || bookingDate,
+        amount_cents: amountCents,
+        counterpart_name: mapped.counterpart_name || undefined,
+        counterpart_iban: mapped.counterpart_iban || undefined,
+        purpose: mapped.purpose || undefined,
+        booking_text: mapped.booking_text || undefined,
+      };
+    })
+    .filter(Boolean) as ParsedTransaction[];
+}
+
+const formatCurrency = (cents: number) =>
+  new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(
+    cents / 100
+  );
+
+export function TransactionImportDialog({
+  open,
+  onOpenChange,
+  accounts,
+}: Props) {
+  const queryClient = useQueryClient();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [selectedAccountId, setSelectedAccountId] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [parsedTransactions, setParsedTransactions] = useState<
+    ParsedTransaction[]
+  >([]);
+  const [importing, setImporting] = useState(false);
+  const [parsing, setParsing] = useState(false);
+  const [step, setStep] = useState<"upload" | "preview" | "done">("upload");
+  const [importResult, setImportResult] = useState({ total: 0, skipped: 0 });
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setFile(f);
+
+    const ext = f.name.split(".").pop()?.toLowerCase();
+
+    if (ext === "csv" || ext === "xlsx" || ext === "xls") {
+      setParsing(true);
+      try {
+        const buffer = await f.arrayBuffer();
+        const txs = parseCSV(buffer);
+        setParsedTransactions(txs);
+        if (txs.length === 0) {
+          toast.error(
+            "Keine Transaktionen erkannt. Prüfen Sie das Dateiformat."
+          );
+        } else {
+          setStep("preview");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Fehler beim Lesen der Datei");
+      } finally {
+        setParsing(false);
+      }
+    } else if (ext === "pdf") {
+      // Use AI extraction for PDFs
+      setParsing(true);
+      try {
+        const buffer = await f.arrayBuffer();
+        const base64 = btoa(
+          new Uint8Array(buffer).reduce(
+            (data, byte) => data + String.fromCharCode(byte),
+            ""
+          )
+        );
+
+        const { data, error } = await supabase.functions.invoke(
+          "extract-import-data",
+          {
+            body: {
+              fileBase64: base64,
+              mimeType: "application/pdf",
+              context: "bank_statement",
+            },
+          }
+        );
+
+        if (error) throw error;
+
+        // Try to parse AI response into transactions
+        const aiTransactions = parseAIBankStatementResponse(data);
+        setParsedTransactions(aiTransactions);
+        if (aiTransactions.length === 0) {
+          toast.error("Keine Transaktionen aus dem PDF erkannt.");
+        } else {
+          setStep("preview");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Fehler beim Analysieren des PDFs");
+      } finally {
+        setParsing(false);
+      }
+    } else {
+      toast.error("Bitte wählen Sie eine CSV-, XLSX- oder PDF-Datei.");
+    }
+  };
+
+  const parseAIBankStatementResponse = (
+    data: Record<string, unknown>
+  ): ParsedTransaction[] => {
+    try {
+      // The AI may return transactions in various formats
+      const result = data?.result || data;
+      let transactions: Array<Record<string, unknown>> = [];
+
+      if (Array.isArray(result)) {
+        transactions = result;
+      } else if (
+        typeof result === "object" &&
+        result !== null &&
+        "transactions" in result
+      ) {
+        transactions = (result as Record<string, unknown>)
+          .transactions as Array<Record<string, unknown>>;
+      }
+
+      return transactions
+        .map((tx) => {
+          const date = parseGermanDate(
+            String(tx.datum || tx.date || tx.booking_date || tx.buchungstag || "")
+          );
+          if (!date) return null;
+
+          let amountCents = 0;
+          const amt = tx.betrag || tx.amount || tx.amount_cents;
+          if (typeof amt === "number") {
+            amountCents =
+              Math.abs(amt) > 1000
+                ? Math.round(amt)
+                : Math.round(amt * 100);
+            // Check for Soll/Haben
+            const sh = String(tx.soll_haben || tx.type || "").toLowerCase();
+            if (sh === "s" || sh === "soll" || sh === "debit") {
+              amountCents = -Math.abs(amountCents);
+            }
+          } else if (typeof amt === "string") {
+            amountCents = parseGermanNumber(amt);
+          }
+
+          if (amountCents === 0) return null;
+
+          return {
+            booking_date: date,
+            value_date: parseGermanDate(
+              String(tx.wertstellung || tx.value_date || tx.valuta || "")
+            ) || date,
+            amount_cents: amountCents,
+            counterpart_name: String(
+              tx.auftraggeber || tx.empfänger || tx.counterpart_name || tx.name || ""
+            ) || undefined,
+            counterpart_iban: String(tx.iban || tx.counterpart_iban || "") || undefined,
+            purpose: String(
+              tx.verwendungszweck || tx.purpose || tx.betreff || ""
+            ) || undefined,
+            booking_text: String(tx.buchungstext || tx.booking_text || "") || undefined,
+          };
+        })
+        .filter(Boolean) as ParsedTransaction[];
+    } catch {
+      return [];
+    }
+  };
+
+  const handleImport = async () => {
+    if (!selectedAccountId || parsedTransactions.length === 0) return;
+
+    setImporting(true);
+    let imported = 0;
+    let skipped = 0;
+
+    try {
+      for (const tx of parsedTransactions) {
+        const { error } = await supabase.from("bank_transactions").insert({
+          account_id: selectedAccountId,
+          finapi_transaction_id: `import_${Date.now()}_${Math.random()
+            .toString(36)
+            .slice(2, 8)}`,
+          booking_date: tx.booking_date,
+          value_date: tx.value_date || tx.booking_date,
+          amount_cents: tx.amount_cents,
+          counterpart_name: tx.counterpart_name || null,
+          counterpart_iban: tx.counterpart_iban || null,
+          purpose: tx.purpose || null,
+          booking_text: tx.booking_text || "Import",
+          match_status: "unmatched",
+          currency: "EUR",
+        });
+
+        if (error) {
+          skipped++;
+        } else {
+          imported++;
+        }
+      }
+
+      setImportResult({ total: imported, skipped });
+      setStep("done");
+      queryClient.invalidateQueries({ queryKey: ["bank-transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
+      toast.success(`${imported} Transaktionen importiert`);
+    } catch (err) {
+      console.error(err);
+      toast.error("Fehler beim Import");
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const handleClose = () => {
+    setStep("upload");
+    setFile(null);
+    setParsedTransactions([]);
+    setSelectedAccountId("");
+    onOpenChange(false);
+  };
+
+  const totalIncome = parsedTransactions
+    .filter((t) => t.amount_cents > 0)
+    .reduce((s, t) => s + t.amount_cents, 0);
+  const totalExpense = parsedTransactions
+    .filter((t) => t.amount_cents < 0)
+    .reduce((s, t) => s + Math.abs(t.amount_cents), 0);
+
+  return (
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Upload className="h-5 w-5" />
+            Kontobewegungen importieren
+          </DialogTitle>
+          <DialogDescription>
+            Laden Sie CSV-, XLSX- oder PDF-Kontoauszüge hoch
+          </DialogDescription>
+        </DialogHeader>
+
+        {step === "upload" && (
+          <div className="space-y-4">
+            <div>
+              <Label>Zielkonto auswählen</Label>
+              <Select
+                value={selectedAccountId}
+                onValueChange={setSelectedAccountId}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Konto wählen…" />
+                </SelectTrigger>
+                <SelectContent>
+                  {accounts.map((acc) => (
+                    <SelectItem key={acc.id} value={acc.id}>
+                      {acc.account_name} ({acc.iban.slice(0, 4)}…
+                      {acc.iban.slice(-4)})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div
+              className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-primary/50 transition-colors"
+              onClick={() => fileRef.current?.click()}
+            >
+              <input
+                ref={fileRef}
+                type="file"
+                accept=".csv,.xlsx,.xls,.pdf"
+                className="hidden"
+                onChange={handleFileSelect}
+              />
+              {parsing ? (
+                <div className="flex flex-col items-center gap-3">
+                  <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                  <p className="text-muted-foreground">Datei wird analysiert…</p>
+                </div>
+              ) : (
+                <>
+                  <FileText className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+                  <p className="font-medium">
+                    Klicken oder Datei hierhin ziehen
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    CSV, XLSX oder PDF (Kontoauszug)
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
+              <p className="font-medium text-foreground mb-1">
+                Unterstützte Formate
+              </p>
+              <ul className="list-disc pl-4 space-y-1">
+                <li>CSV/XLSX: Sparkasse, DKB, ING, Commerzbank, N26 u.v.m.</li>
+                <li>
+                  Spalten werden automatisch erkannt (Buchungstag, Betrag,
+                  Verwendungszweck…)
+                </li>
+                <li>
+                  PDF: Kontoauszüge werden per KI analysiert
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {step === "preview" && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Badge variant="secondary" className="text-sm">
+                {file?.name}
+              </Badge>
+              <span className="text-sm text-muted-foreground">
+                {parsedTransactions.length} Transaktionen erkannt
+              </span>
+            </div>
+
+            {/* Summary */}
+            <div className="grid grid-cols-2 gap-3">
+              <Card>
+                <CardContent className="p-3 flex items-center gap-3">
+                  <ArrowUpRight className="h-5 w-5 text-primary" />
+                  <div>
+                    <p className="text-lg font-bold text-primary">
+                      {formatCurrency(totalIncome)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Eingänge</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-3 flex items-center gap-3">
+                  <ArrowDownRight className="h-5 w-5 text-destructive" />
+                  <div>
+                    <p className="text-lg font-bold text-destructive">
+                      {formatCurrency(totalExpense)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Ausgänge</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Account Selection if not yet chosen */}
+            {!selectedAccountId && (
+              <div>
+                <Label>Zielkonto auswählen</Label>
+                <Select
+                  value={selectedAccountId}
+                  onValueChange={setSelectedAccountId}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Konto wählen…" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {accounts.map((acc) => (
+                      <SelectItem key={acc.id} value={acc.id}>
+                        {acc.account_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Transaction Preview (first 10) */}
+            <div className="border rounded-lg overflow-hidden">
+              <div className="bg-muted px-3 py-2 text-xs font-medium grid grid-cols-[100px_1fr_120px]">
+                <span>Datum</span>
+                <span>Buchung</span>
+                <span className="text-right">Betrag</span>
+              </div>
+              <div className="max-h-64 overflow-y-auto divide-y">
+                {parsedTransactions.slice(0, 20).map((tx, i) => (
+                  <div
+                    key={i}
+                    className="px-3 py-2 text-sm grid grid-cols-[100px_1fr_120px] items-center"
+                  >
+                    <span className="text-muted-foreground">
+                      {tx.booking_date.split("-").reverse().join(".")}
+                    </span>
+                    <div className="truncate">
+                      <p className="font-medium truncate">
+                        {tx.counterpart_name || "–"}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {tx.purpose || tx.booking_text || ""}
+                      </p>
+                    </div>
+                    <span
+                      className={`text-right font-mono font-medium ${
+                        tx.amount_cents > 0 ? "text-primary" : "text-destructive"
+                      }`}
+                    >
+                      {formatCurrency(tx.amount_cents)}
+                    </span>
+                  </div>
+                ))}
+                {parsedTransactions.length > 20 && (
+                  <div className="px-3 py-2 text-xs text-muted-foreground text-center">
+                    … und {parsedTransactions.length - 20} weitere
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-between pt-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setStep("upload");
+                  setFile(null);
+                  setParsedTransactions([]);
+                }}
+              >
+                Zurück
+              </Button>
+              <Button
+                onClick={handleImport}
+                disabled={importing || !selectedAccountId}
+              >
+                {importing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Importiere…
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-4 w-4 mr-2" />
+                    {parsedTransactions.length} Transaktionen importieren
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {step === "done" && (
+          <div className="text-center py-6 space-y-4">
+            <CheckCircle className="h-16 w-16 text-primary mx-auto" />
+            <div>
+              <h3 className="text-xl font-bold">Import abgeschlossen</h3>
+              <p className="text-muted-foreground mt-1">
+                {importResult.total} Transaktionen importiert
+                {importResult.skipped > 0 && (
+                  <span className="flex items-center justify-center gap-1 mt-1 text-sm">
+                    <AlertCircle className="h-3 w-3" />
+                    {importResult.skipped} übersprungen (Duplikate)
+                  </span>
+                )}
+              </p>
+            </div>
+            <Button onClick={handleClose}>Schließen</Button>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
