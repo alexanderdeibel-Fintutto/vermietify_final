@@ -49,52 +49,69 @@ export default function Dashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      // Fetch buildings count
-      const { count: buildingsCount } = await supabase
-        .from('buildings')
-        .select('*', { count: 'exact', head: true });
+      // Fetch all data in parallel
+      const [
+        { count: buildingsCount },
+        { data: units },
+        { count: tenantsCount },
+        { data: tasksData },
+        { data: leasesData },
+      ] = await Promise.all([
+        supabase.from('buildings').select('*', { count: 'exact', head: true }),
+        supabase.from('units').select('id, rent_amount, status'),
+        supabase.from('tenants').select('*', { count: 'exact', head: true }),
+        supabase
+          .from('tasks')
+          .select('*')
+          .eq('is_completed', false)
+          .order('due_date', { ascending: true })
+          .limit(5),
+        supabase
+          .from('leases')
+          .select('rent_amount, utility_advance, start_date, is_active')
+          .eq('is_active', true),
+      ]);
 
-      // Fetch units with status
-      const { data: units } = await supabase
-        .from('units')
-        .select('id, rent_amount, status');
+      // Calculate rent from active leases (in cents → EUR)
+      const totalRentCents = leasesData?.reduce(
+        (sum, lease) => sum + (lease.rent_amount || 0), 0
+      ) || 0;
+      const totalRent = totalRentCents / 100;
 
-      // Fetch tenants count
-      const { count: tenantsCount } = await supabase
-        .from('tenants')
-        .select('*', { count: 'exact', head: true });
-
-      // Fetch open tasks
-      const { data: tasksData } = await supabase
-        .from('tasks')
-        .select('*')
-        .eq('is_completed', false)
-        .order('due_date', { ascending: true })
-        .limit(5);
-
-      // Calculate stats
-      const totalRent = units?.reduce((sum, unit) => 
-        unit.status === 'rented' ? sum + (unit.rent_amount || 0) : sum, 0) || 0;
-      
-      const vacantUnits = units?.filter(u => u.status === 'vacant').length || 0;
+      // Calculate vacancy
       const totalUnits = units?.length || 0;
+      const vacantUnits = units?.filter(u => u.status === 'vacant').length || 0;
       const vacancyRate = totalUnits > 0 ? (vacantUnits / totalUnits) * 100 : 0;
 
-      // Generate mock revenue data for last 12 months
+      // Open repairs = actual open task count
+      const openRepairs = tasksData?.length || 0;
+
+      // Build revenue history from leases start_date
       const monthlyRevenue: MonthlyRevenue[] = [];
       for (let i = 11; i >= 0; i--) {
         const date = subMonths(new Date(), i);
+        const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+        
+        // Sum rent from leases that were active in this month
+        const monthRent = (leasesData || []).reduce((sum, lease) => {
+          const leaseStart = new Date(lease.start_date);
+          if (leaseStart <= monthStart) {
+            return sum + (lease.rent_amount || 0) / 100;
+          }
+          return sum;
+        }, 0);
+
         monthlyRevenue.push({
           month: format(date, 'MMM', { locale: de }),
-          revenue: totalRent * (0.85 + Math.random() * 0.3), // Simulate variation
+          revenue: monthRent,
         });
       }
 
       setStats({
         totalRent,
         vacancyRate: Math.round(vacancyRate * 10) / 10,
-        openRepairs: Math.floor(Math.random() * 5), // Mock data
-        pendingPayments: Math.floor(Math.random() * 3) * 500, // Mock data
+        openRepairs,
+        pendingPayments: 0, // No payments table – real tracking not yet available
         totalBuildings: buildingsCount || 0,
         totalUnits,
         totalTenants: tenantsCount || 0,
@@ -120,25 +137,25 @@ export default function Dashboard() {
     {
       title: "Monatliche Mieteinnahmen",
       value: formatCurrency(stats?.totalRent || 0),
-      description: `${stats?.totalUnits || 0} Einheiten verwaltet`,
+      description: `aus ${stats?.totalUnits || 0} Einheiten`,
       icon: TrendingUp,
-      trend: "+5.2%",
-      trendUp: true,
+      trend: stats?.totalRent ? "Aktive Mieten" : "Keine Mietverträge",
+      trendUp: (stats?.totalRent || 0) > 0,
     },
     {
       title: "Leerstandsquote",
       value: `${stats?.vacancyRate || 0}%`,
-      description: `${Math.round((stats?.vacancyRate || 0) * (stats?.totalUnits || 0) / 100)} von ${stats?.totalUnits || 0} Einheiten`,
+      description: `${Math.round((stats?.vacancyRate || 0) * (stats?.totalUnits || 0) / 100)} von ${stats?.totalUnits || 0} leer`,
       icon: Building2,
-      trend: stats?.vacancyRate ? (stats.vacancyRate > 5 ? "Zu hoch" : "Optimal") : "-",
+      trend: stats?.vacancyRate ? (stats.vacancyRate > 5 ? "Zu hoch" : "Optimal") : "Keine Einheiten",
       trendUp: (stats?.vacancyRate || 0) <= 5,
     },
     {
-      title: "Offene Reparaturen",
+      title: "Offene Aufgaben",
       value: stats?.openRepairs || 0,
       description: "Zu bearbeitende Aufgaben",
       icon: Wrench,
-      trend: stats?.openRepairs ? "Ausstehend" : "Keine",
+      trend: stats?.openRepairs ? `${stats.openRepairs} offen` : "Keine offenen",
       trendUp: (stats?.openRepairs || 0) === 0,
     },
     {
@@ -146,8 +163,8 @@ export default function Dashboard() {
       value: formatCurrency(stats?.pendingPayments || 0),
       description: "Offene Forderungen",
       icon: AlertCircle,
-      trend: stats?.pendingPayments ? "Mahnung fällig" : "Alles bezahlt",
-      trendUp: (stats?.pendingPayments || 0) === 0,
+      trend: "Zahlungs-Tracking einrichten",
+      trendUp: true,
     },
   ];
 
