@@ -33,6 +33,9 @@ export const TRIGGER_TYPES: Record<WorkflowTriggerType, { label: string; categor
   event_contract_ending: { label: "Mietvertrag endet bald", category: "Ereignisbasiert", icon: "📋" },
   event_building_created: { label: "Gebäude erstellt", category: "Ereignisbasiert", icon: "🏢" },
   event_unit_created: { label: "Einheit erstellt", category: "Ereignisbasiert", icon: "🏠" },
+  event_offer_created: { label: "Mietangebot erstellt", category: "Ereignisbasiert", icon: "📋" },
+  event_offer_accepted: { label: "Mietangebot angenommen", category: "Ereignisbasiert", icon: "✅" },
+  event_offer_rejected: { label: "Mietangebot abgelehnt", category: "Ereignisbasiert", icon: "❌" },
 };
 
 // Action type labels

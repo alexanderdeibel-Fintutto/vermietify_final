@@ -4849,6 +4849,9 @@ export type Database = {
         | "event_contract_ending"
         | "event_building_created"
         | "event_unit_created"
+        | "event_offer_created"
+        | "event_offer_accepted"
+        | "event_offer_rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -5122,6 +5125,9 @@ export const Constants = {
         "event_contract_ending",
         "event_building_created",
         "event_unit_created",
+        "event_offer_created",
+        "event_offer_accepted",
+        "event_offer_rejected",
       ],
     },
   },
