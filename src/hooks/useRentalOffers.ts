@@ -28,9 +28,12 @@ export interface RentalOfferInsert {
 
 export interface KduRateInsert {
   organization_id: string;
-  municipality: string;
+  building_id: string;
+  region_name?: string;
+  municipality?: string;
   postal_code?: string;
   household_size: number;
+  max_area_sqm?: number;
   max_rent_cents: number;
   max_utilities_cents: number;
   max_heating_cents: number;
@@ -131,7 +134,6 @@ export function useRentalOffers() {
         .single();
       if (error) throw error;
 
-      // Update tenant status from "interessent" to "active"
       const { data: offer } = await supabase
         .from("rental_offers")
         .select("tenant_id")
@@ -153,15 +155,35 @@ export function useRentalOffers() {
     },
   });
 
-  // KdU Rates
-  const useKduRates = () =>
+  // KdU Rates - per building
+  const useKduRates = (buildingId?: string) =>
     useQuery({
-      queryKey: [KDU_KEY, "list"],
+      queryKey: [KDU_KEY, "list", buildingId],
+      queryFn: async () => {
+        let query = supabase
+          .from("kdu_rates")
+          .select("*")
+          .order("household_size", { ascending: true });
+        
+        if (buildingId) {
+          query = query.eq("building_id", buildingId);
+        }
+        
+        const { data, error } = await query;
+        if (error) throw error;
+        return data;
+      },
+    });
+
+  const useKduRatesByBuilding = () =>
+    useQuery({
+      queryKey: [KDU_KEY, "all-with-buildings"],
       queryFn: async () => {
         const { data, error } = await supabase
           .from("kdu_rates")
-          .select("*")
-          .order("municipality", { ascending: true });
+          .select("*, buildings(id, name, address, city)")
+          .order("building_id", { ascending: true })
+          .order("household_size", { ascending: true });
         if (error) throw error;
         return data;
       },
@@ -171,7 +193,7 @@ export function useRentalOffers() {
     mutationFn: async (data: KduRateInsert) => {
       const { data: rate, error } = await supabase
         .from("kdu_rates")
-        .insert(data)
+        .insert(data as any)
         .select()
         .single();
       if (error) throw error;
@@ -186,11 +208,29 @@ export function useRentalOffers() {
     },
   });
 
+  const createKduRatesBatch = useMutation({
+    mutationFn: async (rates: KduRateInsert[]) => {
+      const { data, error } = await supabase
+        .from("kdu_rates")
+        .insert(rates as any[])
+        .select();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [KDU_KEY] });
+      toast({ title: "KdU-Sätze gespeichert" });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Fehler", description: error.message, variant: "destructive" });
+    },
+  });
+
   const updateKduRate = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<KduRateInsert> }) => {
       const { data: rate, error } = await supabase
         .from("kdu_rates")
-        .update(data)
+        .update(data as any)
         .eq("id", id)
         .select()
         .single();
@@ -220,6 +260,19 @@ export function useRentalOffers() {
     },
   });
 
+  const deleteKduRatesForBuilding = useMutation({
+    mutationFn: async (buildingId: string) => {
+      const { error } = await supabase.from("kdu_rates").delete().eq("building_id", buildingId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [KDU_KEY] });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Fehler", description: error.message, variant: "destructive" });
+    },
+  });
+
   return {
     useOffersList,
     useOffer,
@@ -227,8 +280,11 @@ export function useRentalOffers() {
     updateOfferStatus,
     convertToContract,
     useKduRates,
+    useKduRatesByBuilding,
     createKduRate,
+    createKduRatesBatch,
     updateKduRate,
     deleteKduRate,
+    deleteKduRatesForBuilding,
   };
 }

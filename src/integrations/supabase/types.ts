@@ -1994,57 +1994,73 @@ export type Database = {
       }
       kdu_rates: {
         Row: {
+          building_id: string | null
           created_at: string
           household_size: number
           id: string
+          max_area_sqm: number | null
           max_heating_cents: number
           max_rent_cents: number
           max_total_cents: number
           max_utilities_cents: number
-          municipality: string
+          municipality: string | null
           notes: string | null
           organization_id: string
           postal_code: string | null
+          region_name: string | null
           source: string | null
           updated_at: string
           valid_from: string
           valid_until: string | null
         }
         Insert: {
+          building_id?: string | null
           created_at?: string
           household_size?: number
           id?: string
+          max_area_sqm?: number | null
           max_heating_cents?: number
           max_rent_cents: number
           max_total_cents: number
           max_utilities_cents?: number
-          municipality: string
+          municipality?: string | null
           notes?: string | null
           organization_id: string
           postal_code?: string | null
+          region_name?: string | null
           source?: string | null
           updated_at?: string
           valid_from?: string
           valid_until?: string | null
         }
         Update: {
+          building_id?: string | null
           created_at?: string
           household_size?: number
           id?: string
+          max_area_sqm?: number | null
           max_heating_cents?: number
           max_rent_cents?: number
           max_total_cents?: number
           max_utilities_cents?: number
-          municipality?: string
+          municipality?: string | null
           notes?: string | null
           organization_id?: string
           postal_code?: string | null
+          region_name?: string | null
           source?: string | null
           updated_at?: string
           valid_from?: string
           valid_until?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "kdu_rates_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "kdu_rates_organization_id_fkey"
             columns: ["organization_id"]

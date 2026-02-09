@@ -16,14 +16,10 @@ interface Props {
 
 export function OfferStepPricing({ data, updateData }: Props) {
   const { useKduRates } = useRentalOffers();
-  const { data: kduRates } = useKduRates();
+  const { data: kduRates } = useKduRates(data.buildingId || undefined);
 
-  // Find matching KdU rate
-  const matchingRate = kduRates?.find((r: any) => {
-    const buildingCity = data.selectedBuilding?.city?.toLowerCase();
-    const rateCity = r.municipality?.toLowerCase();
-    return rateCity && buildingCity && buildingCity.includes(rateCity) && r.household_size === data.householdSize;
-  });
+  // Find matching KdU rate for the selected building and household size
+  const matchingRate = kduRates?.find((r: any) => r.household_size === data.householdSize);
 
   // Auto-set KdU values when match found
   useEffect(() => {
