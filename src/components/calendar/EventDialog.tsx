@@ -293,12 +293,12 @@ export function EventDialog({
 
           <div className="space-y-2">
             <Label>Bezug</Label>
-            <Select value={selectedRelatedType} onValueChange={(v) => setSelectedRelatedType(v as RelatedEntityType)}>
+            <Select value={selectedRelatedType || "none"} onValueChange={(v) => setSelectedRelatedType(v === "none" ? "" : v as RelatedEntityType)}>
               <SelectTrigger>
                 <SelectValue placeholder="Kein Bezug" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Keiner</SelectItem>
+                <SelectItem value="none">Keiner</SelectItem>
                 <SelectItem value="building">Gebäude</SelectItem>
                 <SelectItem value="unit">Einheit</SelectItem>
                 <SelectItem value="tenant">Mieter</SelectItem>
