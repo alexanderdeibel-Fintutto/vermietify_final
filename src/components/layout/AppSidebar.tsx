@@ -76,10 +76,12 @@ const navigationItems = [
     icon: Users,
     subItems: [
       { title: "Übersicht", url: "/tenants" },
+      { title: "Mietangebote", url: "/angebote" },
       { title: "Verträge", url: "/vertraege" },
       { title: "Unterschriften", url: "/unterschriften" },
       { title: "Mietanpassungen", url: "/miete/anpassungen" },
       { title: "Inserate", url: "/inserate" },
+      { title: "KdU-Richtwerte", url: "/kdu-richtwerte" },
     ]
   },
   { 

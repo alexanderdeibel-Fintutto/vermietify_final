@@ -1992,6 +1992,68 @@ export type Database = {
           },
         ]
       }
+      kdu_rates: {
+        Row: {
+          created_at: string
+          household_size: number
+          id: string
+          max_heating_cents: number
+          max_rent_cents: number
+          max_total_cents: number
+          max_utilities_cents: number
+          municipality: string
+          notes: string | null
+          organization_id: string
+          postal_code: string | null
+          source: string | null
+          updated_at: string
+          valid_from: string
+          valid_until: string | null
+        }
+        Insert: {
+          created_at?: string
+          household_size?: number
+          id?: string
+          max_heating_cents?: number
+          max_rent_cents: number
+          max_total_cents: number
+          max_utilities_cents?: number
+          municipality: string
+          notes?: string | null
+          organization_id: string
+          postal_code?: string | null
+          source?: string | null
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Update: {
+          created_at?: string
+          household_size?: number
+          id?: string
+          max_heating_cents?: number
+          max_rent_cents?: number
+          max_total_cents?: number
+          max_utilities_cents?: number
+          municipality?: string
+          notes?: string | null
+          organization_id?: string
+          postal_code?: string | null
+          source?: string | null
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kdu_rates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lease_rent_settings: {
         Row: {
           created_at: string
@@ -3380,6 +3442,120 @@ export type Database = {
           },
         ]
       }
+      rental_offers: {
+        Row: {
+          converted_at: string | null
+          converted_lease_id: string | null
+          created_at: string
+          created_by: string | null
+          deposit_amount_cents: number
+          heating_advance_cents: number
+          id: string
+          is_kdu_eligible: boolean | null
+          kdu_max_total_cents: number | null
+          kdu_rate_id: string | null
+          notes: string | null
+          organization_id: string
+          proposed_end_date: string | null
+          proposed_start_date: string
+          rent_amount_cents: number
+          special_agreements: string | null
+          status: string
+          tenant_id: string
+          total_amount_cents: number
+          unit_id: string
+          updated_at: string
+          utility_advance_cents: number
+          valid_until: string | null
+        }
+        Insert: {
+          converted_at?: string | null
+          converted_lease_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deposit_amount_cents?: number
+          heating_advance_cents?: number
+          id?: string
+          is_kdu_eligible?: boolean | null
+          kdu_max_total_cents?: number | null
+          kdu_rate_id?: string | null
+          notes?: string | null
+          organization_id: string
+          proposed_end_date?: string | null
+          proposed_start_date: string
+          rent_amount_cents: number
+          special_agreements?: string | null
+          status?: string
+          tenant_id: string
+          total_amount_cents: number
+          unit_id: string
+          updated_at?: string
+          utility_advance_cents?: number
+          valid_until?: string | null
+        }
+        Update: {
+          converted_at?: string | null
+          converted_lease_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deposit_amount_cents?: number
+          heating_advance_cents?: number
+          id?: string
+          is_kdu_eligible?: boolean | null
+          kdu_max_total_cents?: number | null
+          kdu_rate_id?: string | null
+          notes?: string | null
+          organization_id?: string
+          proposed_end_date?: string | null
+          proposed_start_date?: string
+          rent_amount_cents?: number
+          special_agreements?: string | null
+          status?: string
+          tenant_id?: string
+          total_amount_cents?: number
+          unit_id?: string
+          updated_at?: string
+          utility_advance_cents?: number
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rental_offers_converted_lease_id_fkey"
+            columns: ["converted_lease_id"]
+            isOneToOne: false
+            referencedRelation: "leases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rental_offers_kdu_rate_id_fkey"
+            columns: ["kdu_rate_id"]
+            isOneToOne: false
+            referencedRelation: "kdu_rates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rental_offers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rental_offers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rental_offers_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       task_activities: {
         Row: {
           action: string
@@ -3682,44 +3858,65 @@ export type Database = {
       tenants: {
         Row: {
           address: string | null
+          birth_date: string | null
           city: string | null
           created_at: string
           email: string | null
           first_name: string
+          household_size: number | null
           id: string
+          income_cents: number | null
+          is_social_benefits: boolean | null
           last_name: string
           notes: string | null
           organization_id: string
           phone: string | null
           postal_code: string | null
+          previous_landlord: string | null
+          schufa_status: string | null
+          status: string
           updated_at: string
         }
         Insert: {
           address?: string | null
+          birth_date?: string | null
           city?: string | null
           created_at?: string
           email?: string | null
           first_name: string
+          household_size?: number | null
           id?: string
+          income_cents?: number | null
+          is_social_benefits?: boolean | null
           last_name: string
           notes?: string | null
           organization_id: string
           phone?: string | null
           postal_code?: string | null
+          previous_landlord?: string | null
+          schufa_status?: string | null
+          status?: string
           updated_at?: string
         }
         Update: {
           address?: string | null
+          birth_date?: string | null
           city?: string | null
           created_at?: string
           email?: string | null
           first_name?: string
+          household_size?: number | null
           id?: string
+          income_cents?: number | null
+          is_social_benefits?: boolean | null
           last_name?: string
           notes?: string | null
           organization_id?: string
           phone?: string | null
           postal_code?: string | null
+          previous_landlord?: string | null
+          schufa_status?: string | null
+          status?: string
           updated_at?: string
         }
         Relationships: [

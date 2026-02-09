@@ -114,6 +114,12 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  // Listings Pages
  import ListingsManagement from "./pages/listings/ListingsManagement";
 
+ // Offer Pages
+ import OfferList from "./pages/offers/OfferList";
+ import NewOffer from "./pages/offers/NewOffer";
+ import OfferDetail from "./pages/offers/OfferDetail";
+ import KduRatesManagement from "./pages/offers/KduRatesManagement";
+
  // Automation Pages
  import AutomationDashboard from "./pages/automation/AutomationDashboard";
  import WorkflowBuilder from "./pages/automation/WorkflowBuilder";
@@ -185,6 +191,26 @@ const App = () => (
             <Route path="/mieter/:id" element={
               <ProtectedRoute>
                 <TenantDetailNew />
+              </ProtectedRoute>
+            } />
+            <Route path="/angebote" element={
+              <ProtectedRoute>
+                <OfferList />
+              </ProtectedRoute>
+            } />
+            <Route path="/angebote/neu" element={
+              <ProtectedRoute>
+                <NewOffer />
+              </ProtectedRoute>
+            } />
+            <Route path="/angebote/:id" element={
+              <ProtectedRoute>
+                <OfferDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/kdu-richtwerte" element={
+              <ProtectedRoute>
+                <KduRatesManagement />
               </ProtectedRoute>
             } />
             <Route path="/vertraege" element={
