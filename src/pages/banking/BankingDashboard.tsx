@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Building2, 
   CreditCard, 
@@ -17,17 +18,30 @@ import {
   List,
   Upload,
   Link2,
+  TrendingUp,
+  BarChart3,
 } from "lucide-react";
 import { useBanking } from "@/hooks/useBanking";
 import { LoadingState } from "@/components/shared/LoadingState";
 import { Link } from "react-router-dom";
-import { format } from "date-fns";
+import { format, subMonths } from "date-fns";
 import { de } from "date-fns/locale";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { ManualAccountDialog } from "@/components/banking/ManualAccountDialog";
 import { TransactionImportDialog } from "@/components/banking/TransactionImportDialog";
 import { BankingStatsGrid } from "@/components/banking/BankingStatsGrid";
 import { BankingAccountCard } from "@/components/banking/BankingAccountCard";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+} from "recharts";
 
 const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline"; icon: React.ReactNode }> = {
   connected: { label: "Verbunden", variant: "default", icon: <CheckCircle className="h-3 w-3" /> },
@@ -139,6 +153,83 @@ export default function BankingDashboard() {
           connectionsCount={connections.length}
           formatCurrency={formatCurrency}
         />
+
+        {/* Charts Row */}
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Monthly Cash Flow Bar Chart */}
+          <Card className="backdrop-blur-md bg-card/40 border-border/30">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <BarChart3 className="h-5 w-5" />
+                Monatlicher Cashflow
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {(() => {
+                const cashflowData = Array.from({ length: 6 }, (_, i) => {
+                  const date = subMonths(new Date(), 5 - i);
+                  const monthStr = format(date, "MMM", { locale: de });
+                  const monthStart = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split("T")[0];
+                  const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split("T")[0];
+                  const monthTx = transactions.filter(t => t.booking_date >= monthStart && t.booking_date <= monthEnd);
+                  const income = monthTx.filter(t => t.amount_cents > 0).reduce((s, t) => s + t.amount_cents, 0) / 100;
+                  const expenses = monthTx.filter(t => t.amount_cents < 0).reduce((s, t) => s + Math.abs(t.amount_cents), 0) / 100;
+                  return { month: monthStr, Einnahmen: income, Ausgaben: expenses };
+                });
+                return (
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart data={cashflowData}>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                      <XAxis dataKey="month" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+                      <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+                      <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px" }} />
+                      <Bar dataKey="Einnahmen" fill="hsl(120, 60%, 45%)" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="Ausgaben" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                );
+              })()}
+            </CardContent>
+          </Card>
+
+          {/* Balance Trend */}
+          <Card className="backdrop-blur-md bg-card/40 border-border/30">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <TrendingUp className="h-5 w-5" />
+                Saldo-Verlauf
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {(() => {
+                let runningBalance = totalBalance / 100;
+                const balanceData = Array.from({ length: 6 }, (_, i) => {
+                  const date = subMonths(new Date(), i);
+                  const monthStr = format(date, "MMM", { locale: de });
+                  const bal = runningBalance;
+                  const monthTx = transactions.filter(t => {
+                    const bookDate = new Date(t.booking_date);
+                    return bookDate.getMonth() === date.getMonth() && bookDate.getFullYear() === date.getFullYear();
+                  });
+                  const netChange = monthTx.reduce((s, t) => s + t.amount_cents, 0) / 100;
+                  runningBalance -= netChange;
+                  return { month: monthStr, Saldo: Math.round(bal) };
+                }).reverse();
+                return (
+                  <ResponsiveContainer width="100%" height={250}>
+                    <LineChart data={balanceData}>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                      <XAxis dataKey="month" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+                      <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+                      <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px" }} />
+                      <Line type="monotone" dataKey="Saldo" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ fill: "hsl(var(--primary))" }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                );
+              })()}
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Connected Accounts */}
         <div>

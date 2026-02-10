@@ -10,6 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { format, subMonths } from "date-fns";
 import { de } from "date-fns/locale";
 import { OnboardingChecklist } from "@/components/onboarding/OnboardingChecklist";
+import { DashboardQuickActions } from "@/components/dashboard/DashboardQuickActions";
+import { DashboardActivityFeed } from "@/components/dashboard/DashboardActivityFeed";
+import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
 
 interface DashboardStats {
   totalRent: number;
@@ -318,6 +321,15 @@ export default function Dashboard() {
           </Card>
         </div>
 
+        {/* Additional Charts */}
+        <DashboardCharts
+          vacancyRate={stats?.vacancyRate || 0}
+          totalUnits={stats?.totalUnits || 0}
+          totalBuildings={stats?.totalBuildings || 0}
+          totalTenants={stats?.totalTenants || 0}
+          isLoading={isLoading}
+        />
+
         {/* Quick Stats */}
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="backdrop-blur-md bg-white/10 border-white/15 text-white">
@@ -360,6 +372,12 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Quick Actions */}
+        <DashboardQuickActions />
+
+        {/* Activity Feed */}
+        <DashboardActivityFeed />
       </div>
     </MainLayout>
   );
