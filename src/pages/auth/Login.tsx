@@ -8,8 +8,22 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { Loader2 } from "lucide-react";
+import { Loader2, BarChart3, ShieldCheck, Building2, Users } from "lucide-react";
 import vermietifyLogo from "@/assets/vermietify-logo.svg";
+
+function FeatureItem({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <div className="flex items-start gap-4">
+      <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+        {icon}
+      </div>
+      <div>
+        <h3 className="font-semibold text-foreground">{title}</h3>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -68,16 +82,52 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="flex justify-center mb-8">
+      <div className="w-full max-w-5xl flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        {/* Left Hero Section */}
+        <div className="hidden lg:flex flex-col gap-8 flex-1">
           <div className="flex items-center gap-3">
-            <img src={vermietifyLogo} alt="Vermietify Logo" className="h-12 w-12 rounded-xl" />
+            <img src={vermietifyLogo} alt="Vermietify Logo" className="h-14 w-14 rounded-xl" />
             <div>
-              <h1 className="text-2xl font-bold">Vermietify</h1>
-              <p className="text-sm text-muted-foreground">Immobilienverwaltung</p>
+              <h1 className="text-3xl font-bold text-foreground">Vermietify</h1>
+              <p className="text-sm text-muted-foreground">Ihre professionelle Immobilienverwaltung</p>
             </div>
           </div>
+          <div className="space-y-6">
+            <FeatureItem
+              icon={<BarChart3 className="h-5 w-5 text-primary" />}
+              title="Echtzeit-Übersicht"
+              description="Alle Immobiliendaten auf einen Blick"
+            />
+            <FeatureItem
+              icon={<ShieldCheck className="h-5 w-5 text-primary" />}
+              title="Sichere Daten"
+              description="Enterprise-Grade Sicherheit für Ihre Daten"
+            />
+            <FeatureItem
+              icon={<Building2 className="h-5 w-5 text-primary" />}
+              title="Multi-Objekt"
+              description="Mehrere Immobilien zentral verwalten"
+            />
+            <FeatureItem
+              icon={<Users className="h-5 w-5 text-primary" />}
+              title="Mieterverwaltung"
+              description="Kommunikation und Verträge digital managen"
+            />
+          </div>
         </div>
+
+        {/* Right Login Card */}
+        <div className="w-full max-w-md">
+          {/* Mobile logo only */}
+          <div className="flex justify-center mb-8 lg:hidden">
+            <div className="flex items-center gap-3">
+              <img src={vermietifyLogo} alt="Vermietify Logo" className="h-12 w-12 rounded-xl" />
+              <div>
+                <h1 className="text-2xl font-bold">Vermietify</h1>
+                <p className="text-sm text-muted-foreground">Immobilienverwaltung</p>
+              </div>
+            </div>
+          </div>
 
         <Card>
           <CardHeader className="space-y-1">
@@ -195,6 +245,7 @@ export default function Login() {
             </CardFooter>
           </form>
         </Card>
+        </div>
       </div>
     </div>
   );
