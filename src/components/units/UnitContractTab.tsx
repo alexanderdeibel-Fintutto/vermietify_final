@@ -159,7 +159,7 @@ export function UnitContractTab({ unitId }: UnitContractTabProps) {
                 )}
               </div>
               <Button asChild variant="outline" size="sm">
-                <Link to={`/tenants/${tenant.id}`}>Details</Link>
+                <Link to={`/mieter/${tenant.id}`}>Details</Link>
               </Button>
             </div>
           )}

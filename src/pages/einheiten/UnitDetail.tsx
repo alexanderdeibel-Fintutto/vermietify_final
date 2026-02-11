@@ -313,7 +313,7 @@ export default function UnitDetail() {
                     )}
 
                     <Button asChild variant="outline" className="w-full">
-                      <Link to={`/tenants/${unit.tenant.id}`}>
+                      <Link to={`/mieter/${unit.tenant.id}`}>
                         Mieter-Details ansehen
                       </Link>
                     </Button>

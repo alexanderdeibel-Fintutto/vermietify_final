@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -367,8 +368,8 @@ export default function Tenants() {
                         <Badge variant="default">Aktiv</Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
-                          Details
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link to={`/mieter/${tenant.id}`}>Details</Link>
                         </Button>
                       </TableCell>
                     </TableRow>
