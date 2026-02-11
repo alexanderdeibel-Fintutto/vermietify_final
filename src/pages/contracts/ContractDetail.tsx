@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { ContractEditDialog } from "@/components/contracts/ContractEditDialog";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { PageHeader, EmptyState, LoadingState } from "@/components/shared";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
@@ -82,6 +83,7 @@ export default function ContractDetail() {
   const { useContract, terminateContract } = useContracts();
   const { data: contract, isLoading, error } = useContract(id);
   const [showTerminateDialog, setShowTerminateDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   if (isLoading) {
     return (
@@ -144,7 +146,7 @@ export default function ContractDetail() {
           }
           actions={
             <div className="flex gap-2">
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => setShowEditDialog(true)}>
                 <Edit className="h-4 w-4 mr-2" />
                 Bearbeiten
               </Button>
@@ -440,6 +442,13 @@ export default function ContractDetail() {
           confirmLabel="Kündigen"
           destructive
           onConfirm={handleTerminate}
+        />
+
+        {/* Edit Dialog */}
+        <ContractEditDialog
+          open={showEditDialog}
+          onOpenChange={setShowEditDialog}
+          contract={contract}
         />
       </div>
     </MainLayout>
