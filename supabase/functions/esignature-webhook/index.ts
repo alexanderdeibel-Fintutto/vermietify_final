@@ -26,28 +26,49 @@
      const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
      const supabase = createClient(supabaseUrl, supabaseServiceKey);
  
-     const event = await req.json() as SignatureEvent;
-     const clientIp = req.headers.get('x-forwarded-for') || 'unknown';
-     const userAgent = req.headers.get('user-agent') || 'unknown';
- 
-     console.log('Received signature event:', event);
- 
-     // Get the order
-     const { data: order, error: orderError } = await supabase
-       .from('esignature_orders')
-       .select('*')
-       .eq('id', event.orderId)
-       .single();
- 
-     if (orderError || !order) {
-       return new Response(JSON.stringify({ 
-         success: false, 
-         error: 'Order not found' 
-       }), {
-         status: 404,
-         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-       });
-     }
+      const event = await req.json() as SignatureEvent;
+      const webhookSecret = req.headers.get('x-webhook-secret');
+      const clientIp = req.headers.get('x-forwarded-for') || 'unknown';
+      const userAgent = req.headers.get('user-agent') || 'unknown';
+
+      console.log('Received signature event:', event);
+
+      // Get the order with organization settings for webhook secret validation
+      const { data: order, error: orderError } = await supabase
+        .from('esignature_orders')
+        .select('*')
+        .eq('id', event.orderId)
+        .single();
+
+      if (orderError || !order) {
+        return new Response(JSON.stringify({ 
+          success: false, 
+          error: 'Order not found' 
+        }), {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // Verify webhook secret against organization's esignature settings
+      const { data: esigSettings } = await supabase
+        .from('esignature_settings')
+        .select('webhook_secret')
+        .eq('organization_id', order.organization_id)
+        .maybeSingle();
+
+      if (esigSettings?.webhook_secret) {
+        if (!webhookSecret || esigSettings.webhook_secret !== webhookSecret) {
+          console.error('Invalid webhook secret for esignature order:', order.id);
+          return new Response(JSON.stringify({ 
+            success: false, 
+            error: 'Invalid webhook secret' 
+          }), {
+            status: 401,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      }
  
      // Log event
      await supabase.from('esignature_events').insert({

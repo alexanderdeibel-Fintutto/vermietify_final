@@ -7,32 +7,42 @@
  };
  
  Deno.serve(async (req) => {
-   // Handle webhook verification (GET request from WhatsApp)
-   if (req.method === 'GET') {
-     const url = new URL(req.url);
-     const mode = url.searchParams.get('hub.mode');
-     const token = url.searchParams.get('hub.verify_token');
-     const challenge = url.searchParams.get('hub.challenge');
- 
-     // In production, verify token against stored webhook_verify_token
-     if (mode === 'subscribe' && token) {
-       console.log('Webhook verified');
-       return new Response(challenge, { status: 200 });
-     }
-     return new Response('Forbidden', { status: 403 });
-   }
- 
-   if (req.method === 'OPTIONS') {
-     return new Response(null, { headers: corsHeaders });
-   }
- 
-   try {
-     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-     const supabase = createClient(supabaseUrl, supabaseServiceKey);
- 
-     const payload = await req.json();
-     console.log('WhatsApp webhook payload:', JSON.stringify(payload));
+    if (req.method === 'OPTIONS') {
+      return new Response(null, { headers: corsHeaders });
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Handle webhook verification (GET request from WhatsApp)
+    if (req.method === 'GET') {
+      const url = new URL(req.url);
+      const mode = url.searchParams.get('hub.mode');
+      const token = url.searchParams.get('hub.verify_token');
+      const challenge = url.searchParams.get('hub.challenge');
+
+      if (mode === 'subscribe' && token) {
+        // Validate token against stored webhook_verify_token
+        const { data: settings } = await supabase
+          .from('whatsapp_settings')
+          .select('webhook_verify_token')
+          .limit(1)
+          .maybeSingle();
+
+        if (settings?.webhook_verify_token && settings.webhook_verify_token === token) {
+          console.log('Webhook verified');
+          return new Response(challenge, { status: 200 });
+        }
+        console.error('Webhook verification failed: token mismatch');
+        return new Response('Forbidden', { status: 403 });
+      }
+      return new Response('Forbidden', { status: 403 });
+    }
+
+    try {
+      const payload = await req.json();
+      console.log('WhatsApp webhook payload:', JSON.stringify(payload));
  
      // Process incoming messages
      const entry = payload.entry?.[0];

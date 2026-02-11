@@ -47,17 +47,20 @@
        });
      }
  
-     // Verify webhook secret if configured
-     // const settings = order.letter_settings as { webhook_secret?: string };
-     // if (settings?.webhook_secret && settings.webhook_secret !== webhookSecret) {
-     //   return new Response(JSON.stringify({ 
-     //     success: false, 
-     //     error: 'Invalid webhook secret' 
-     //   }), {
-     //     status: 401,
-     //     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-     //   });
-     // }
+      // Verify webhook secret if configured
+      const settings = order.letter_settings as { webhook_secret?: string };
+      if (settings?.webhook_secret) {
+        if (!webhookSecret || settings.webhook_secret !== webhookSecret) {
+          console.error('Invalid webhook secret for order:', order.id);
+          return new Response(JSON.stringify({ 
+            success: false, 
+            error: 'Invalid webhook secret' 
+          }), {
+            status: 401,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      }
  
      // Map LetterXpress status to our status
      const statusMap: Record<string, string> = {
