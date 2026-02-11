@@ -333,24 +333,23 @@ export default function ContractList() {
         ) : (
           <Card>
             <CardContent className="p-0">
-              <div
-                className="[&_tr]:cursor-pointer [&_tr:hover]:bg-muted/50"
-                onClick={(e) => {
-                  const target = e.target as HTMLElement;
-                  const row = target.closest("tr");
-                  if (row && !target.closest("a")) {
-                    const contractId = filteredContracts[Number(row.dataset.index)]?.id;
-                    if (contractId) navigate(`/vertraege/${contractId}`);
-                  }
-                }}
-              >
-                <DataTable
-                  columns={columns}
-                  data={filteredContracts.map((c: any, i: number) => ({ ...c, _index: i }))}
-                  pagination
-                  pageSize={10}
-                />
-              </div>
+              <DataTable
+                columns={[
+                  ...columns,
+                  {
+                    id: "actions",
+                    header: "",
+                    cell: ({ row }) => (
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link to={`/vertraege/${row.original.id}`}>Details</Link>
+                      </Button>
+                    ),
+                  },
+                ]}
+                data={filteredContracts}
+                pagination
+                pageSize={10}
+              />
             </CardContent>
           </Card>
         )}
