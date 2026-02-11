@@ -416,6 +416,9 @@ export interface TenantFormData {
   address?: string;
   city?: string;
   postal_code?: string;
+  birth_date?: string;
+  household_size?: number;
+  previous_landlord?: string;
   notes?: string;
 }
 

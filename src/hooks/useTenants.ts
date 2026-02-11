@@ -121,17 +121,20 @@
  
    const createTenant = useMutation({
      mutationFn: async (data: TenantFormData & { organization_id: string }) => {
-       const insertData: TenantInsert = {
-         organization_id: data.organization_id,
-         first_name: data.first_name,
-         last_name: data.last_name,
-         email: data.email || null,
-         phone: data.phone || null,
-         address: data.address || null,
-         city: data.city || null,
-         postal_code: data.postal_code || null,
-         notes: data.notes || null,
-       };
+        const insertData: TenantInsert = {
+          organization_id: data.organization_id,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          email: data.email || null,
+          phone: data.phone || null,
+          address: data.address || null,
+          city: data.city || null,
+          postal_code: data.postal_code || null,
+          birth_date: data.birth_date || null,
+          household_size: data.household_size || null,
+          previous_landlord: data.previous_landlord || null,
+          notes: data.notes || null,
+        };
  
        const { data: tenant, error } = await supabase
          .from("tenants")

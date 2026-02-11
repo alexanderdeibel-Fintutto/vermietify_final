@@ -36,13 +36,18 @@
    tenantMode: "existing" | "new";
    tenantId: string;
    selectedTenant: any;
-   newTenant: {
-     firstName: string;
-     lastName: string;
-     email: string;
-     phone: string;
-     birthDate: string;
-   };
+    newTenant: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone: string;
+      birthDate: string;
+      householdSize: string;
+      address: string;
+      postalCode: string;
+      city: string;
+      previousLandlord: string;
+    };
    
    // Step 3 - Conditions
    startDate: string;
@@ -73,12 +78,17 @@
    tenantId: "",
    selectedTenant: null,
    newTenant: {
-     firstName: "",
-     lastName: "",
-     email: "",
-     phone: "",
-     birthDate: "",
-   },
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    birthDate: "",
+    householdSize: "",
+    address: "",
+    postalCode: "",
+    city: "",
+    previousLandlord: "",
+  },
    startDate: "",
    endDate: "",
    rentAmount: 0,
@@ -159,13 +169,19 @@
        
        // Create new tenant if needed
        if (data.tenantMode === "new") {
-         const newTenant = await createTenant.mutateAsync({
-           organization_id: profile.organization_id,
-           first_name: data.newTenant.firstName,
-           last_name: data.newTenant.lastName,
-           email: data.newTenant.email,
-           phone: data.newTenant.phone || undefined,
-         });
+          const newTenant = await createTenant.mutateAsync({
+            organization_id: profile.organization_id,
+            first_name: data.newTenant.firstName,
+            last_name: data.newTenant.lastName,
+            email: data.newTenant.email,
+            phone: data.newTenant.phone || undefined,
+            birth_date: data.newTenant.birthDate || undefined,
+            household_size: data.newTenant.householdSize ? parseInt(data.newTenant.householdSize) : undefined,
+            address: data.newTenant.address || undefined,
+            postal_code: data.newTenant.postalCode || undefined,
+            city: data.newTenant.city || undefined,
+            previous_landlord: data.newTenant.previousLandlord || undefined,
+          });
          tenantId = newTenant.id;
        }
  
