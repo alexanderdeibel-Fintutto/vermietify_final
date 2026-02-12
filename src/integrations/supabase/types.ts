@@ -262,6 +262,66 @@ export type Database = {
           },
         ]
       }
+      building_caretakers: {
+        Row: {
+          accepted_at: string | null
+          building_id: string
+          created_at: string | null
+          email: string
+          first_name: string | null
+          id: string
+          invited_at: string | null
+          last_name: string | null
+          organization_id: string
+          phone: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          building_id: string
+          created_at?: string | null
+          email: string
+          first_name?: string | null
+          id?: string
+          invited_at?: string | null
+          last_name?: string | null
+          organization_id: string
+          phone?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          building_id?: string
+          created_at?: string | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          invited_at?: string | null
+          last_name?: string | null
+          organization_id?: string
+          phone?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "building_caretakers_building_id_fkey"
+            columns: ["building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "building_caretakers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       buildings: {
         Row: {
           address: string

@@ -71,3 +71,6 @@ verify_jwt = false
 
 [functions.fetch-ablesung-data]
 verify_jwt = false
+
+[functions.send-caretaker-invite]
+verify_jwt = false
