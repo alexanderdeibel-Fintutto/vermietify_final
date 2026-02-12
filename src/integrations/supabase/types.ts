@@ -260,6 +260,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "bank_transactions_matched_tenant_id_fkey"
+            columns: ["matched_tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       building_caretakers: {
@@ -740,6 +747,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "consent_records_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       cost_types: {
@@ -911,6 +925,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "document_requests_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       documents: {
@@ -983,6 +1004,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -1114,6 +1142,13 @@ export type Database = {
             columns: ["invited_tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ecosystem_referrals_invited_tenant_id_fkey"
+            columns: ["invited_tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
             referencedColumns: ["id"]
           },
           {
@@ -1400,6 +1435,13 @@ export type Database = {
             columns: ["recipient_tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_log_recipient_tenant_id_fkey"
+            columns: ["recipient_tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
             referencedColumns: ["id"]
           },
           {
@@ -1825,6 +1867,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "gdpr_requests_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       handover_defects: {
@@ -1984,6 +2033,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "handover_protocols_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
             referencedColumns: ["id"]
           },
           {
@@ -2433,6 +2489,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leases_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
             referencedColumns: ["id"]
           },
           {
@@ -2981,6 +3044,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       meter_readings: {
@@ -3410,6 +3480,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "operating_cost_tenant_results_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "operating_cost_tenant_results_unit_id_fkey"
             columns: ["unit_id"]
             isOneToOne: false
@@ -3819,6 +3896,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "rental_offers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "rental_offers_unit_id_fkey"
             columns: ["unit_id"]
             isOneToOne: false
@@ -4115,6 +4199,13 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_unit_access_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
             referencedColumns: ["id"]
           },
           {
@@ -4640,6 +4731,13 @@ export type Database = {
             referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "whatsapp_contacts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       whatsapp_messages: {
@@ -4962,9 +5060,86 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      tenants_safe: {
+        Row: {
+          address: string | null
+          birth_date: string | null
+          city: string | null
+          created_at: string | null
+          email: string | null
+          first_name: string | null
+          household_size: number | null
+          id: string | null
+          income_cents: number | null
+          is_social_benefits: boolean | null
+          last_name: string | null
+          notes: string | null
+          organization_id: string | null
+          phone: string | null
+          postal_code: string | null
+          previous_landlord: string | null
+          schufa_status: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          birth_date?: never
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          household_size?: never
+          id?: string | null
+          income_cents?: never
+          is_social_benefits?: never
+          last_name?: string | null
+          notes?: string | null
+          organization_id?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          previous_landlord?: never
+          schufa_status?: never
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          birth_date?: never
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          household_size?: never
+          id?: string | null
+          income_cents?: never
+          is_social_benefits?: never
+          last_name?: string | null
+          notes?: string | null
+          organization_id?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          previous_landlord?: never
+          schufa_status?: never
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenants_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      can_view_sensitive_tenant_data: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
       create_personal_organization: {
         Args: { _first_name?: string; _last_name?: string; _user_id: string }
         Returns: string
