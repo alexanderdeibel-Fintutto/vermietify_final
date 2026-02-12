@@ -50,7 +50,7 @@ import { supabase } from "@/integrations/supabase/client";
   });
  
    const [filters, setFilters] = useState({
-     accountId: searchParams.get('account') || '',
+     accountId: searchParams.get('account') || 'all-accounts',
      startDate: '',
      endDate: '',
      type: 'all' as 'income' | 'expense' | 'all',
@@ -62,7 +62,7 @@ import { supabase } from "@/integrations/supabase/client";
    const [selectedIds, setSelectedIds] = useState<string[]>([]);
  
    const { data: transactions = [], isLoading } = useTransactions({
-     accountId: filters.accountId || undefined,
+     accountId: filters.accountId === 'all-accounts' ? undefined : filters.accountId || undefined,
      startDate: filters.startDate || undefined,
      endDate: filters.endDate || undefined,
      type: filters.type === 'all' ? undefined : filters.type,
@@ -239,7 +239,7 @@ import { supabase } from "@/integrations/supabase/client";
                    <SelectValue placeholder="Alle Konten" />
                  </SelectTrigger>
                  <SelectContent>
-                   <SelectItem value="">Alle Konten</SelectItem>
+                   <SelectItem value="all-accounts">Alle Konten</SelectItem>
                    {accounts.map(acc => (
                      <SelectItem key={acc.id} value={acc.id}>{acc.account_name}</SelectItem>
                    ))}

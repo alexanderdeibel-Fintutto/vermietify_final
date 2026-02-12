@@ -53,10 +53,10 @@ type TransactionType = 'rent' | 'deposit' | 'utility' | 'maintenance' | 'other';
    });
  
    const handleSubmit = async () => {
-     await matchTransaction.mutateAsync({
-       transactionId: transaction.id,
-       tenantId: formData.tenantId || undefined,
-       leaseId: formData.leaseId || undefined,
+      await matchTransaction.mutateAsync({
+        transactionId: transaction.id,
+        tenantId: formData.tenantId === 'none' ? undefined : formData.tenantId || undefined,
+        leaseId: formData.leaseId === 'none' ? undefined : formData.leaseId || undefined,
        transactionType: formData.transactionType,
        createRule: formData.createRule,
        ruleConditions: formData.createRule ? [
@@ -152,8 +152,8 @@ type TransactionType = 'rent' | 'deposit' | 'utility' | 'maintenance' | 'other';
                <SelectTrigger>
                  <SelectValue placeholder="Mieter auswählen..." />
                </SelectTrigger>
-               <SelectContent>
-                 <SelectItem value="">Keine Zuordnung</SelectItem>
+                <SelectContent>
+                  <SelectItem value="none">Keine Zuordnung</SelectItem>
                  {tenants.map(t => (
                    <SelectItem key={t.id} value={t.id}>
                      {t.first_name} {t.last_name}
