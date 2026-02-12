@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { TenantAppInviteDialog } from "@/components/tenants/TenantAppInviteDialog";
+import { MieterAppPromoWidget } from "@/components/tenants/MieterAppPromoWidget";
  import { MainLayout } from "@/components/layout/MainLayout";
  import { PageHeader, StatCard, EmptyState, LoadingState } from "@/components/shared";
  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,7 +22,6 @@ import {
     Calendar,
     Building2,
     AlertCircle,
-    Smartphone,
   } from "lucide-react";
  import { useTenants } from "@/hooks/useTenants";
  import { TenantOverviewTab } from "@/components/tenants/TenantOverviewTab";
@@ -44,8 +42,7 @@ import {
  export default function TenantDetail() {
     const { id } = useParams<{ id: string }>();
     const { useTenant } = useTenants();
-    const { data: tenant, isLoading, error } = useTenant(id);
-    const [inviteOpen, setInviteOpen] = useState(false);
+   const { data: tenant, isLoading, error } = useTenant(id);
  
    if (isLoading) {
      return (
@@ -89,27 +86,29 @@ import {
          <PageHeader
            title={fullName}
            subtitle={tenant.email || "Keine E-Mail hinterlegt"}
-            actions={
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setInviteOpen(true)}>
-                  <Smartphone className="h-4 w-4 mr-2" />
-                  Mieter-App Einladung
-                </Button>
-                <Button variant="outline">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Bearbeiten
-                </Button>
-                <Button>
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Nachricht senden
-                </Button>
-              </div>
-            }
+             actions={
+               <div className="flex gap-2">
+                 <Button variant="outline">
+                   <Edit className="h-4 w-4 mr-2" />
+                   Bearbeiten
+                 </Button>
+                 <Button>
+                   <MessageSquare className="h-4 w-4 mr-2" />
+                   Nachricht senden
+                 </Button>
+               </div>
+             }
          />
  
-         <Card>
-           <CardContent className="pt-6">
-             <div className="flex flex-col md:flex-row gap-6 items-start">
+          <MieterAppPromoWidget
+            tenantId={id!}
+            tenantName={fullName}
+            tenantEmail={tenant.email || null}
+          />
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex flex-col md:flex-row gap-6 items-start">
                <Avatar className="h-24 w-24">
                  <AvatarImage src={undefined} alt={fullName} />
                  <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
@@ -237,13 +236,6 @@ import {
           </Tabs>
         </div>
 
-        <TenantAppInviteDialog
-          open={inviteOpen}
-          onOpenChange={setInviteOpen}
-          tenantId={id!}
-          tenantName={fullName}
-          tenantEmail={tenant.email || null}
-        />
-      </MainLayout>
+       </MainLayout>
     );
   }
