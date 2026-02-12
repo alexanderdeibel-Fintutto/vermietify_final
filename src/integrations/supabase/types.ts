@@ -176,6 +176,7 @@ export type Database = {
           match_confidence: number | null
           match_status: string
           matched_at: string | null
+          matched_building_id: string | null
           matched_by: string | null
           matched_lease_id: string | null
           matched_payment_id: string | null
@@ -198,6 +199,7 @@ export type Database = {
           match_confidence?: number | null
           match_status?: string
           matched_at?: string | null
+          matched_building_id?: string | null
           matched_by?: string | null
           matched_lease_id?: string | null
           matched_payment_id?: string | null
@@ -220,6 +222,7 @@ export type Database = {
           match_confidence?: number | null
           match_status?: string
           matched_at?: string | null
+          matched_building_id?: string | null
           matched_by?: string | null
           matched_lease_id?: string | null
           matched_payment_id?: string | null
@@ -234,6 +237,13 @@ export type Database = {
             columns: ["account_id"]
             isOneToOne: false
             referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bank_transactions_matched_building_id_fkey"
+            columns: ["matched_building_id"]
+            isOneToOne: false
+            referencedRelation: "buildings"
             referencedColumns: ["id"]
           },
           {

@@ -1,34 +1,33 @@
- import { useState, useMemo } from "react";
- import { MainLayout } from "@/components/layout/MainLayout";
- import { Card, CardContent } from "@/components/ui/card";
- import { Button } from "@/components/ui/button";
- import { Input } from "@/components/ui/input";
- import { Badge } from "@/components/ui/badge";
- import { Checkbox } from "@/components/ui/checkbox";
- import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
- import { 
-   Search, 
-   Filter,
-   ArrowUpRight,
-   ArrowDownRight,
-   CheckCircle,
-   Clock,
-   XCircle,
-   Eye,
-   UserPlus,
-   MoreHorizontal
- } from "lucide-react";
- import { useBanking, BankTransaction } from "@/hooks/useBanking";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
+import { MainLayout } from "@/components/layout/MainLayout";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Search, 
+  ArrowUpRight,
+  ArrowDownRight,
+  UserPlus,
+  MoreHorizontal,
+  XCircle,
+  Eye,
+  Layers
+} from "lucide-react";
+import { useBanking, BankTransaction } from "@/hooks/useBanking";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
- import { DataTable } from "@/components/shared/DataTable";
- import { LoadingState } from "@/components/shared/LoadingState";
- import { TransactionMatchDialog } from "@/components/banking/TransactionMatchDialog";
- import { ColumnDef } from "@tanstack/react-table";
- import { format } from "date-fns";
- import { de } from "date-fns/locale";
- import { useSearchParams } from "react-router-dom";
- import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DataTable } from "@/components/shared/DataTable";
+import { LoadingState } from "@/components/shared/LoadingState";
+import { TransactionMatchDialog } from "@/components/banking/TransactionMatchDialog";
+import { BulkMatchDialog } from "@/components/banking/BulkMatchDialog";
+import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { de } from "date-fns/locale";
+import { useSearchParams } from "react-router-dom";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
  
  const matchStatusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
    unmatched: { label: "Offen", variant: "outline" },
@@ -39,7 +38,8 @@ import { supabase } from "@/integrations/supabase/client";
  
  export default function Transactions() {
    const [searchParams] = useSearchParams();
-   const { accounts, useTransactions, ignoreTransaction } = useBanking();
+  const { accounts, useTransactions, ignoreTransaction } = useBanking();
+  const queryClient = useQueryClient();
   
   const { data: tenants = [] } = useQuery({
     queryKey: ['tenants-simple'],
@@ -58,8 +58,9 @@ import { supabase } from "@/integrations/supabase/client";
      search: '',
    });
  
-   const [selectedTransaction, setSelectedTransaction] = useState<BankTransaction | null>(null);
-   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedTransaction, setSelectedTransaction] = useState<BankTransaction | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showBulkDialog, setShowBulkDialog] = useState(false);
  
    const { data: transactions = [], isLoading } = useTransactions({
      accountId: filters.accountId === 'all-accounts' ? undefined : filters.accountId || undefined,
@@ -284,31 +285,27 @@ import { supabase } from "@/integrations/supabase/client";
                />
              </div>
  
-             {selectedIds.length > 0 && (
-               <div className="flex items-center gap-2 mt-4 pt-4 border-t">
-                 <span className="text-sm text-muted-foreground">
-                   {selectedIds.length} ausgewählt
-                 </span>
-                 <Button 
-                   variant="outline" 
-                   size="sm"
-                   onClick={() => {
-                     const first = transactions.find(t => t.id === selectedIds[0]);
-                     if (first) setSelectedTransaction(first);
-                   }}
-                 >
-                   <UserPlus className="h-4 w-4 mr-2" />
-                   Zuordnen
-                 </Button>
-                 <Button 
-                   variant="outline" 
-                   size="sm"
-                   onClick={() => setSelectedIds([])}
-                 >
-                   Auswahl aufheben
-                 </Button>
-               </div>
-             )}
+            {selectedIds.length > 0 && (
+                <div className="flex items-center gap-2 mt-4 pt-4 border-t">
+                  <span className="text-sm font-medium">
+                    {selectedIds.length} ausgewählt
+                  </span>
+                  <Button 
+                    size="sm"
+                    onClick={() => setShowBulkDialog(true)}
+                  >
+                    <Layers className="h-4 w-4 mr-2" />
+                    Bulk-Zuordnung
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setSelectedIds([])}
+                  >
+                    Auswahl aufheben
+                  </Button>
+                </div>
+              )}
            </CardContent>
          </Card>
  
@@ -320,15 +317,28 @@ import { supabase } from "@/integrations/supabase/client";
            pageSize={20}
          />
  
-         {/* Match Dialog */}
-         {selectedTransaction && (
-           <TransactionMatchDialog
-             transaction={selectedTransaction}
-             tenants={tenants}
-             onClose={() => setSelectedTransaction(null)}
-           />
-         )}
-       </div>
-     </MainLayout>
-   );
- }
+        {/* Match Dialog */}
+        {selectedTransaction && (
+          <TransactionMatchDialog
+            transaction={selectedTransaction}
+            tenants={tenants}
+            onClose={() => setSelectedTransaction(null)}
+          />
+        )}
+
+        {/* Bulk Match Dialog */}
+        {showBulkDialog && (
+          <BulkMatchDialog
+            transactions={filteredTransactions.filter(t => selectedIds.includes(t.id))}
+            onClose={() => setShowBulkDialog(false)}
+            onDone={() => {
+              setShowBulkDialog(false);
+              setSelectedIds([]);
+              queryClient.invalidateQueries({ queryKey: ['bank-transactions'] });
+            }}
+          />
+        )}
+      </div>
+    </MainLayout>
+  );
+}
