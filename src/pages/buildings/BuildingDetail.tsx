@@ -11,8 +11,9 @@ import { BuildingOverviewTab } from "@/components/buildings/BuildingOverviewTab"
 import { BuildingUnitsTab } from "@/components/buildings/BuildingUnitsTab";
 import { BuildingDocumentsTab } from "@/components/buildings/BuildingDocumentsTab";
 import { BuildingFinancesTab } from "@/components/buildings/BuildingFinancesTab";
-import { Building2, Edit, Plus, AlertCircle } from "lucide-react";
+import { Building2, Edit, Plus, AlertCircle, Gauge } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { BuildingMetersTab } from "@/components/buildings/BuildingMetersTab";
 
 export default function BuildingDetail() {
   const { id } = useParams<{ id: string }>();
@@ -94,9 +95,13 @@ export default function BuildingDetail() {
         />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:grid-cols-none lg:flex">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:grid-cols-none lg:flex">
             <TabsTrigger value="overview">Übersicht</TabsTrigger>
             <TabsTrigger value="units">Einheiten</TabsTrigger>
+            <TabsTrigger value="meters">
+              <Gauge className="h-4 w-4 mr-1" />
+              Zähler
+            </TabsTrigger>
             <TabsTrigger value="documents">Dokumente</TabsTrigger>
             <TabsTrigger value="finances">Finanzen</TabsTrigger>
           </TabsList>
@@ -109,6 +114,13 @@ export default function BuildingDetail() {
             <BuildingUnitsTab 
               building={building} 
               onAddUnit={() => setUnitDialogOpen(true)} 
+            />
+          </TabsContent>
+
+          <TabsContent value="meters" className="mt-6">
+            <BuildingMetersTab
+              buildingId={building.id}
+              units={(building as any).units?.map((u: any) => ({ id: u.id, unit_number: u.unit_number })) || []}
             />
           </TabsContent>
 

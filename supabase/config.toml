@@ -68,3 +68,6 @@ verify_jwt = false
 
 [functions.apply-rule-retroactively]
 verify_jwt = false
+
+[functions.fetch-ablesung-data]
+verify_jwt = false
