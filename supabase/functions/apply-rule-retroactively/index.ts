@@ -85,20 +85,33 @@ Deno.serve(async (req) => {
 
     if (ruleError || !rule) throw new Error('Rule not found');
 
-    // Fetch unmatched transactions for this org
-    const { data: transactions, error: txError } = await supabase
-      .from('bank_transactions')
-      .select(`
-        id, counterpart_name, counterpart_iban, purpose, amount_cents, booking_date, booking_text, match_status, currency,
-        account:bank_accounts!inner(
-          id, account_name, iban,
-          connection:finapi_connections!inner(organization_id)
-        )
-      `)
-      // Search ALL transactions for retroactive matching, not just unmatched
-      .order('booking_date', { ascending: false });
+    // Fetch ALL transactions for this org using pagination to bypass 1000-row limit
+    const PAGE_SIZE = 1000;
+    let allTransactions: Record<string, unknown>[] = [];
+    let page = 0;
+    let hasMore = true;
 
-    if (txError) throw txError;
+    while (hasMore) {
+      const { data: batch, error: txError } = await supabase
+        .from('bank_transactions')
+        .select(`
+          id, counterpart_name, counterpart_iban, purpose, amount_cents, booking_date, booking_text, match_status, currency,
+          account:bank_accounts!inner(
+            id, account_name, iban,
+            connection:finapi_connections!inner(organization_id)
+          )
+        `)
+        .order('booking_date', { ascending: false })
+        .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+
+      if (txError) throw txError;
+      
+      allTransactions = allTransactions.concat(batch || []);
+      hasMore = (batch?.length || 0) === PAGE_SIZE;
+      page++;
+    }
+
+    const transactions = allTransactions;
 
     // Filter by organization
     const orgTransactions = (transactions || []).filter(
