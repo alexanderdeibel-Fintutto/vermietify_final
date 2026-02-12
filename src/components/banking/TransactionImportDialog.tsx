@@ -49,55 +49,101 @@ interface ParsedTransaction {
 }
 
 const HEADER_MAP: Record<string, string> = {
-  // Date fields
+  // ── Date fields ──
   buchungstag: "booking_date",
   buchungsdatum: "booking_date",
   datum: "booking_date",
   date: "booking_date",
   "booking date": "booking_date",
+  buchung: "booking_date",                          // ING
+  "buchung / valuta": "booking_date",               // ING alt
   valuta: "value_date",
+  valutadatum: "value_date",                        // Volksbank
   wertstellungstag: "value_date",
   wertstellung: "value_date",
-  "wert": "value_date",
+  wert: "value_date",
   "value date": "value_date",
-  // Amount
+
+  // ── Amount ──
   betrag: "amount",
   "betrag (eur)": "amount",
+  "betrag (€)": "amount",                           // DKB neu
+  "betrag in €": "amount",                          // DKB alt
+  "betrag in eur": "amount",
   amount: "amount",
   "amount (eur)": "amount",
   umsatz: "amount",
   "umsatz in eur": "amount",
-  // Counterpart
-  "auftraggeber / begünstigter": "counterpart_name",
+  "umsatz in €": "amount",
+
+  // ── Counterpart name ──
+  "auftraggeber / begünstigter": "counterpart_name",  // Sparkasse
   "auftraggeber/begünstigter": "counterpart_name",
+  "auftraggeber / empfänger": "counterpart_name",
+  "auftraggeber/empfänger": "counterpart_name",        // ING
   auftraggeber: "counterpart_name",
   "begünstigter": "counterpart_name",
-  empfänger: "counterpart_name",
+  "empfänger": "counterpart_name",
+  empfaenger: "counterpart_name",
   name: "counterpart_name",
-  "partner name": "counterpart_name",
+  "partner name": "counterpart_name",                  // N26
   "beguenstigter/zahlungspflichtiger": "counterpart_name",
-  "name zahlungsbeteiligter": "counterpart_name",
+  "zahlungspflichtige*r": "counterpart_name",          // DKB neu
+  "zahlungsempfänger*in": "counterpart_name",          // DKB neu
+  "zahlungsempfaenger*in": "counterpart_name",
+  "name zahlungsbeteiligter": "counterpart_name",      // Volksbank
   counterpart: "counterpart_name",
-  // IBAN
+  "name des partners": "counterpart_name",
+  "transaktionspartner": "counterpart_name",
+
+  // ── IBAN ──
   "kontonummer/iban": "counterpart_iban",
   iban: "counterpart_iban",
-  "partner iban": "counterpart_iban",
+  "partner iban": "counterpart_iban",                  // N26
   "iban des auftraggebers": "counterpart_iban",
-  // Purpose
+  "iban des zahlungsbeteiligten": "counterpart_iban",  // Volksbank
+  "kontonr./iban": "counterpart_iban",
+  "konto-nr. des auftraggebers": "counterpart_iban",
+  "gläubiger-id": "_ignore",                           // ignorieren
+
+  // ── Purpose / Verwendungszweck ──
   verwendungszweck: "purpose",
   "verwendungszweck/kundenreferenz": "purpose",
   betreff: "purpose",
   purpose: "purpose",
-  "payment reference": "purpose",
-  "info": "purpose",
-  // Booking text
+  "payment reference": "purpose",                      // N26
+  info: "purpose",
+  beschreibung: "purpose",
+  "kundenreferenz (end-to-end)": "purpose",
+  kundenreferenz: "purpose",
+
+  // ── Booking text / type ──
   buchungstext: "booking_text",
-  "buchungsart": "booking_text",
+  buchungsart: "booking_text",
   typ: "booking_text",
-  type: "booking_text",
+  type: "booking_text",                                // N26
   umsatzart: "booking_text",
-  // Account name (ignored but mapped to prevent issues)
-  "account name": "_account_name",
+  umsatztyp: "booking_text",                           // DKB neu
+  vorgang: "booking_text",                             // Comdirect
+  transaktionstyp: "booking_text",
+  "buchungsdetails": "booking_text",
+
+  // ── Ignored columns (mapped to prevent warnings) ──
+  "account name": "_ignore",
+  "original amount": "_ignore",
+  "original currency": "_ignore",
+  "exchange rate": "_ignore",
+  währung: "_ignore",
+  currency: "_ignore",
+  saldo: "_ignore",
+  "saldo in eur": "_ignore",
+  status: "_ignore",
+  mandatsreferenz: "_ignore",
+  "bezeichnung auftragskonto": "_ignore",
+  "iban auftragskonto": "_ignore",
+  "bic auftragskonto": "_ignore",
+  "bic (swift-code)": "_ignore",
+  "bankname auftragskonto": "_ignore",
 };
 
 function parseGermanNumber(value: string): number {
