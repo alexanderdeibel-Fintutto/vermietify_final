@@ -55,10 +55,13 @@ const HEADER_MAP: Record<string, string> = {
   datum: "booking_date",
   date: "booking_date",
   "booking date": "booking_date",
-  buchung: "booking_date",                          // ING
-  "buchung / valuta": "booking_date",               // ING alt
+  booking_date: "booking_date",                        // Tomorrow/Kontist
+  buchung: "booking_date",                             // ING
+  "buchung / valuta": "booking_date",                  // ING alt
+  "auftragsdatum": "booking_date",                     // Consorsbank
   valuta: "value_date",
-  valutadatum: "value_date",                        // Volksbank
+  valutadatum: "value_date",                           // Volksbank
+  valuta_date: "value_date",                           // Tomorrow/Kontist
   wertstellungstag: "value_date",
   wertstellung: "value_date",
   wert: "value_date",
@@ -67,14 +70,17 @@ const HEADER_MAP: Record<string, string> = {
   // ── Amount ──
   betrag: "amount",
   "betrag (eur)": "amount",
-  "betrag (€)": "amount",                           // DKB neu
-  "betrag in €": "amount",                          // DKB alt
+  "betrag (€)": "amount",                             // DKB neu
+  "betrag in €": "amount",                             // DKB alt
   "betrag in eur": "amount",
   amount: "amount",
   "amount (eur)": "amount",
   umsatz: "amount",
   "umsatz in eur": "amount",
   "umsatz in €": "amount",
+  "soll/haben": "_soll_haben",                        // Sparda separate S/H
+  "haben": "_haben",
+  "soll": "_soll",
 
   // ── Counterpart name ──
   "auftraggeber / begünstigter": "counterpart_name",  // Sparkasse
@@ -95,6 +101,13 @@ const HEADER_MAP: Record<string, string> = {
   counterpart: "counterpart_name",
   "name des partners": "counterpart_name",
   "transaktionspartner": "counterpart_name",
+  sender_or_recipient: "counterpart_name",             // Tomorrow/Kontist
+  "sender or recipient": "counterpart_name",
+  "empfänger/auftraggeber": "counterpart_name",        // Sparda
+  "empfaenger/auftraggeber": "counterpart_name",
+  "begünstigter/auftraggeber": "counterpart_name",
+  "zahlungspartner": "counterpart_name",               // Consorsbank
+  "empfaenger/zahlungspflichtiger": "counterpart_name",
 
   // ── IBAN ──
   "kontonummer/iban": "counterpart_iban",
@@ -104,7 +117,10 @@ const HEADER_MAP: Record<string, string> = {
   "iban des zahlungsbeteiligten": "counterpart_iban",  // Volksbank
   "kontonr./iban": "counterpart_iban",
   "konto-nr. des auftraggebers": "counterpart_iban",
-  "gläubiger-id": "_ignore",                           // ignorieren
+  "konto-nr.": "counterpart_iban",                     // Sparda
+  "kontonummer": "counterpart_iban",
+  "gläubiger-id": "_ignore",
+  "glaeubiger-id": "_ignore",
 
   // ── Purpose / Verwendungszweck ──
   verwendungszweck: "purpose",
@@ -114,29 +130,41 @@ const HEADER_MAP: Record<string, string> = {
   "payment reference": "purpose",                      // N26
   info: "purpose",
   beschreibung: "purpose",
+  description: "purpose",                              // Tomorrow/Kontist
   "kundenreferenz (end-to-end)": "purpose",
   kundenreferenz: "purpose",
+  "primanota": "_ignore",
+  "buchungsinformationen": "purpose",                  // Consorsbank
+  "zahlungsgrund": "purpose",
 
   // ── Booking text / type ──
   buchungstext: "booking_text",
   buchungsart: "booking_text",
   typ: "booking_text",
   type: "booking_text",                                // N26
+  booking_type: "booking_text",                        // Tomorrow/Kontist
+  "booking type": "booking_text",
   umsatzart: "booking_text",
   umsatztyp: "booking_text",                           // DKB neu
   vorgang: "booking_text",                             // Comdirect
   transaktionstyp: "booking_text",
   "buchungsdetails": "booking_text",
+  "textschlüssel": "booking_text",                     // Sparda
+  "textschluessel": "booking_text",
 
   // ── Ignored columns (mapped to prevent warnings) ──
   "account name": "_ignore",
+  account_type: "_ignore",                             // Tomorrow/Kontist
+  "account type": "_ignore",
   "original amount": "_ignore",
   "original currency": "_ignore",
   "exchange rate": "_ignore",
   währung: "_ignore",
+  waehrung: "_ignore",
   currency: "_ignore",
   saldo: "_ignore",
   "saldo in eur": "_ignore",
+  "saldo in €": "_ignore",
   status: "_ignore",
   mandatsreferenz: "_ignore",
   "bezeichnung auftragskonto": "_ignore",
@@ -144,6 +172,13 @@ const HEADER_MAP: Record<string, string> = {
   "bic auftragskonto": "_ignore",
   "bic (swift-code)": "_ignore",
   "bankname auftragskonto": "_ignore",
+  category: "_ignore",                                 // Tomorrow/Kontist
+  kategorie: "_ignore",
+  "bic": "_ignore",
+  "auftragskonto": "_ignore",
+  "kontobezeichnung": "_ignore",
+  "sammlerreferenz": "_ignore",
+  "lastschriftsequenz": "_ignore",
 };
 
 function parseAmountToCents(value: string | number | undefined): number {
