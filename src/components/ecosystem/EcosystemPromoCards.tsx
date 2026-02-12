@@ -3,7 +3,7 @@ import { useEcosystemApps, type EcosystemApp } from "@/hooks/useEcosystemApps";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Send, Sparkles } from "lucide-react";
+import { ExternalLink, Send, Sparkles, TrendingDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EcosystemInviteDialog } from "./EcosystemInviteDialog";
 
@@ -16,8 +16,16 @@ function formatPrice(cents: number): string {
   return `${(cents / 100).toFixed(2).replace(".", ",")} €`;
 }
 
+function calcSavingsPercent(monthly: number, yearly: number): number {
+  if (monthly === 0 || yearly === 0) return 0;
+  const fullYear = monthly * 12;
+  return Math.round(((fullYear - yearly) / fullYear) * 100);
+}
+
 function AppCard({ app, onInvite, compact }: { app: EcosystemApp; onInvite: (app: EcosystemApp) => void; compact?: boolean }) {
   const isFree = app.price_monthly_cents === 0;
+  const savingsPercent = calcSavingsPercent(app.price_monthly_cents, app.price_yearly_cents);
+  const yearlySavedCents = (app.price_monthly_cents * 12) - app.price_yearly_cents;
 
   return (
     <Card className="group relative overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
@@ -61,6 +69,7 @@ function AppCard({ app, onInvite, compact }: { app: EcosystemApp; onInvite: (app
           </div>
         )}
 
+        {/* Price with savings */}
         <div className="flex items-center justify-between mb-3 py-2 px-3 rounded-lg bg-muted/50">
           {isFree ? (
             <div className="flex items-center gap-1.5">
@@ -70,13 +79,23 @@ function AppCard({ app, onInvite, compact }: { app: EcosystemApp; onInvite: (app
               </span>
             </div>
           ) : (
-            <div>
-              <span className="text-sm font-bold">{formatPrice(app.price_monthly_cents)}</span>
-              <span className="text-[10px] text-muted-foreground">/Monat</span>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold">{formatPrice(app.price_monthly_cents)}</span>
+                <span className="text-[10px] text-muted-foreground">/Monat</span>
+              </div>
               {app.price_yearly_cents > 0 && (
-                <p className="text-[10px] text-muted-foreground">
-                  oder {formatPrice(app.price_yearly_cents)}/Jahr
-                </p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-[10px] text-muted-foreground">
+                    oder {formatPrice(app.price_yearly_cents)}/Jahr
+                  </span>
+                  {savingsPercent > 0 && (
+                    <Badge variant="secondary" className="text-[9px] px-1 py-0 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                      <TrendingDown className="h-2.5 w-2.5 mr-0.5" />
+                      {savingsPercent}% sparen ({formatPrice(yearlySavedCents)})
+                    </Badge>
+                  )}
+                </div>
               )}
             </div>
           )}
@@ -92,7 +111,7 @@ function AppCard({ app, onInvite, compact }: { app: EcosystemApp; onInvite: (app
           {app.target_audience !== "vermieter" ? (
             <Button
               size="sm"
-              className="flex-1 h-8 text-xs"
+              className="flex-1 h-8 text-xs text-white"
               style={{ background: `linear-gradient(135deg, ${app.color_from}, ${app.color_to})` }}
               onClick={() => onInvite(app)}
             >
@@ -102,7 +121,7 @@ function AppCard({ app, onInvite, compact }: { app: EcosystemApp; onInvite: (app
           ) : (
             <Button
               size="sm"
-              className="flex-1 h-8 text-xs"
+              className="flex-1 h-8 text-xs text-white"
               style={{ background: `linear-gradient(135deg, ${app.color_from}, ${app.color_to})` }}
               asChild
             >

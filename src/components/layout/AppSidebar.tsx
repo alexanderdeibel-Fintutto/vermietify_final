@@ -26,6 +26,7 @@ import {
    HelpCircle,
    History,
    Shield,
+   Sparkles,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -98,6 +99,7 @@ const navigationItems = [
   { title: "Kalender", url: "/kalender", icon: CalendarDays },
   { title: "Aufgaben", url: "/aufgaben", icon: CheckSquare },
   { title: "Automatisierung", url: "/automatisierung", icon: Zap },
+  { title: "Empfehlungen", url: "/empfehlungen", icon: Sparkles },
   { 
     title: "Rechner", 
     icon: Calculator,

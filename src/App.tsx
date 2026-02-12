@@ -133,6 +133,9 @@ import CalendarPage from "./pages/calendar/CalendarPage";
  import AuditLog from "./pages/settings/AuditLog";
  import PrivacySettings from "./pages/settings/PrivacySettings";
 
+ // Ecosystem Pages
+ import ReferralDashboard from "./pages/ecosystem/ReferralDashboard";
+
  import { AIAssistant } from "./components/ai/AIAssistant";
 
 const queryClient = new QueryClient();
@@ -461,6 +464,11 @@ const App = () => (
             <Route path="/automatisierung/:id" element={
               <ProtectedRoute>
                 <WorkflowBuilder />
+              </ProtectedRoute>
+            } />
+            <Route path="/empfehlungen" element={
+              <ProtectedRoute>
+                <ReferralDashboard />
               </ProtectedRoute>
             } />
             <Route path="/benachrichtigungen" element={
