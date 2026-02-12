@@ -379,7 +379,9 @@ export type Database = {
         Row: {
           app_url: string
           category: string
+          context_pages: string[]
           created_at: string
+          credit_cost: number
           description: string | null
           icon_name: string
           id: string
@@ -393,7 +395,9 @@ export type Database = {
         Insert: {
           app_url: string
           category?: string
+          context_pages?: string[]
           created_at?: string
+          credit_cost?: number
           description?: string | null
           icon_name?: string
           id?: string
@@ -407,7 +411,9 @@ export type Database = {
         Update: {
           app_url?: string
           category?: string
+          context_pages?: string[]
           created_at?: string
+          credit_cost?: number
           description?: string | null
           icon_name?: string
           id?: string
