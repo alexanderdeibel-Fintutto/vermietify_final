@@ -52,6 +52,12 @@ export default function Dashboard() {
 
   const fetchDashboardData = async () => {
     try {
+      const now = new Date();
+      const currentMonthStart = format(new Date(now.getFullYear(), now.getMonth(), 1), 'yyyy-MM-dd');
+      const currentMonthEnd = format(new Date(now.getFullYear(), now.getMonth() + 1, 0), 'yyyy-MM-dd');
+      // 12 months ago start
+      const twelveMonthsAgo = format(subMonths(new Date(now.getFullYear(), now.getMonth(), 1), 11), 'yyyy-MM-dd');
+
       // Fetch all data in parallel
       const [
         { count: buildingsCount },
@@ -59,6 +65,8 @@ export default function Dashboard() {
         { count: tenantsCount },
         { data: tasksData },
         { data: leasesData },
+        { data: bankTxThisMonth },
+        { data: bankTxHistory },
       ] = await Promise.all([
         supabase.from('buildings').select('*', { count: 'exact', head: true }),
         supabase.from('units').select('id, rent_amount, status'),
@@ -73,13 +81,32 @@ export default function Dashboard() {
           .from('leases')
           .select('rent_amount, utility_advance, start_date, is_active')
           .eq('is_active', true),
+        // Bank transactions this month (income)
+        supabase
+          .from('bank_transactions')
+          .select('amount_cents, booking_date, account:bank_accounts!inner(connection:finapi_connections!inner(organization_id))')
+          .gte('booking_date', currentMonthStart)
+          .lte('booking_date', currentMonthEnd),
+        // Bank transactions last 12 months for chart
+        supabase
+          .from('bank_transactions')
+          .select('amount_cents, booking_date, account:bank_accounts!inner(connection:finapi_connections!inner(organization_id))')
+          .gte('booking_date', twelveMonthsAgo),
       ]);
 
-      // Calculate rent from active leases (in cents → EUR)
-      const totalRentCents = leasesData?.reduce(
-        (sum, lease) => sum + (lease.rent_amount || 0), 0
+      // Calculate expected rent from active leases (in cents → EUR)
+      const totalExpectedRentCents = leasesData?.reduce(
+        (sum, lease) => sum + (lease.rent_amount || 0) + (lease.utility_advance || 0), 0
       ) || 0;
-      const totalRent = totalRentCents / 100;
+      const totalExpectedRent = totalExpectedRentCents / 100;
+
+      // Actual income this month from bank transactions
+      const actualIncomeThisMonth = (bankTxThisMonth || [])
+        .filter(tx => tx.amount_cents > 0)
+        .reduce((sum, tx) => sum + tx.amount_cents, 0) / 100;
+
+      // Pending = expected - received (minimum 0)
+      const pendingPayments = Math.max(0, totalExpectedRent - actualIncomeThisMonth);
 
       // Calculate vacancy
       const totalUnits = units?.length || 0;
@@ -89,32 +116,29 @@ export default function Dashboard() {
       // Open repairs = actual open task count
       const openRepairs = tasksData?.length || 0;
 
-      // Build revenue history from leases start_date
+      // Build revenue history from actual bank transactions
       const monthlyRevenue: MonthlyRevenue[] = [];
       for (let i = 11; i >= 0; i--) {
         const date = subMonths(new Date(), i);
-        const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+        const mStart = format(new Date(date.getFullYear(), date.getMonth(), 1), 'yyyy-MM-dd');
+        const mEnd = format(new Date(date.getFullYear(), date.getMonth() + 1, 0), 'yyyy-MM-dd');
         
-        // Sum rent from leases that were active in this month
-        const monthRent = (leasesData || []).reduce((sum, lease) => {
-          const leaseStart = new Date(lease.start_date);
-          if (leaseStart <= monthStart) {
-            return sum + (lease.rent_amount || 0) / 100;
-          }
-          return sum;
-        }, 0);
+        // Sum actual income from bank transactions in this month
+        const monthIncome = (bankTxHistory || [])
+          .filter(tx => tx.amount_cents > 0 && tx.booking_date >= mStart && tx.booking_date <= mEnd)
+          .reduce((sum, tx) => sum + tx.amount_cents, 0) / 100;
 
         monthlyRevenue.push({
           month: format(date, 'MMM', { locale: de }),
-          revenue: monthRent,
+          revenue: monthIncome,
         });
       }
 
       setStats({
-        totalRent,
+        totalRent: actualIncomeThisMonth,
         vacancyRate: Math.round(vacancyRate * 10) / 10,
         openRepairs,
-        pendingPayments: 0, // No payments table – real tracking not yet available
+        pendingPayments,
         totalBuildings: buildingsCount || 0,
         totalUnits,
         totalTenants: tenantsCount || 0,
@@ -138,11 +162,11 @@ export default function Dashboard() {
 
   const kpiCards = [
     {
-      title: "Monatliche Mieteinnahmen",
+      title: "Einnahmen diesen Monat",
       value: formatCurrency(stats?.totalRent || 0),
-      description: `aus ${stats?.totalUnits || 0} Einheiten`,
+      description: `tatsächliche Zahlungseingänge`,
       icon: TrendingUp,
-      trend: stats?.totalRent ? "Aktive Mieten" : "Keine Mietverträge",
+      trend: stats?.totalRent ? "Aus Bankdaten" : "Keine Eingänge",
       trendUp: (stats?.totalRent || 0) > 0,
     },
     {
@@ -164,10 +188,10 @@ export default function Dashboard() {
     {
       title: "Ausstehende Zahlungen",
       value: formatCurrency(stats?.pendingPayments || 0),
-      description: "Offene Forderungen",
+      description: "Erwartete Miete − Eingänge",
       icon: AlertCircle,
-      trend: "Zahlungs-Tracking einrichten",
-      trendUp: true,
+      trend: (stats?.pendingPayments || 0) > 0 ? "Offen" : "Alles bezahlt",
+      trendUp: (stats?.pendingPayments || 0) === 0,
     },
   ];
 
