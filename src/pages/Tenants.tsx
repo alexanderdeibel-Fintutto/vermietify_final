@@ -9,13 +9,14 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Users, Plus, Search, Mail, Phone, Home, Loader2, Upload } from "lucide-react";
+import { Users, Plus, Search, Mail, Phone, Home, Loader2, Upload, Smartphone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { tenantSchema } from "@/lib/validationSchemas";
 import { sanitizeErrorMessage } from "@/lib/errorHandler";
 import { BulkImportDialog } from "@/components/import/BulkImportDialog";
+import { TenantAppInviteDialog } from "@/components/tenants/TenantAppInviteDialog";
 
 interface Tenant {
   id: string;
@@ -38,6 +39,7 @@ export default function Tenants() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [inviteDialogTenant, setInviteDialogTenant] = useState<{ id: string; name: string; email: string | null } | null>(null);
 
   const [newTenant, setNewTenant] = useState({
     first_name: "",
@@ -114,6 +116,26 @@ export default function Tenants() {
         title: "Erfolg",
         description: "Der Mieter wurde erfolgreich angelegt.",
       });
+
+      // Offer to send app invite if email was provided
+      if (validatedData.email) {
+        // We need the new tenant's ID - fetch the latest
+        const { data: newTenants } = await supabase
+          .from("tenants")
+          .select("id")
+          .eq("organization_id", profile?.organization_id)
+          .eq("email", validatedData.email)
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (newTenants?.[0]) {
+          setInviteDialogTenant({
+            id: newTenants[0].id,
+            name: `${validatedData.first_name} ${validatedData.last_name}`,
+            email: validatedData.email,
+          });
+        }
+      }
 
       setIsDialogOpen(false);
       setNewTenant({
@@ -371,6 +393,19 @@ export default function Tenants() {
                         <Button variant="ghost" size="sm" asChild>
                           <Link to={`/mieter/${tenant.id}`}>Details</Link>
                         </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setInviteDialogTenant({
+                            id: tenant.id,
+                            name: `${tenant.first_name} ${tenant.last_name}`,
+                            email: tenant.email,
+                          })}
+                          disabled={!tenant.email}
+                          title={!tenant.email ? "Keine E-Mail hinterlegt" : "Mieter-App Einladung senden"}
+                        >
+                          <Smartphone className="h-4 w-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -388,6 +423,16 @@ export default function Tenants() {
         organizationId={profile?.organization_id}
         onSuccess={() => fetchTenants()}
       />
+
+      {inviteDialogTenant && (
+        <TenantAppInviteDialog
+          open={!!inviteDialogTenant}
+          onOpenChange={(o) => !o && setInviteDialogTenant(null)}
+          tenantId={inviteDialogTenant.id}
+          tenantName={inviteDialogTenant.name}
+          tenantEmail={inviteDialogTenant.email}
+        />
+      )}
     </MainLayout>
   );
 }

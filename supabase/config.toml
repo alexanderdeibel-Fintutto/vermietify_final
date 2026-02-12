@@ -77,3 +77,6 @@ verify_jwt = false
 
 [functions.sync-hausmeister-data]
 verify_jwt = false
+
+[functions.send-tenant-app-invite]
+verify_jwt = false

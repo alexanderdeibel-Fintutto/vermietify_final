@@ -1,5 +1,6 @@
- import { useState } from "react";
- import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { TenantAppInviteDialog } from "@/components/tenants/TenantAppInviteDialog";
  import { MainLayout } from "@/components/layout/MainLayout";
  import { PageHeader, StatCard, EmptyState, LoadingState } from "@/components/shared";
  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,22 +8,23 @@
  import { Button } from "@/components/ui/button";
  import { Badge } from "@/components/ui/badge";
  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
- import {
-   User,
-   Edit,
-   MessageSquare,
-   Home,
-   FileText,
-   CreditCard,
-   FolderOpen,
-   Clock,
-   Mail,
-   Phone,
-   MapPin,
-   Calendar,
-   Building2,
-   AlertCircle,
- } from "lucide-react";
+import {
+    User,
+    Edit,
+    MessageSquare,
+    Home,
+    FileText,
+    CreditCard,
+    FolderOpen,
+    Clock,
+    Mail,
+    Phone,
+    MapPin,
+    Calendar,
+    Building2,
+    AlertCircle,
+    Smartphone,
+  } from "lucide-react";
  import { useTenants } from "@/hooks/useTenants";
  import { TenantOverviewTab } from "@/components/tenants/TenantOverviewTab";
  import { TenantContractTab } from "@/components/tenants/TenantContractTab";
@@ -40,9 +42,10 @@
  };
  
  export default function TenantDetail() {
-   const { id } = useParams<{ id: string }>();
-   const { useTenant } = useTenants();
-   const { data: tenant, isLoading, error } = useTenant(id);
+    const { id } = useParams<{ id: string }>();
+    const { useTenant } = useTenants();
+    const { data: tenant, isLoading, error } = useTenant(id);
+    const [inviteOpen, setInviteOpen] = useState(false);
  
    if (isLoading) {
      return (
@@ -86,18 +89,22 @@
          <PageHeader
            title={fullName}
            subtitle={tenant.email || "Keine E-Mail hinterlegt"}
-           actions={
-             <div className="flex gap-2">
-               <Button variant="outline">
-                 <Edit className="h-4 w-4 mr-2" />
-                 Bearbeiten
-               </Button>
-               <Button>
-                 <MessageSquare className="h-4 w-4 mr-2" />
-                 Nachricht senden
-               </Button>
-             </div>
-           }
+            actions={
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setInviteOpen(true)}>
+                  <Smartphone className="h-4 w-4 mr-2" />
+                  Mieter-App Einladung
+                </Button>
+                <Button variant="outline">
+                  <Edit className="h-4 w-4 mr-2" />
+                  Bearbeiten
+                </Button>
+                <Button>
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Nachricht senden
+                </Button>
+              </div>
+            }
          />
  
          <Card>
@@ -227,8 +234,16 @@
            <TabsContent value="activities">
              <TenantActivitiesTab tenant={tenant} />
            </TabsContent>
-         </Tabs>
-       </div>
-     </MainLayout>
-   );
- }
+          </Tabs>
+        </div>
+
+        <TenantAppInviteDialog
+          open={inviteOpen}
+          onOpenChange={setInviteOpen}
+          tenantId={id!}
+          tenantName={fullName}
+          tenantEmail={tenant.email || null}
+        />
+      </MainLayout>
+    );
+  }
