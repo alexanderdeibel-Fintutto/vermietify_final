@@ -9,8 +9,9 @@
  import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
  import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
  import { DataTable } from "@/components/shared/DataTable";
- import { Plus, Edit, Trash2, CheckCircle } from "lucide-react";
- import { useBanking, TransactionRule } from "@/hooks/useBanking";
+import { Plus, Edit, Trash2, CheckCircle, PlayCircle } from "lucide-react";
+import { useBanking, TransactionRule } from "@/hooks/useBanking";
+import { ApplyRuleDialog } from "@/components/banking/ApplyRuleDialog";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
  import { LoadingState } from "@/components/shared/LoadingState";
@@ -33,8 +34,9 @@ import { supabase } from "@/integrations/supabase/client";
       return data || [];
     },
   });
-   const [dialogOpen, setDialogOpen] = useState(false);
-   const [editRule, setEditRule] = useState<TransactionRule | null>(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [editRule, setEditRule] = useState<TransactionRule | null>(null);
+    const [applyRule, setApplyRule] = useState<TransactionRule | null>(null);
    
    const [formData, setFormData] = useState<{
      name: string;
@@ -172,22 +174,30 @@ import { supabase } from "@/integrations/supabase/client";
          : "-",
      },
      {
-       id: "actions",
-       header: "Aktionen",
-       cell: ({ row }) => (
-         <div className="flex gap-1">
-           <Button variant="ghost" size="icon" onClick={() => openEdit(row.original)}>
-             <Edit className="h-4 w-4" />
-           </Button>
-           <Button 
-             variant="ghost" 
-             size="icon"
-             onClick={() => deleteRule.mutate(row.original.id)}
-           >
-             <Trash2 className="h-4 w-4" />
-           </Button>
-         </div>
-       ),
+        id: "actions",
+        header: "Aktionen",
+        cell: ({ row }) => (
+          <div className="flex gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Rückwirkend anwenden"
+              onClick={() => setApplyRule(row.original)}
+            >
+              <PlayCircle className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => openEdit(row.original)}>
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => deleteRule.mutate(row.original.id)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        ),
      },
    ];
  
@@ -376,7 +386,14 @@ import { supabase } from "@/integrations/supabase/client";
            pagination
            pageSize={10}
          />
-       </div>
-     </MainLayout>
-   );
- }
+        </div>
+
+        {applyRule && (
+          <ApplyRuleDialog
+            rule={applyRule}
+            onClose={() => setApplyRule(null)}
+          />
+        )}
+      </MainLayout>
+    );
+  }
