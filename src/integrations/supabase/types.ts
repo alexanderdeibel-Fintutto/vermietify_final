@@ -1930,6 +1930,47 @@ export type Database = {
           },
         ]
       }
+      hausmeister_sync_map: {
+        Row: {
+          created_at: string | null
+          entity_type: string
+          id: string
+          last_synced_at: string | null
+          local_id: string
+          organization_id: string
+          remote_id: string
+          sync_direction: string
+        }
+        Insert: {
+          created_at?: string | null
+          entity_type: string
+          id?: string
+          last_synced_at?: string | null
+          local_id: string
+          organization_id: string
+          remote_id: string
+          sync_direction?: string
+        }
+        Update: {
+          created_at?: string | null
+          entity_type?: string
+          id?: string
+          last_synced_at?: string | null
+          local_id?: string
+          organization_id?: string
+          remote_id?: string
+          sync_direction?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hausmeister_sync_map_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inbound_email_addresses: {
         Row: {
           allowed_senders: string[]

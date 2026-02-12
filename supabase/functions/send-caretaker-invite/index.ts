@@ -97,6 +97,56 @@ Deno.serve(async (req) => {
         continue;
       }
 
+      // Build dynamic invite link with query params
+      const inviteParams = new URLSearchParams({
+        invite: caretaker?.id ?? "",
+        building: building?.name ?? "",
+        org: orgName,
+      });
+      const inviteUrl = `https://hausmeister.pro?${inviteParams.toString()}`;
+
+      // Check if user already exists in HausmeisterPro (same DB)
+      let userExistsInHP = false;
+      try {
+        const { data: allUsers } = await admin.auth.admin.listUsers();
+        const existingUser = allUsers?.users?.find(
+          (u: any) => u.email?.toLowerCase() === email.toLowerCase()
+        );
+        if (existingUser) {
+          userExistsInHP = true;
+          // Auto-link building in HausmeisterPro if company/building mapping exists
+          const { data: companyMap } = await admin
+            .from("hausmeister_sync_map")
+            .select("remote_id")
+            .eq("organization_id", profile.organization_id)
+            .eq("entity_type", "company")
+            .maybeSingle();
+
+          if (companyMap?.remote_id) {
+            // Check if caretaker profile exists and link building
+            const { data: caretakerProfile } = await admin
+              .from("profiles")
+              .select("id, user_id")
+              .eq("user_id", existingUser.id)
+              .maybeSingle();
+
+            if (caretakerProfile) {
+              // Try to associate user with the company in HausmeisterPro
+              await admin.from("company_members").upsert(
+                {
+                  company_id: companyMap.remote_id,
+                  user_id: existingUser.id,
+                  role: "caretaker",
+                },
+                { onConflict: "company_id,user_id" }
+              ).select();
+            }
+          }
+        }
+      } catch (_) {
+        // Non-critical: if check fails, invitation still works
+      }
+
       // Build invitation email HTML
       const recipientName = [entry.first_name, entry.last_name].filter(Boolean).join(" ") || "Sehr geehrte/r Hausmeister/in";
       const htmlBody = `
@@ -110,8 +160,9 @@ Deno.serve(async (req) => {
   <p>Probieren Sie die App kostenlos aus! Sie bleibt für Sie <strong>dauerhaft kostenlos</strong>, solange Sie nur dieses eine Gebäude verwalten.</p>
   <p>Mit Hausmeister Pro wird die Kommunikation zwischen Verwalter, Hausmeister und Mieter <strong>entkompliziert, vereinfacht und beschleunigt</strong>.</p>
   <div style="margin:24px 0;text-align:center;">
-    <a href="https://hausmeister.pro" style="background:#2563eb;color:white;padding:12px 32px;text-decoration:none;border-radius:8px;font-weight:bold;">Jetzt kostenlos starten</a>
+    <a href="${inviteUrl}" style="background:#2563eb;color:white;padding:12px 32px;text-decoration:none;border-radius:8px;font-weight:bold;">Jetzt kostenlos starten</a>
   </div>
+  ${userExistsInHP ? '<p style="color:#16a34a;font-size:13px;">✓ Ihr Account wurde bereits erkannt – das Gebäude wird automatisch zugewiesen.</p>' : ""}
   <p style="color:#666;font-size:13px;">Diese Einladung wurde von ${orgName} über Vermietify gesendet.</p>
 </body>
 </html>`;
@@ -126,7 +177,12 @@ Deno.serve(async (req) => {
         sent_at: new Date().toISOString(),
       });
 
-      results.push({ email, status: "invited", caretaker_id: caretaker?.id });
+      results.push({
+        email,
+        status: "invited",
+        caretaker_id: caretaker?.id,
+        user_exists: userExistsInHP,
+      });
     }
 
     return new Response(JSON.stringify({ success: true, results }), {

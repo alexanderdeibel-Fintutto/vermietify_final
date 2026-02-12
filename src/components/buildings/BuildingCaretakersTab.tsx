@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useCaretakers } from "@/hooks/useCaretakers";
+import { useHausmeisterSync } from "@/hooks/useHausmeisterSync";
 import { CaretakerInviteDialog } from "./CaretakerInviteDialog";
+import { HausmeisterSyncDialog } from "./HausmeisterSyncDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
-import { UserPlus, Mail, Phone, Trash2, Wrench } from "lucide-react";
+import { UserPlus, Mail, Phone, Trash2, Wrench, RefreshCw, CheckCircle2 } from "lucide-react";
 
 const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "outline" }> = {
   invited: { label: "Eingeladen", variant: "secondary" },
@@ -21,18 +23,31 @@ interface Props {
 
 export function BuildingCaretakersTab({ buildingId, buildingName }: Props) {
   const { caretakersQuery, sendInvites, removeCaretaker } = useCaretakers(buildingId);
+  const { statusQuery } = useHausmeisterSync(buildingId);
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [syncOpen, setSyncOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const caretakers = caretakersQuery.data ?? [];
+  const syncStatus = statusQuery.data;
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-wrap gap-2">
         <h3 className="text-lg font-semibold">Hausmeister ({caretakers.length})</h3>
-        <Button onClick={() => setInviteOpen(true)}>
-          <UserPlus className="h-4 w-4 mr-2" /> Hausmeister einladen
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setSyncOpen(true)}>
+            {syncStatus?.is_synced ? (
+              <CheckCircle2 className="h-4 w-4 mr-2 text-primary" />
+            ) : (
+              <RefreshCw className="h-4 w-4 mr-2" />
+            )}
+            HausmeisterPro Sync
+          </Button>
+          <Button onClick={() => setInviteOpen(true)}>
+            <UserPlus className="h-4 w-4 mr-2" /> Hausmeister einladen
+          </Button>
+        </div>
       </div>
 
       {caretakers.length === 0 ? (
@@ -89,6 +104,13 @@ export function BuildingCaretakersTab({ buildingId, buildingName }: Props) {
             { onSuccess: () => setInviteOpen(false) }
           );
         }}
+      />
+
+      <HausmeisterSyncDialog
+        open={syncOpen}
+        onOpenChange={setSyncOpen}
+        buildingId={buildingId}
+        buildingName={buildingName}
       />
 
       <ConfirmDialog
