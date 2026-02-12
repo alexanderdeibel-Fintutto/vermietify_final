@@ -146,46 +146,57 @@ const HEADER_MAP: Record<string, string> = {
   "bankname auftragskonto": "_ignore",
 };
 
-function parseGermanNumber(value: string): number {
-  if (!value) return 0;
-  const cleaned = value.replace(/[€\s]/g, "").trim();
+function parseAmountToCents(value: string | number | undefined): number {
+  if (value === undefined || value === null || value === "") return 0;
+  if (typeof value === "number") return Math.round(value * 100);
+  const cleaned = String(value).replace(/[€\s]/g, "").trim();
   if (!cleaned) return 0;
   let normalized: string;
   if (cleaned.includes(",") && cleaned.includes(".")) {
-    // Determine format by position: last separator is decimal
     const lastComma = cleaned.lastIndexOf(",");
     const lastDot = cleaned.lastIndexOf(".");
     if (lastComma > lastDot) {
-      // German: 1.234,56
       normalized = cleaned.replace(/\./g, "").replace(",", ".");
     } else {
-      // English: 1,234.56
       normalized = cleaned.replace(/,/g, "");
     }
   } else if (cleaned.includes(",")) {
-    // Only comma → German decimal
     normalized = cleaned.replace(",", ".");
   } else {
-    // Only dots or no separator → standard number
     normalized = cleaned;
   }
   const num = parseFloat(normalized);
   return isNaN(num) ? 0 : Math.round(num * 100);
 }
 
-function parseGermanDate(value: string): string {
-  if (!value) return "";
-  // Try DD.MM.YYYY or DD.MM.YY
-  const dotMatch = value.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
+function excelSerialToDate(serial: number): string {
+  // Excel serial date → JS Date → YYYY-MM-DD
+  const utcDays = Math.floor(serial - 25569);
+  const date = new Date(utcDays * 86400 * 1000);
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(date.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function parseDateValue(value: string | number | undefined): string {
+  if (!value && value !== 0) return "";
+  // Handle Excel serial number
+  if (typeof value === "number" && value > 30000 && value < 60000) {
+    return excelSerialToDate(value);
+  }
+  const str = String(value).trim();
+  // YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+  // DD.MM.YYYY or DD.MM.YY
+  const dotMatch = str.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
   if (dotMatch) {
     const [, d, m, y] = dotMatch;
     const year = y.length === 2 ? `20${y}` : y;
     return `${year}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
   }
-  // Try YYYY-MM-DD
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-  // Try MM/DD/YYYY
-  const slashMatch = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  // MM/DD/YYYY
+  const slashMatch = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (slashMatch) {
     const [, m, d, y] = slashMatch;
     return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
@@ -194,10 +205,11 @@ function parseGermanDate(value: string): string {
 }
 
 function parseCSV(buffer: ArrayBuffer): ParsedTransaction[] {
-  const workbook = read(buffer, { type: "array" });
+  const workbook = read(buffer, { type: "array", cellDates: false });
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
-  const rows = utils.sheet_to_json<Record<string, string>>(sheet, {
-    raw: false,
+  // Use raw: true to get original values (numbers stay numbers, no locale formatting)
+  const rows = utils.sheet_to_json<Record<string, any>>(sheet, {
+    raw: true,
     defval: "",
   });
 
@@ -215,20 +227,21 @@ function parseCSV(buffer: ArrayBuffer): ParsedTransaction[] {
 
   return rows
     .map((row) => {
-      const mapped: Record<string, string> = {};
+      const mapped: Record<string, any> = {};
       for (const [origKey, mappedKey] of Object.entries(headerMapping)) {
-        if (row[origKey]) mapped[mappedKey] = row[origKey];
+        const v = row[origKey];
+        if (v !== undefined && v !== null && v !== "") mapped[mappedKey] = v;
       }
 
-      const bookingDate = parseGermanDate(mapped.booking_date || "");
+      const bookingDate = parseDateValue(mapped.booking_date);
       if (!bookingDate) return null;
 
-      const amountCents = parseGermanNumber(mapped.amount || "");
+      const amountCents = parseAmountToCents(mapped.amount);
       if (amountCents === 0) return null;
 
       return {
         booking_date: bookingDate,
-        value_date: parseGermanDate(mapped.value_date || "") || bookingDate,
+        value_date: parseDateValue(mapped.value_date) || bookingDate,
         amount_cents: amountCents,
         counterpart_name: mapped.counterpart_name || undefined,
         counterpart_iban: mapped.counterpart_iban || undefined,
@@ -352,7 +365,7 @@ export function TransactionImportDialog({
 
       return transactions
         .map((tx) => {
-          const date = parseGermanDate(
+          const date = parseDateValue(
             String(tx.datum || tx.date || tx.booking_date || tx.buchungstag || "")
           );
           if (!date) return null;
@@ -370,14 +383,14 @@ export function TransactionImportDialog({
               amountCents = -Math.abs(amountCents);
             }
           } else if (typeof amt === "string") {
-            amountCents = parseGermanNumber(amt);
+            amountCents = parseAmountToCents(amt);
           }
 
           if (amountCents === 0) return null;
 
           return {
             booking_date: date,
-            value_date: parseGermanDate(
+            value_date: parseDateValue(
               String(tx.wertstellung || tx.value_date || tx.valuta || "")
             ) || date,
             amount_cents: amountCents,
