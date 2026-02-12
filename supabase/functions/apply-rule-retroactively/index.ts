@@ -12,15 +12,31 @@ interface ApplyRequest {
   preview?: boolean; // if true, just return matching transactions without updating
 }
 
+function getFieldValue(transaction: Record<string, unknown>, field: string): string {
+  // For matching, also search booking_text as fallback when the primary field is empty
+  const primary = String(transaction[field] || '').toLowerCase();
+  if (primary) return primary;
+  
+  // If the field is counterpart_name or purpose, fall back to booking_text
+  if (field === 'counterpart_name' || field === 'purpose') {
+    return String(transaction['booking_text'] || '').toLowerCase();
+  }
+  return '';
+}
+
 function matchesCondition(
   transaction: Record<string, unknown>,
   condition: { field: string; operator: string; value: string }
 ): boolean {
-  const fieldValue = String(transaction[condition.field] || '').toLowerCase();
+  const fieldValue = getFieldValue(transaction, condition.field);
   const matchValue = condition.value.toLowerCase();
 
   switch (condition.operator) {
     case 'equals':
+      // For fallback fields (booking_text), use contains instead of strict equals
+      if (!transaction[condition.field] && (condition.field === 'counterpart_name' || condition.field === 'purpose')) {
+        return fieldValue.includes(matchValue);
+      }
       return fieldValue === matchValue;
     case 'contains':
       return fieldValue.includes(matchValue);
