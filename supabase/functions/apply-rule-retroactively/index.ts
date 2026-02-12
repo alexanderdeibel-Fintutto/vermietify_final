@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
           connection:finapi_connections!inner(organization_id)
         )
       `)
-      .in('match_status', ['unmatched'])
+      // Search ALL transactions for retroactive matching, not just unmatched
       .order('booking_date', { ascending: false });
 
     if (txError) throw txError;
