@@ -265,7 +265,7 @@ export function TransactionImportDialog({
   const queryClient = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
   const [selectedAccountId, setSelectedAccountId] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [parsedTransactions, setParsedTransactions] = useState<
     ParsedTransaction[]
   >([]);
@@ -275,72 +275,58 @@ export function TransactionImportDialog({
   const [importResult, setImportResult] = useState({ total: 0, skipped: 0 });
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    setFile(f);
+    const selectedFiles = Array.from(e.target.files || []);
+    if (selectedFiles.length === 0) return;
+    setFiles(selectedFiles);
+    setParsing(true);
 
-    const ext = f.name.split(".").pop()?.toLowerCase();
+    try {
+      let allTransactions: ParsedTransaction[] = [];
 
-    if (ext === "csv" || ext === "xlsx" || ext === "xls") {
-      setParsing(true);
-      try {
-        const buffer = await f.arrayBuffer();
-        const txs = parseCSV(buffer);
-        setParsedTransactions(txs);
-        if (txs.length === 0) {
-          toast.error(
-            "Keine Transaktionen erkannt. Prüfen Sie das Dateiformat."
+      for (const f of selectedFiles) {
+        const ext = f.name.split(".").pop()?.toLowerCase();
+
+        if (ext === "csv" || ext === "xlsx" || ext === "xls") {
+          const buffer = await f.arrayBuffer();
+          const txs = parseCSV(buffer);
+          allTransactions = allTransactions.concat(txs);
+        } else if (ext === "pdf") {
+          const buffer = await f.arrayBuffer();
+          const base64 = btoa(
+            new Uint8Array(buffer).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              ""
+            )
           );
+          const { data, error } = await supabase.functions.invoke(
+            "extract-import-data",
+            {
+              body: {
+                fileBase64: base64,
+                mimeType: "application/pdf",
+                context: "bank_statement",
+              },
+            }
+          );
+          if (error) throw error;
+          const aiTransactions = parseAIBankStatementResponse(data);
+          allTransactions = allTransactions.concat(aiTransactions);
         } else {
-          setStep("preview");
+          toast.error(`${f.name}: Nicht unterstütztes Format`);
         }
-      } catch (err) {
-        console.error(err);
-        toast.error("Fehler beim Lesen der Datei");
-      } finally {
-        setParsing(false);
       }
-    } else if (ext === "pdf") {
-      // Use AI extraction for PDFs
-      setParsing(true);
-      try {
-        const buffer = await f.arrayBuffer();
-        const base64 = btoa(
-          new Uint8Array(buffer).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
-        );
 
-        const { data, error } = await supabase.functions.invoke(
-          "extract-import-data",
-          {
-            body: {
-              fileBase64: base64,
-              mimeType: "application/pdf",
-              context: "bank_statement",
-            },
-          }
-        );
-
-        if (error) throw error;
-
-        // Try to parse AI response into transactions
-        const aiTransactions = parseAIBankStatementResponse(data);
-        setParsedTransactions(aiTransactions);
-        if (aiTransactions.length === 0) {
-          toast.error("Keine Transaktionen aus dem PDF erkannt.");
-        } else {
-          setStep("preview");
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error("Fehler beim Analysieren des PDFs");
-      } finally {
-        setParsing(false);
+      setParsedTransactions(allTransactions);
+      if (allTransactions.length === 0) {
+        toast.error("Keine Transaktionen erkannt. Prüfen Sie das Dateiformat.");
+      } else {
+        setStep("preview");
       }
-    } else {
-      toast.error("Bitte wählen Sie eine CSV-, XLSX- oder PDF-Datei.");
+    } catch (err) {
+      console.error(err);
+      toast.error("Fehler beim Lesen der Dateien");
+    } finally {
+      setParsing(false);
     }
   };
 
@@ -457,7 +443,7 @@ export function TransactionImportDialog({
 
   const handleClose = () => {
     setStep("upload");
-    setFile(null);
+    setFiles([]);
     setParsedTransactions([]);
     setSelectedAccountId("");
     onOpenChange(false);
@@ -513,6 +499,7 @@ export function TransactionImportDialog({
                 ref={fileRef}
                 type="file"
                 accept=".csv,.xlsx,.xls,.pdf"
+                multiple
                 className="hidden"
                 onChange={handleFileSelect}
               />
@@ -525,10 +512,10 @@ export function TransactionImportDialog({
                 <>
                   <FileText className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
                   <p className="font-medium">
-                    Klicken oder Datei hierhin ziehen
+                    Klicken oder Dateien hierhin ziehen
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    CSV, XLSX oder PDF (Kontoauszug)
+                    CSV, XLSX oder PDF – mehrere Dateien gleichzeitig möglich
                   </p>
                 </>
               )}
@@ -556,7 +543,7 @@ export function TransactionImportDialog({
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <Badge variant="secondary" className="text-sm">
-                {file?.name}
+                {files.length === 1 ? files[0].name : `${files.length} Dateien`}
               </Badge>
               <span className="text-sm text-muted-foreground">
                 {parsedTransactions.length} Transaktionen erkannt
@@ -657,7 +644,7 @@ export function TransactionImportDialog({
                 variant="outline"
                 onClick={() => {
                   setStep("upload");
-                  setFile(null);
+                  setFiles([]);
                   setParsedTransactions([]);
                 }}
               >
