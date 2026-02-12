@@ -54,14 +54,17 @@ const HEADER_MAP: Record<string, string> = {
   buchungsdatum: "booking_date",
   datum: "booking_date",
   date: "booking_date",
+  "booking date": "booking_date",
   valuta: "value_date",
   wertstellungstag: "value_date",
   wertstellung: "value_date",
   "wert": "value_date",
+  "value date": "value_date",
   // Amount
   betrag: "amount",
   "betrag (eur)": "amount",
   amount: "amount",
+  "amount (eur)": "amount",
   umsatz: "amount",
   "umsatz in eur": "amount",
   // Counterpart
@@ -71,33 +74,56 @@ const HEADER_MAP: Record<string, string> = {
   "begünstigter": "counterpart_name",
   empfänger: "counterpart_name",
   name: "counterpart_name",
+  "partner name": "counterpart_name",
   "beguenstigter/zahlungspflichtiger": "counterpart_name",
   "name zahlungsbeteiligter": "counterpart_name",
   counterpart: "counterpart_name",
   // IBAN
   "kontonummer/iban": "counterpart_iban",
   iban: "counterpart_iban",
+  "partner iban": "counterpart_iban",
   "iban des auftraggebers": "counterpart_iban",
   // Purpose
   verwendungszweck: "purpose",
   "verwendungszweck/kundenreferenz": "purpose",
   betreff: "purpose",
   purpose: "purpose",
+  "payment reference": "purpose",
   "info": "purpose",
   // Booking text
   buchungstext: "booking_text",
   "buchungsart": "booking_text",
   typ: "booking_text",
+  type: "booking_text",
   umsatzart: "booking_text",
+  // Account name (ignored but mapped to prevent issues)
+  "account name": "_account_name",
 };
 
 function parseGermanNumber(value: string): number {
   if (!value) return 0;
-  const cleaned = value
-    .replace(/[€\s]/g, "")
-    .replace(/\./g, "")
-    .replace(",", ".");
-  const num = parseFloat(cleaned);
+  const cleaned = value.replace(/[€\s]/g, "").trim();
+  if (!cleaned) return 0;
+  let normalized: string;
+  if (cleaned.includes(",") && cleaned.includes(".")) {
+    // Determine format by position: last separator is decimal
+    const lastComma = cleaned.lastIndexOf(",");
+    const lastDot = cleaned.lastIndexOf(".");
+    if (lastComma > lastDot) {
+      // German: 1.234,56
+      normalized = cleaned.replace(/\./g, "").replace(",", ".");
+    } else {
+      // English: 1,234.56
+      normalized = cleaned.replace(/,/g, "");
+    }
+  } else if (cleaned.includes(",")) {
+    // Only comma → German decimal
+    normalized = cleaned.replace(",", ".");
+  } else {
+    // Only dots or no separator → standard number
+    normalized = cleaned;
+  }
+  const num = parseFloat(normalized);
   return isNaN(num) ? 0 : Math.round(num * 100);
 }
 
