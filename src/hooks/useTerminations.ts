@@ -51,7 +51,7 @@ export function useTerminations() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["terminations"] });
+      queryClient.invalidateQueries({ queryKey: ["terminations", orgId] });
       toast({ title: "Kündigung erfasst" });
     },
     onError: (e: Error) => toast({ title: "Fehler", description: e.message, variant: "destructive" }),
@@ -69,7 +69,7 @@ export function useTerminations() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["terminations"] });
+      queryClient.invalidateQueries({ queryKey: ["terminations", orgId] });
       toast({ title: "Kündigung aktualisiert" });
     },
     onError: (e: Error) => toast({ title: "Fehler", description: e.message, variant: "destructive" }),

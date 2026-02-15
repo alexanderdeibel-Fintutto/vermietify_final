@@ -63,7 +63,7 @@ export function useTenantCommunity(buildingId?: string) {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["community-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["community-posts", orgId] });
       toast({ title: "Beitrag veröffentlicht" });
     },
     onError: (e: Error) => toast({ title: "Fehler", description: e.message, variant: "destructive" }),
@@ -80,7 +80,7 @@ export function useTenantCommunity(buildingId?: string) {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["community-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["community-posts", orgId] });
       toast({ title: "Kommentar hinzugefügt" });
     },
     onError: (e: Error) => toast({ title: "Fehler", description: e.message, variant: "destructive" }),

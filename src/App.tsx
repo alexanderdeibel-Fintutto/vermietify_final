@@ -30,7 +30,6 @@ import NotFound from "./pages/NotFound";
 import BuildingDetail from "./pages/buildings/BuildingDetail";
 import UnitDetail from "./pages/einheiten/UnitDetail";
 import UnitsList from "./pages/units/UnitsList";
-import TenantDetail from "./pages/tenants/TenantDetail";
 import TenantDetailNew from "./pages/mieter/TenantDetail";
 
 // Contract Pages

@@ -76,7 +76,7 @@ export function useTaxScenarios(year: number) {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tax-scenarios"] });
+      queryClient.invalidateQueries({ queryKey: ["tax-scenarios", orgId, year] });
       toast({ title: "Szenario erstellt" });
     },
     onError: (e: Error) => toast({ title: "Fehler", description: e.message, variant: "destructive" }),
@@ -88,7 +88,7 @@ export function useTaxScenarios(year: number) {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tax-scenarios"] });
+      queryClient.invalidateQueries({ queryKey: ["tax-scenarios", orgId, year] });
       toast({ title: "Szenario gelöscht" });
     },
     onError: (e: Error) => toast({ title: "Fehler", description: e.message, variant: "destructive" }),

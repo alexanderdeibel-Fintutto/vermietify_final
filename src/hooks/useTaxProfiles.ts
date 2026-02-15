@@ -56,7 +56,7 @@ export function useTaxProfiles(year?: number) {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tax-profiles"] });
+      queryClient.invalidateQueries({ queryKey: ["tax-profiles", orgId] });
       toast({ title: "Steuerprofil erstellt" });
     },
     onError: (e: Error) => toast({ title: "Fehler", description: e.message, variant: "destructive" }),
@@ -74,7 +74,7 @@ export function useTaxProfiles(year?: number) {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tax-profiles"] });
+      queryClient.invalidateQueries({ queryKey: ["tax-profiles", orgId] });
       toast({ title: "Steuerprofil aktualisiert" });
     },
     onError: (e: Error) => toast({ title: "Fehler", description: e.message, variant: "destructive" }),
