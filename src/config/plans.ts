@@ -24,7 +24,8 @@ export const PLANS: Plan[] = [
     priceMonthly: 0,
     priceYearly: 0,
     priceId: 'price_1Sr55p52lqSgjCzeX6tlI5tv',
-    productId: 'prod_starter',
+    priceIdYearly: '',
+    productId: 'prod_starter', // TODO: Replace with real Stripe Product ID
     features: [
       '1 Immobilie',
       '5 Einheiten',
@@ -45,7 +46,8 @@ export const PLANS: Plan[] = [
     priceMonthly: 9.99,
     priceYearly: 95.90,
     priceId: 'price_1Sr56K52lqSgjCzeqfCfOudX',
-    productId: 'prod_basic',
+    priceIdYearly: '', // TODO: Create yearly price in Stripe Dashboard
+    productId: 'prod_basic', // TODO: Replace with real Stripe Product ID
     features: [
       '3 Immobilien',
       '25 Einheiten',
@@ -67,7 +69,8 @@ export const PLANS: Plan[] = [
     priceMonthly: 24.99,
     priceYearly: 239.90,
     priceId: 'price_1Sr56o52lqSgjCzeRuGrant2',
-    productId: 'prod_pro',
+    priceIdYearly: '', // TODO: Create yearly price in Stripe Dashboard
+    productId: 'prod_pro', // TODO: Replace with real Stripe Product ID
     features: [
       '10 Immobilien',
       '100 Einheiten',
@@ -91,7 +94,8 @@ export const PLANS: Plan[] = [
     priceMonthly: 49.99,
     priceYearly: 479.90,
     priceId: 'price_1Sr57E52lqSgjCze3iHixnBn',
-    productId: 'prod_enterprise',
+    priceIdYearly: '', // TODO: Create yearly price in Stripe Dashboard
+    productId: 'prod_enterprise', // TODO: Replace with real Stripe Product ID
     features: [
       'Unbegrenzte Immobilien',
       'Unbegrenzte Einheiten',
