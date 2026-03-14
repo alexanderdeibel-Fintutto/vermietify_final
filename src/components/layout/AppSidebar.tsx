@@ -37,6 +37,14 @@ import {
   Wallet,
   Scale,
   Send,
+  FileCheck,
+  Wrench,
+  PiggyBank,
+  DoorClosed,
+  Handshake,
+  TrendingDown,
+  Sun,
+  Globe,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -125,6 +133,9 @@ const navigationItems = [
       { title: "DATEV", url: "/steuern/datev" },
       { title: "Compliance", url: "/steuern/compliance" },
       { title: "Export", url: "/steuern/export" },
+      { title: "Österreich", url: "/steuern/oesterreich" },
+      { title: "Schweiz", url: "/steuern/schweiz" },
+      { title: "Grenzüberschreitend", url: "/steuern/grenzueberschreitend" },
     ]
   },
   {
@@ -139,12 +150,44 @@ const navigationItems = [
       { title: "Cashflow", url: "/rechner/cashflow" },
       { title: "Wertentwicklung", url: "/rechner/wertentwicklung" },
       { title: "CO₂-Kosten", url: "/co2" },
+      { title: "Monte-Carlo", url: "/rechner/monte-carlo" },
+      { title: "Szenarien", url: "/rechner/szenarien" },
+      { title: "Objektvergleich", url: "/rechner/vergleich" },
+      { title: "Indexmieten", url: "/rechner/indexmieten" },
     ]
   },
   { title: "Kalender", url: "/kalender", icon: CalendarDays },
   { title: "Aufgaben", url: "/aufgaben", icon: CheckSquare },
   { title: "Automatisierung", url: "/automatisierung", icon: Zap },
   { title: "Dokumente", url: "/documents", icon: FileText },
+  {
+    title: "Formulare",
+    icon: FileCheck,
+    subItems: [
+      { title: "Alle Formulare", url: "/formulare" },
+      { title: "Mietvertrag", url: "/formulare/mietvertrag" },
+      { title: "Gewerbemietvertrag", url: "/formulare/gewerbemietvertrag" },
+      { title: "Staffelmietvertrag", url: "/formulare/staffelmietvertrag" },
+      { title: "Kündigung", url: "/formulare/kuendigung" },
+      { title: "Eigenbedarf", url: "/formulare/eigenbedarf" },
+      { title: "Abmahnung", url: "/formulare/abmahnung" },
+      { title: "Mahnung", url: "/formulare/mahnung" },
+      { title: "Mieterhöhung", url: "/formulare/mieterhoehung" },
+      { title: "Mietaufhebung", url: "/formulare/mietaufhebung" },
+      { title: "Nachtragsvereinbarung", url: "/formulare/nachtrag" },
+      { title: "Untermieterlaubnis", url: "/formulare/untermieterlaubnis" },
+      { title: "Hausordnung", url: "/formulare/hausordnung" },
+      { title: "Mieterselbstauskunft", url: "/formulare/selbstauskunft" },
+      { title: "Wohnungsgeberbestätigung", url: "/formulare/wohnungsgeberbestaetigung" },
+      { title: "Mietminderung-Reaktion", url: "/formulare/mietminderung" },
+      { title: "NK-Widerspruch", url: "/formulare/nebenkostenwiderspruch" },
+      { title: "Mietschuldenfreiheit", url: "/formulare/mietschuldenfreiheit" },
+      { title: "SEPA-Lastschrift", url: "/formulare/sepa" },
+      { title: "Kautionsabrechnung", url: "/formulare/kautionsabrechnung" },
+      { title: "Zahlungsplan", url: "/formulare/zahlungsplan" },
+      { title: "Mietpreisbremse", url: "/formulare/mietpreisbremse" },
+    ]
+  },
   {
     title: "Kommunikation",
     icon: MessageSquare,
@@ -190,7 +233,35 @@ const navigationItems = [
     url: "/versicherungen",
     icon: Shield,
   },
-  { title: "Energie", url: "/energie", icon: Leaf },
+  {
+    title: "Wartung",
+    icon: Wrench,
+    subItems: [
+      { title: "Dashboard", url: "/wartung" },
+      { title: "Planung", url: "/wartung/planung" },
+    ]
+  },
+  { title: "Kautionen", url: "/kautionen", icon: PiggyBank },
+  { title: "Leerstand", url: "/leerstand", icon: DoorClosed },
+  { title: "Dienstleister", url: "/dienstleister", icon: Handshake },
+  { title: "Bewertung", url: "/bewertung", icon: TrendingDown },
+  {
+    title: "Energie",
+    icon: Leaf,
+    subItems: [
+      { title: "Dashboard", url: "/energie" },
+      { title: "Solar / PV", url: "/energie/solar" },
+      { title: "Wärmepumpe", url: "/energie/waermepumpe" },
+      { title: "Tarifmanager", url: "/energie/tarife" },
+      { title: "Anbietervergleich", url: "/energie/anbieter" },
+      { title: "Smart-Alerts", url: "/energie/alerts" },
+      { title: "Verbrauchs-Heatmap", url: "/energie/heatmap" },
+      { title: "Nebenkostenabrechnung", url: "/energie/abrechnung" },
+      { title: "Zähler-OCR", url: "/energie/ocr" },
+      { title: "Energie-Chat", url: "/energie/chat" },
+      { title: "Mieterstrom", url: "/energie/mieterstrom" },
+    ]
+  },
   { title: "Wissen", url: "/wissen", icon: BookOpen },
   { title: "Empfehlungen", url: "/empfehlungen", icon: Sparkles },
 ];
