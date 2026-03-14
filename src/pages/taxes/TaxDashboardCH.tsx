@@ -2,290 +2,303 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Info,
-  ArrowLeft,
-  Building2,
-  Euro,
-  Landmark,
-  MapPin,
-  Scale,
-  Calculator,
-} from "lucide-react";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Info, Calculator, Home, Building2, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const cantonalTaxes = [
-  { canton: "Zürich (ZH)", liegenschaftssteuer: "0,5-1,5\u2030", grundsteuer: "Ja", besonderheit: "Gemeindezuschlag variiert" },
-  { canton: "Bern (BE)", liegenschaftssteuer: "1,0-1,5\u2030", grundsteuer: "Ja", besonderheit: "Liegenschaftssteuer kantonal geregelt" },
-  { canton: "Luzern (LU)", liegenschaftssteuer: "0,5-1,0\u2030", grundsteuer: "Ja", besonderheit: "" },
-  { canton: "St. Gallen (SG)", liegenschaftssteuer: "0,3-0,8\u2030", grundsteuer: "Ja", besonderheit: "" },
-  { canton: "Basel-Stadt (BS)", liegenschaftssteuer: "Keine", grundsteuer: "Nein", besonderheit: "Keine Liegenschaftssteuer" },
-  { canton: "Genf (GE)", liegenschaftssteuer: "0,5-1,0\u2030", grundsteuer: "Ja", besonderheit: "Impôt immobilier complémentaire" },
-  { canton: "Aargau (AG)", liegenschaftssteuer: "0,5-1,5\u2030", grundsteuer: "Ja", besonderheit: "" },
-  { canton: "Zug (ZG)", liegenschaftssteuer: "0,5\u2030", grundsteuer: "Ja", besonderheit: "Niedriger Steuerfuß" },
+const kantonsvergleich = [
+  { kanton: "Zurich", eigenmietwert: "60-70 % Marktwert", liegenschaftssteuer: "0,08 - 0,15 %", grundstuckgewinnsteuer: "Bis 40 % (degressiv)" },
+  { kanton: "Bern", eigenmietwert: "60-70 % Marktwert", liegenschaftssteuer: "0,1 - 0,2 %", grundstuckgewinnsteuer: "Bis 40 % (degressiv)" },
+  { kanton: "Luzern", eigenmietwert: "70 % Marktwert", liegenschaftssteuer: "0,05 - 0,15 %", grundstuckgewinnsteuer: "Bis 48 % (degressiv)" },
+  { kanton: "Zug", eigenmietwert: "60 % Marktwert", liegenschaftssteuer: "0,05 %", grundstuckgewinnsteuer: "Bis 30 % (degressiv)" },
+  { kanton: "Basel-Stadt", eigenmietwert: "70 % Marktwert", liegenschaftssteuer: "Keine", grundstuckgewinnsteuer: "Bis 60 % (degressiv)" },
+  { kanton: "Genf", eigenmietwert: "Ca. 4 % des Steuerwerts", liegenschaftssteuer: "0,1 %", grundstuckgewinnsteuer: "Bis 50 % (degressiv)" },
+  { kanton: "Waadt", eigenmietwert: "70 % Marktwert", liegenschaftssteuer: "0,1 %", grundstuckgewinnsteuer: "Bis 30 % (degressiv)" },
 ];
 
 export default function TaxDashboardCH() {
+  const [activeTab, setActiveTab] = useState("uebersicht");
+
   return (
     <MainLayout
       title="Steuern Schweiz"
       breadcrumbs={[
+        { label: "Dashboard", href: "/dashboard" },
         { label: "Steuern", href: "/taxes" },
         { label: "Schweiz" },
       ]}
     >
       <div className="space-y-6">
         <PageHeader
-          title="Steuerübersicht Schweiz"
-          subtitle="Besteuerung von Mieteinnahmen und Liegenschaften in der Schweiz."
+          title="Steuer-Dashboard Schweiz"
+          subtitle="Ubersicht uber die steuerlichen Regelungen fur Immobilieneigentum und Vermietung in der Schweiz."
           actions={
-            <Link to="/taxes">
-              <Button variant="outline">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Zurück zur Übersicht
-              </Button>
-            </Link>
+            <Button variant="outline" asChild>
+              <Link to="/taxes">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Steuerubersicht
+              </Link>
+            </Button>
           }
         />
 
-        {/* Eigenmietwert */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5" />
-              Eigenmietwert
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm">
-              Der <strong>Eigenmietwert</strong> ist ein fiktives Einkommen, das Eigentümer selbstgenutzter
-              Liegenschaften als Einkommen versteuern müssen. Er entspricht in der Regel 60-70% des
-              Marktmietwerts der Liegenschaft.
-            </p>
-            <div className="rounded-lg bg-blue-50 border border-blue-200 p-4 text-sm">
-              <div className="flex items-start gap-2">
-                <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
-                <div className="text-blue-800">
-                  <p><strong>Wichtig:</strong> Der Eigenmietwert gilt nur für selbstgenutzte Liegenschaften.
-                  Bei vermieteten Objekten werden stattdessen die tatsächlichen Mieteinnahmen versteuert.</p>
-                  <p className="mt-2">Im Gegenzug können Unterhaltskosten, Hypothekarzinsen und
-                  Versicherungsprämien abgezogen werden.</p>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList>
+            <TabsTrigger value="uebersicht">Ubersicht</TabsTrigger>
+            <TabsTrigger value="eigenmietwert">Eigenmietwert</TabsTrigger>
+            <TabsTrigger value="unterhaltskosten">Unterhaltskosten</TabsTrigger>
+            <TabsTrigger value="grundstueckgewinn">Grundstuckgewinn</TabsTrigger>
+            <TabsTrigger value="kantone">Kantonsvergleich</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="uebersicht" className="space-y-4">
+            <Card className="bg-blue-50 border-blue-200">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-3">
+                  <Info className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
+                  <div className="space-y-2">
+                    <p className="font-medium text-blue-900">Besteuerung von Immobilien in der Schweiz</p>
+                    <p className="text-sm text-blue-800">
+                      Die Schweiz besteuert Immobilieneigentum auf Bundes-, Kantons- und Gemeindeebene.
+                      Das System unterscheidet sich grundlegend von Deutschland und Osterreich,
+                      insbesondere durch den Eigenmietwert, die kantonalen Liegenschaftssteuern und
+                      die Grundstuckgewinnsteuer.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-4 text-sm">
-              <div className="flex items-start gap-2">
-                <Info className="h-4 w-4 text-yellow-600 mt-0.5 shrink-0" />
-                <p className="text-yellow-800">
-                  <strong>Reformdiskussion:</strong> Die Abschaffung des Eigenmietwerts wird seit Jahren
-                  politisch diskutiert. Eine mögliche Reform könnte auch Auswirkungen auf die Abzugsfähigkeit
-                  von Schuldzinsen haben.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
 
-        {/* Cantonal Differences */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              Kantonale Unterschiede
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground mb-4">
-              Die Besteuerung von Liegenschaften unterscheidet sich in der Schweiz erheblich zwischen
-              den 26 Kantonen. Sowohl Steuersätze als auch Abzugsmöglichkeiten variieren.
-            </p>
-            <div className="rounded-lg bg-orange-50 border border-orange-200 p-4 text-sm">
-              <div className="flex items-start gap-2">
-                <Info className="h-4 w-4 text-orange-600 mt-0.5 shrink-0" />
-                <p className="text-orange-800">
-                  <strong>Hinweis:</strong> Die Einkommenssteuer auf Mieteinnahmen wird auf Bundes-, Kantons-
-                  und Gemeindeebene erhoben. Der effektive Steuersatz kann daher je nach Standort stark
-                  variieren (ca. 20-45%).
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Pauschalabzug vs. effektive Kosten */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calculator className="h-5 w-5" />
-              Pauschalabzug vs. effektive Kosten
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-lg border p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge className="bg-green-100 text-green-800">Option 1</Badge>
-                  <span className="font-medium">Pauschalabzug</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Jährlicher Pauschalabzug von <strong>10-20%</strong> des Bruttomietwerts
-                  (je nach Alter der Liegenschaft). Einfach, kein Nachweis einzelner Kosten nötig.
-                </p>
-                <ul className="text-sm text-muted-foreground mt-2 list-disc list-inside space-y-1">
-                  <li>Liegenschaft bis 10 Jahre: 10%</li>
-                  <li>Liegenschaft über 10 Jahre: 20%</li>
-                </ul>
-              </div>
-              <div className="rounded-lg border p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge className="bg-blue-100 text-blue-800">Option 2</Badge>
-                  <span className="font-medium">Effektive Kosten</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Abzug der tatsächlich angefallenen Unterhalts- und Verwaltungskosten.
-                  Lohnt sich bei grösseren Renovationen.
-                </p>
-                <ul className="text-sm text-muted-foreground mt-2 list-disc list-inside space-y-1">
-                  <li>Reparaturen und Unterhalt</li>
-                  <li>Verwaltungskosten</li>
-                  <li>Versicherungsprämien</li>
-                  <li>Hypothekarzinsen</li>
-                </ul>
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Die Wahl zwischen Pauschal- und effektivem Abzug kann jedes Jahr neu getroffen werden.
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Liegenschaftssteuer by Canton */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Landmark className="h-5 w-5" />
-              Liegenschaftssteuer nach Kanton
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2 px-4 font-medium text-muted-foreground">Kanton</th>
-                    <th className="text-right py-2 px-4 font-medium text-muted-foreground">Liegenschaftssteuer</th>
-                    <th className="text-center py-2 px-4 font-medium text-muted-foreground">Grundsteuer</th>
-                    <th className="text-left py-2 px-4 font-medium text-muted-foreground">Besonderheit</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cantonalTaxes.map((row, i) => (
-                    <tr key={i} className="border-b hover:bg-muted/50">
-                      <td className="py-2 px-4 font-medium">{row.canton}</td>
-                      <td className="py-2 px-4 text-right">{row.liegenschaftssteuer}</td>
-                      <td className="py-2 px-4 text-center">
-                        <Badge
-                          variant="outline"
-                          className={
-                            row.grundsteuer === "Ja"
-                              ? "bg-green-50 text-green-700"
-                              : "bg-gray-50 text-gray-700"
-                          }
-                        >
-                          {row.grundsteuer}
-                        </Badge>
-                      </td>
-                      <td className="py-2 px-4 text-muted-foreground">{row.besonderheit}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Grundstückgewinnsteuer */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Scale className="h-5 w-5" />
-              Grundstückgewinnsteuer
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm">
-              Beim Verkauf einer Liegenschaft fällt in der Schweiz eine <strong>Grundstückgewinnsteuer</strong> an.
-              Diese besteuert den Gewinn aus der Veräusserung von Grundstücken und wird kantonal geregelt.
-            </p>
-            <div className="rounded-lg bg-muted p-4 space-y-2 text-sm">
-              <p><strong>Wichtige Merkmale:</strong></p>
-              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li>Progressiver Tarif: Kurzfristige Gewinne werden höher besteuert</li>
-                <li>Haltedauer-Rabatt: Je länger die Haltedauer, desto geringer die Steuer</li>
-                <li>Spekulationszuschlag bei Besitzdauer unter 1-2 Jahren möglich</li>
-                <li>Ersatzbeschaffung: Steuerneutrale Reinvestition unter bestimmten Bedingungen</li>
-                <li>Wertvermehrende Investitionen können vom Gewinn abgezogen werden</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Key Differences from DE */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Info className="h-5 w-5" />
-              Wesentliche Unterschiede zur Besteuerung in Deutschland
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {[
-                {
-                  topic: "Eigenmietwert",
-                  ch: "Fiktives Einkommen für selbstgenutzte Immobilien wird besteuert",
-                  de: "Kein Eigenmietwert in Deutschland",
-                },
-                {
-                  topic: "AfA / Abschreibung",
-                  ch: "Keine lineare AfA wie in DE; stattdessen Pauschal- oder Effektivabzug",
-                  de: "Lineare AfA: 2% (Altbau) bzw. 3% (Neubau ab 2023)",
-                },
-                {
-                  topic: "Spekulationsfrist",
-                  ch: "Grundstückgewinnsteuer mit Haltedauer-Rabatt, keine feste Frist",
-                  de: "10-Jahres-Spekulationsfrist, danach steuerfrei",
-                },
-                {
-                  topic: "Kantonale Steuern",
-                  ch: "Drei Ebenen: Bund, Kanton, Gemeinde - erhebliche Unterschiede",
-                  de: "Einheitliche Bundesregelung mit Solidaritätszuschlag",
-                },
-                {
-                  topic: "Umsatzsteuer",
-                  ch: "Option zur Versteuerung möglich (MWST 8,1%)",
-                  de: "Grundsätzlich umsatzsteuerfrei (§ 4 Nr. 12 UStG), Option möglich",
-                },
-              ].map((item, i) => (
-                <div key={i} className="rounded-lg border p-4">
-                  <p className="font-medium mb-2">{item.topic}</p>
-                  <div className="grid gap-2 md:grid-cols-2 text-sm">
-                    <div className="flex items-start gap-2">
-                      <Badge variant="outline" className="shrink-0 bg-red-50 text-red-700">CH</Badge>
-                      <span className="text-muted-foreground">{item.ch}</span>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 rounded-full bg-primary/10">
+                      <Home className="h-5 w-5 text-primary" />
                     </div>
-                    <div className="flex items-start gap-2">
-                      <Badge variant="outline" className="shrink-0 bg-yellow-50 text-yellow-700">DE</Badge>
-                      <span className="text-muted-foreground">{item.de}</span>
+                    <p className="font-medium">Eigenmietwert</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Selbstgenutzte Immobilien werden mit einem fiktiven Mietwert (60-70 % des Marktwerts)
+                    als Einkommen besteuert.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 rounded-full bg-primary/10">
+                      <Building2 className="h-5 w-5 text-primary" />
+                    </div>
+                    <p className="font-medium">Liegenschaftssteuer</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Jahrliche Steuer auf den amtlichen Wert der Liegenschaft.
+                    Hohe und Erhebung variieren nach Kanton.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 rounded-full bg-primary/10">
+                      <MapPin className="h-5 w-5 text-primary" />
+                    </div>
+                    <p className="font-medium">Kantonale Unterschiede</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Die steuerliche Belastung variiert erheblich zwischen den 26 Kantonen.
+                    Steuersatze, Abzuge und Bewertungsmethoden unterscheiden sich deutlich.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Mieteinkommen Schweiz</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <p>
+                  Mieteinnahmen aus vermieteten Liegenschaften werden als Einkommen besteuert.
+                  Im Gegensatz zu selbstgenutzten Immobilien wird kein Eigenmietwert zugerechnet,
+                  sondern die tatsachlichen Mieteinnahmen versteuert.
+                </p>
+                <p>
+                  Abzugsfahig sind: Unterhalts- und Verwaltungskosten, Versicherungspramien,
+                  Schuldzinsen, sowie wertvermehrende Investitionen unter bestimmten Voraussetzungen.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="eigenmietwert" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Home className="h-5 w-5 text-primary" />
+                  Eigenmietwert
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Der Eigenmietwert ist ein fiktives Einkommen, das Eigentumern selbstgenutzter
+                  Wohnungen zugerechnet wird. Er entspricht dem Betrag, den ein Dritter als
+                  Miete fur die gleiche Liegenschaft zahlen wurde, wird aber in der Regel auf
+                  60-70 % des Marktmietwerts festgesetzt.
+                </p>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="p-4 border rounded-lg">
+                    <p className="font-medium text-emerald-700">Vorteile</p>
+                    <ul className="text-sm text-muted-foreground mt-2 space-y-1 list-disc list-inside">
+                      <li>Schuldzinsen voll abzugsfahig</li>
+                      <li>Unterhaltskosten absetzbar</li>
+                      <li>Energetische Sanierung abzugsfahig</li>
+                    </ul>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <p className="font-medium text-destructive">Nachteile</p>
+                    <ul className="text-sm text-muted-foreground mt-2 space-y-1 list-disc list-inside">
+                      <li>Besteuerung ohne echten Geldfluss</li>
+                      <li>Steigt mit Marktwert der Immobilie</li>
+                      <li>Benachteiligung schuldfreier Eigentumer</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <Card className="bg-yellow-50 border-yellow-200">
+                  <CardContent className="p-4">
+                    <p className="text-sm text-yellow-800">
+                      <strong>Hinweis:</strong> Eine Reform des Eigenmietwerts wird seit Jahren diskutiert.
+                      Ein Systemwechsel (Abschaffung fur Erstwohnsitz) ist politisch in Vorbereitung,
+                      jedoch noch nicht beschlossen.
+                    </p>
+                  </CardContent>
+                </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="unterhaltskosten" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Calculator className="h-5 w-5 text-primary" />
+                  Unterhaltskosten: Pauschal vs. Effektiv
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="p-4 border rounded-lg">
+                    <Badge className="bg-blue-100 text-blue-800 mb-2">Pauschalabzug</Badge>
+                    <div className="space-y-2 text-sm">
+                      <p><strong>Gebaude bis 10 Jahre:</strong> 10 % des Bruttomietwerts</p>
+                      <p><strong>Gebaude uber 10 Jahre:</strong> 20 % des Bruttomietwerts</p>
+                      <p className="text-muted-foreground mt-2">
+                        Einfacher, kein Nachweis notwendig. Vorteilhaft bei geringen
+                        tatsachlichen Kosten.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <Badge className="bg-emerald-100 text-emerald-800 mb-2">Effektive Kosten</Badge>
+                    <div className="space-y-2 text-sm">
+                      <p><strong>Tatsachliche Unterhaltskosten</strong></p>
+                      <p>Alle Belege mussen aufbewahrt werden</p>
+                      <p className="text-muted-foreground mt-2">
+                        Vorteilhaft bei hohen Unterhaltskosten, Sanierungen oder grosseren Reparaturen.
+                      </p>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                <p className="text-xs text-muted-foreground mt-4">
+                  * Der Wechsel zwischen Pauschal- und effektivem Abzug ist jahrlich moglich.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="grundstueckgewinn" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Grundstuckgewinnsteuer</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Die Grundstuckgewinnsteuer wird beim Verkauf einer Liegenschaft auf den Gewinn
+                  erhoben. Sie ist kantonal geregelt und sinkt mit zunehmender Haltedauer
+                  (degressiver Tarif). Bei kurzer Besitzdauer kann ein Spekulationszuschlag
+                  anfallen.
+                </p>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="p-4 border rounded-lg text-center">
+                    <p className="text-sm text-muted-foreground">Kurzfristig (&lt;2 Jahre)</p>
+                    <p className="text-2xl font-bold text-destructive mt-1">Bis 60 %</p>
+                    <p className="text-xs text-muted-foreground mt-1">mit Spekulationszuschlag</p>
+                  </div>
+                  <div className="p-4 border rounded-lg text-center">
+                    <p className="text-sm text-muted-foreground">Mittelfristig (5-10 Jahre)</p>
+                    <p className="text-2xl font-bold text-yellow-600 mt-1">20-35 %</p>
+                    <p className="text-xs text-muted-foreground mt-1">je nach Kanton</p>
+                  </div>
+                  <div className="p-4 border rounded-lg text-center">
+                    <p className="text-sm text-muted-foreground">Langfristig (&gt;20 Jahre)</p>
+                    <p className="text-2xl font-bold text-emerald-600 mt-1">0-15 %</p>
+                    <p className="text-xs text-muted-foreground mt-1">stark reduziert</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="kantone" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <MapPin className="h-5 w-5 text-primary" />
+                  Kantonsvergleich (Platzhalterdaten)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Kanton</TableHead>
+                      <TableHead>Eigenmietwert</TableHead>
+                      <TableHead>Liegenschaftssteuer</TableHead>
+                      <TableHead>Grundstuckgewinnsteuer</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {kantonsvergleich.map((row, idx) => (
+                      <TableRow key={idx}>
+                        <TableCell className="font-medium">{row.kanton}</TableCell>
+                        <TableCell>{row.eigenmietwert}</TableCell>
+                        <TableCell>{row.liegenschaftssteuer}</TableCell>
+                        <TableCell>{row.grundstuckgewinnsteuer}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <p className="text-xs text-muted-foreground mt-4">
+                  * Platzhalterdaten. Verbindliche Informationen bei der kantonalen Steuerverwaltung.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </MainLayout>
   );
