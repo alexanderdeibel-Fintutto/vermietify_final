@@ -222,6 +222,61 @@ import ReferralDashboard from "./pages/ecosystem/ReferralDashboard";
 // Portal Pages
 import PortalHub from "./pages/portal/PortalHub";
 
+// Formulare Pages (NEW - Legal Document Generators)
+import FormularHub from "./pages/formulare/FormularHub";
+import MietvertragGenerator from "./pages/formulare/MietvertragGenerator";
+import GewerbemietvertragGenerator from "./pages/formulare/GewerbemietvertragGenerator";
+import StaffelmietvertragGenerator from "./pages/formulare/StaffelmietvertragGenerator";
+import UntermieterlaubnisGenerator from "./pages/formulare/UntermieterlaubnisGenerator";
+import NachtragsvereinbarungGenerator from "./pages/formulare/NachtragsvereinbarungGenerator";
+import MietaufhebungsvertragGenerator from "./pages/formulare/MietaufhebungsvertragGenerator";
+import KuendigungGenerator from "./pages/formulare/KuendigungGenerator";
+import EigenbedarfGenerator from "./pages/formulare/EigenbedarfGenerator";
+import AbmahnungGenerator from "./pages/formulare/AbmahnungGenerator";
+import MahnungGenerator from "./pages/formulare/MahnungGenerator";
+import MieterhoehungGenerator from "./pages/formulare/MieterhoehungGenerator";
+import MietminderungReaktion from "./pages/formulare/MietminderungReaktion";
+import NebenkostenwiderspruchReaktion from "./pages/formulare/NebenkostenwiderspruchReaktion";
+import MietpreisBremsechecker from "./pages/formulare/MietpreisBremsechecker";
+import HausordnungGenerator from "./pages/formulare/HausordnungGenerator";
+import MieterselbstauskunftGenerator from "./pages/formulare/MieterselbstauskunftGenerator";
+import WohnungsgeberbestaetigungGenerator from "./pages/formulare/WohnungsgeberbestaetigungGenerator";
+import MietschuldenfreiheitGenerator from "./pages/formulare/MietschuldenfreiheitGenerator";
+import SEPALastschriftGenerator from "./pages/formulare/SEPALastschriftGenerator";
+import KautionsabrechnungGenerator from "./pages/formulare/KautionsabrechnungGenerator";
+import ZahlungsplanGenerator from "./pages/formulare/ZahlungsplanGenerator";
+
+// Energy Pages (NEW - Advanced Energy Management)
+import SolarDashboard from "./pages/energy/SolarDashboard";
+import HeatPumpDashboard from "./pages/energy/HeatPumpDashboard";
+import TariffManager from "./pages/energy/TariffManager";
+import ProviderComparison from "./pages/energy/ProviderComparison";
+import SmartAlerts from "./pages/energy/SmartAlerts";
+import ConsumptionHeatmap from "./pages/energy/ConsumptionHeatmap";
+import UtilityBilling from "./pages/energy/UtilityBilling";
+import MeterOCR from "./pages/energy/MeterOCR";
+import EnergyChat from "./pages/energy/EnergyChat";
+import MieterStromDashboard from "./pages/energy/MieterStromDashboard";
+
+// Calculator Pages (NEW - Advanced)
+import MonteCarloSimulation from "./pages/calculators/MonteCarloSimulation";
+import ScenarioDashboard from "./pages/calculators/ScenarioDashboard";
+import PropertyComparison from "./pages/calculators/PropertyComparison";
+import IndexmietenRechner from "./pages/calculators/IndexmietenRechner";
+
+// Tax Pages (NEW - DACH Multi-Country)
+import TaxDashboardAT from "./pages/taxes/TaxDashboardAT";
+import TaxDashboardCH from "./pages/taxes/TaxDashboardCH";
+import CrossBorderTaxDashboard from "./pages/taxes/CrossBorderTaxDashboard";
+
+// Domain Pages (NEW - Maintenance, Deposits, Vacancy, Vendors, Valuation)
+import MaintenanceDashboard from "./pages/maintenance/MaintenanceManager";
+import MaintenanceScheduling from "./pages/maintenance/MaintenanceScheduling";
+import DepositManagement from "./pages/deposits/DepositManagement";
+import VacancyManagement from "./pages/vacancy/VacancyManagement";
+import VendorManagement from "./pages/vendors/VendorManagement";
+import PropertyValuation from "./pages/valuation/PropertyValuation";
+
 import { AIAssistant } from "./components/ai/AIAssistant";
 
 const queryClient = new QueryClient();
@@ -443,6 +498,71 @@ const App = () => (
             <Route path="/mieter-portal/nachrichten" element={<TenantProtectedRoute><TenantMessages /></TenantProtectedRoute>} />
             <Route path="/mieter-portal/zufriedenheit" element={<TenantProtectedRoute><TenantSatisfaction /></TenantProtectedRoute>} />
             <Route path="/mieter-portal/zahlungen" element={<TenantProtectedRoute><TenantPaymentHistory /></TenantProtectedRoute>} />
+
+            {/* Formulare Routes (Legal Document Generators) */}
+            <Route path="/formulare" element={<ProtectedRoute><FormularHub /></ProtectedRoute>} />
+            <Route path="/formulare/mietvertrag" element={<ProtectedRoute><MietvertragGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/gewerbemietvertrag" element={<ProtectedRoute><GewerbemietvertragGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/staffelmietvertrag" element={<ProtectedRoute><StaffelmietvertragGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/untermieterlaubnis" element={<ProtectedRoute><UntermieterlaubnisGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/nachtragsvereinbarung" element={<ProtectedRoute><NachtragsvereinbarungGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/mietaufhebung" element={<ProtectedRoute><MietaufhebungsvertragGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/kuendigung" element={<ProtectedRoute><KuendigungGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/eigenbedarf" element={<ProtectedRoute><EigenbedarfGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/abmahnung" element={<ProtectedRoute><AbmahnungGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/mahnung" element={<ProtectedRoute><MahnungGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/mieterhoehung" element={<ProtectedRoute><MieterhoehungGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/mietminderung" element={<ProtectedRoute><MietminderungReaktion /></ProtectedRoute>} />
+            <Route path="/formulare/nebenkostenwiderspruch" element={<ProtectedRoute><NebenkostenwiderspruchReaktion /></ProtectedRoute>} />
+            <Route path="/formulare/indexmieten" element={<ProtectedRoute><IndexmietenRechner /></ProtectedRoute>} />
+            <Route path="/formulare/mietpreisbremse" element={<ProtectedRoute><MietpreisBremsechecker /></ProtectedRoute>} />
+            <Route path="/formulare/hausordnung" element={<ProtectedRoute><HausordnungGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/uebergabeprotokoll" element={<ProtectedRoute><HausordnungGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/mieterselbstauskunft" element={<ProtectedRoute><MieterselbstauskunftGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/wohnungsgeberbestaetigung" element={<ProtectedRoute><WohnungsgeberbestaetigungGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/mietschuldenfreiheit" element={<ProtectedRoute><MietschuldenfreiheitGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/sepa" element={<ProtectedRoute><SEPALastschriftGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/kautionsabrechnung" element={<ProtectedRoute><KautionsabrechnungGenerator /></ProtectedRoute>} />
+            <Route path="/formulare/zahlungsplan" element={<ProtectedRoute><ZahlungsplanGenerator /></ProtectedRoute>} />
+
+            {/* Advanced Energy Routes */}
+            <Route path="/energie/solar" element={<ProtectedRoute><SolarDashboard /></ProtectedRoute>} />
+            <Route path="/energie/waermepumpe" element={<ProtectedRoute><HeatPumpDashboard /></ProtectedRoute>} />
+            <Route path="/energie/tarife" element={<ProtectedRoute><TariffManager /></ProtectedRoute>} />
+            <Route path="/energie/anbietervergleich" element={<ProtectedRoute><ProviderComparison /></ProtectedRoute>} />
+            <Route path="/energie/alarme" element={<ProtectedRoute><SmartAlerts /></ProtectedRoute>} />
+            <Route path="/energie/heatmap" element={<ProtectedRoute><ConsumptionHeatmap /></ProtectedRoute>} />
+            <Route path="/energie/abrechnung" element={<ProtectedRoute><UtilityBilling /></ProtectedRoute>} />
+            <Route path="/energie/ocr" element={<ProtectedRoute><MeterOCR /></ProtectedRoute>} />
+            <Route path="/energie/chat" element={<ProtectedRoute><EnergyChat /></ProtectedRoute>} />
+            <Route path="/energie/mieterstrom" element={<ProtectedRoute><MieterStromDashboard /></ProtectedRoute>} />
+
+            {/* Advanced Calculator Routes */}
+            <Route path="/rechner/monte-carlo" element={<ProtectedRoute><MonteCarloSimulation /></ProtectedRoute>} />
+            <Route path="/rechner/szenarien" element={<ProtectedRoute><ScenarioDashboard /></ProtectedRoute>} />
+            <Route path="/rechner/vergleich" element={<ProtectedRoute><PropertyComparison /></ProtectedRoute>} />
+            <Route path="/rechner/indexmieten" element={<ProtectedRoute><IndexmietenRechner /></ProtectedRoute>} />
+
+            {/* DACH Tax Routes */}
+            <Route path="/steuern/oesterreich" element={<ProtectedRoute><TaxDashboardAT /></ProtectedRoute>} />
+            <Route path="/steuern/schweiz" element={<ProtectedRoute><TaxDashboardCH /></ProtectedRoute>} />
+            <Route path="/steuern/grenzueberschreitend" element={<ProtectedRoute><CrossBorderTaxDashboard /></ProtectedRoute>} />
+
+            {/* Maintenance Routes */}
+            <Route path="/wartung" element={<ProtectedRoute><MaintenanceDashboard /></ProtectedRoute>} />
+            <Route path="/wartung/planung" element={<ProtectedRoute><MaintenanceScheduling /></ProtectedRoute>} />
+
+            {/* Deposit Management */}
+            <Route path="/kautionen" element={<ProtectedRoute><DepositManagement /></ProtectedRoute>} />
+
+            {/* Vacancy Management */}
+            <Route path="/leerstand" element={<ProtectedRoute><VacancyManagement /></ProtectedRoute>} />
+
+            {/* Vendor Management */}
+            <Route path="/dienstleister" element={<ProtectedRoute><VendorManagement /></ProtectedRoute>} />
+
+            {/* Property Valuation */}
+            <Route path="/bewertung" element={<ProtectedRoute><PropertyValuation /></ProtectedRoute>} />
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
