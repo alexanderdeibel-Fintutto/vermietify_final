@@ -1,26 +1,34 @@
-import React from 'react';
-import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Wrench, AlertCircle, CheckCircle, Clock, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
+interface MaintenanceTask {
+    id: string;
+    titel: string;
+    beschreibung?: string;
+    status: 'Offen' | 'In Bearbeitung' | 'Erledigt';
+    prioritaet: 'Niedrig' | 'Mittel' | 'Hoch';
+    building_id?: string;
+    building_name?: string;
+    erstellt_am: string;
+}
+
+const DEMO_TASKS: MaintenanceTask[] = [
+    { id: '1', titel: 'Heizungsanlage warten', beschreibung: 'Jährliche Wartung', status: 'Offen', prioritaet: 'Hoch', building_name: 'Musterhaus 1', erstellt_am: '2025-03-01' },
+    { id: '2', titel: 'Treppenhausreinigung', status: 'In Bearbeitung', prioritaet: 'Mittel', building_name: 'Musterhaus 2', erstellt_am: '2025-03-05' },
+    { id: '3', titel: 'Rauchmelder prüfen', status: 'Erledigt', prioritaet: 'Hoch', building_name: 'Musterhaus 1', erstellt_am: '2025-02-20' },
+    { id: '4', titel: 'Dachrinne reinigen', status: 'Offen', prioritaet: 'Niedrig', building_name: 'Musterhaus 3', erstellt_am: '2025-03-10' },
+];
+
 export default function MaintenanceManager() {
-    const { data: tasks = [] } = useQuery({
-        queryKey: ['maintenanceTasks'],
-        queryFn: () => base44.entities.MaintenanceTask.list('-created_date')
-    });
+    const [tasks] = useState<MaintenanceTask[]>(DEMO_TASKS);
 
-    const { data: buildings = [] } = useQuery({
-        queryKey: ['buildings'],
-        queryFn: () => base44.entities.Building.list()
-    });
-
-    const openTasks = tasks.filter(t => t.status === 'open' || t.status === 'Offen');
-    const inProgressTasks = tasks.filter(t => t.status === 'in_progress' || t.status === 'In Bearbeitung');
-    const completedTasks = tasks.filter(t => t.status === 'completed' || t.status === 'Erledigt');
-    const urgentTasks = tasks.filter(t => (t.priority === 'high' || t.prioritaet === 'Hoch') && (t.status === 'open' || t.status === 'Offen'));
+    const openTasks = tasks.filter(t => t.status === 'Offen');
+    const inProgressTasks = tasks.filter(t => t.status === 'In Bearbeitung');
+    const completedTasks = tasks.filter(t => t.status === 'Erledigt');
+    const urgentTasks = tasks.filter(t => t.prioritaet === 'Hoch' && t.status === 'Offen');
 
     return (
         <div className="space-y-6">
@@ -84,16 +92,13 @@ export default function MaintenanceManager() {
                             Dringende Aufgaben ({urgentTasks.length})
                         </h3>
                         <div className="space-y-2">
-                            {urgentTasks.slice(0, 5).map((task) => {
-                                const building = buildings.find(b => b.id === task.building_id);
-                                return (
-                                    <div key={task.id} className="p-3 bg-white rounded-lg border border-red-200">
-                                        <div className="font-semibold text-sm">{task.titel}</div>
-                                        <div className="text-xs text-gray-600 mt-1">{building?.name}</div>
-                                        <Badge className="mt-2 vf-badge-error text-xs">Dringend</Badge>
-                                    </div>
-                                );
-                            })}
+                            {urgentTasks.slice(0, 5).map((task) => (
+                                <div key={task.id} className="p-3 bg-white rounded-lg border border-red-200">
+                                    <div className="font-semibold text-sm">{task.titel}</div>
+                                    <div className="text-xs text-gray-600 mt-1">{task.building_name}</div>
+                                    <Badge className="mt-2 vf-badge-error text-xs">Dringend</Badge>
+                                </div>
+                            ))}
                         </div>
                     </CardContent>
                 </Card>
