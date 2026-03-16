@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg95"
+   sodipodi:docname="fintutto-animated-v9g.svg"
+   inkscape:export-filename="FINTUTTO_LOGO_ALL_ANIMATET.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview97"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <defs
+     id="defs65">
+    <linearGradient
+       id="bg-gradient"
+       x1="0"
+       y1="0"
+       x2="512"
+       y2="512"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#0f0f1a"
+         id="stop2" />
+      <stop
+         offset="15%"
+         stop-color="#1a1030"
+         id="stop4" />
+      <stop
+         offset="30%"
+         stop-color="#2d1850"
+         id="stop6" />
+      <stop
+         offset="45%"
+         stop-color="#4a2070"
+         id="stop8" />
+      <stop
+         offset="55%"
+         stop-color="#6a3080"
+         id="stop10" />
+      <stop
+         offset="65%"
+         stop-color="#8a4070"
+         id="stop12" />
+      <stop
+         offset="78%"
+         stop-color="#b85060"
+         id="stop14" />
+      <stop
+         offset="90%"
+         stop-color="#e07050"
+         id="stop16" />
+      <stop
+         offset="100%"
+         stop-color="#f09060"
+         id="stop18" />
+    </linearGradient>
+    <linearGradient
+       id="ring-gradient"
+       x1="0"
+       y1="1"
+       x2="1"
+       y2="0">
+      <stop
+         offset="0%"
+         stop-color="#2563EB"
+         id="stop21">
+        <animate
+           attributeName="stop-color"
+           values="#2563EB;#E879F9;#10B981;#F97316;#2563EB"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+      <stop
+         offset="25%"
+         stop-color="#14B8A6"
+         id="stop23">
+        <animate
+           attributeName="stop-color"
+           values="#14B8A6;#2563EB;#E879F9;#84CC16;#14B8A6"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+      <stop
+         offset="50%"
+         stop-color="#EAB308"
+         id="stop25">
+        <animate
+           attributeName="stop-color"
+           values="#EAB308;#14B8A6;#2563EB;#E879F9;#EAB308"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+      <stop
+         offset="75%"
+         stop-color="#E879F9"
+         id="stop27">
+        <animate
+           attributeName="stop-color"
+           values="#E879F9;#F97316;#14B8A6;#2563EB;#E879F9"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+      <stop
+         offset="100%"
+         stop-color="#2563EB"
+         id="stop29">
+        <animate
+           attributeName="stop-color"
+           values="#2563EB;#E879F9;#10B981;#F97316;#2563EB"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+    </linearGradient>
+    <filter
+       id="glow"
+       x="-0.13235293"
+       y="-0.13235293"
+       width="1.2647059"
+       height="1.2647059">
+      <feGaussianBlur
+         stdDeviation="10"
+         result="blur"
+         id="feGaussianBlur32" />
+      <feMerge
+         id="feMerge40">
+        <feMergeNode
+           in="blur"
+           id="feMergeNode34" />
+        <feMergeNode
+           in="blur"
+           id="feMergeNode36" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode38" />
+      </feMerge>
+    </filter>
+    <filter
+       id="glow-strong"
+       x="-0.30000001"
+       y="-0.30000001"
+       width="1.6"
+       height="1.6">
+      <feGaussianBlur
+         stdDeviation="20"
+         result="blur1"
+         id="feGaussianBlur43">
+        <animate
+           attributeName="stdDeviation"
+           values="20;28;20"
+           dur="3s"
+           repeatCount="indefinite" />
+      </feGaussianBlur>
+      <feGaussianBlur
+         stdDeviation="10"
+         result="blur2"
+         id="feGaussianBlur45" />
+      <feMerge
+         id="feMerge53">
+        <feMergeNode
+           in="blur1"
+           id="feMergeNode47" />
+        <feMergeNode
+           in="blur2"
+           id="feMergeNode49" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode51" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#ring-gradient"
+       id="linearGradient1236"
+       x1="-16.000004"
+       y1="528"
+       x2="528"
+       y2="-16.000004"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#ring-gradient"
+       id="linearGradient1238"
+       x1="41.000004"
+       y1="471"
+       x2="471"
+       y2="41.000004"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#ring-gradient"
+       id="linearGradient1240"
+       x1="70.998871"
+       y1="441.00323"
+       x2="440.99701"
+       y2="71.005081"
+       gradientTransform="scale(1.0000068,0.99999323)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#ring-gradient"
+       id="linearGradient1242"
+       x1="75.737"
+       y1="436.66507"
+       x2="434.49268"
+       y2="77.909378"
+       gradientTransform="scale(1.0034691,0.99654287)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#ring-gradient"
+       id="linearGradient1244"
+       x1="71"
+       y1="441"
+       x2="441"
+       y2="71"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <!-- V9g Gradient Background -->
+  <rect
+     width="512"
+     height="512"
+     rx="113"
+     fill="url(#bg-gradient)"
+     id="rect67"
+     x="0"
+     y="0"
+     style="fill:url(#bg-gradient)" />
+  <!-- Outer Glow Ring - DICK & pulsing -->
+  <circle
+     cx="256"
+     cy="256"
+     r="170"
+     fill="none"
+     stroke="url(#ring-gradient)"
+     stroke-width="60"
+     filter="url(#glow-strong)"
+     id="circle69"
+     style="stroke:url(#linearGradient1236)">
+    <animate
+       attributeName="opacity"
+       values="0.12;0.28;0.12"
+       dur="3s"
+       repeatCount="indefinite" />
+  </circle>
+  <!-- Middle Ring - DICK -->
+  <circle
+     cx="256"
+     cy="256"
+     r="170"
+     fill="none"
+     stroke="url(#ring-gradient)"
+     stroke-width="42"
+     filter="url(#glow)"
+     id="circle71"
+     style="stroke:url(#linearGradient1238)">
+    <animate
+       attributeName="opacity"
+       values="0.3;0.55;0.3"
+       dur="3s"
+       repeatCount="indefinite" />
+  </circle>
+  <!-- Rotating dashed ring -->
+  <circle
+     cx="256"
+     cy="256"
+     r="170"
+     fill="none"
+     stroke="url(#ring-gradient)"
+     stroke-width="30"
+     opacity="0.4"
+     stroke-dasharray="50, 25"
+     stroke-linecap="round"
+     id="circle73"
+     style="stroke:url(#linearGradient1240)">
+    <animateTransform
+       attributeName="transform"
+       type="rotate"
+       from="0 256 256"
+       to="360 256 256"
+       dur="25s"
+       repeatCount="indefinite" />
+  </circle>
+  <!-- Counter-rotating dashed ring -->
+  <circle
+     cx="256"
+     cy="256"
+     r="170"
+     fill="none"
+     stroke="url(#ring-gradient)"
+     stroke-width="20"
+     opacity="0.25"
+     stroke-dasharray="25, 50"
+     stroke-linecap="round"
+     id="circle75"
+     style="stroke:url(#linearGradient1242)">
+    <animateTransform
+       attributeName="transform"
+       type="rotate"
+       from="360 256 256"
+       to="0 256 256"
+       dur="35s"
+       repeatCount="indefinite" />
+  </circle>
+  <!-- Solid Core Ring - DICK -->
+  <circle
+     cx="256"
+     cy="256"
+     r="170"
+     fill="none"
+     stroke="url(#ring-gradient)"
+     stroke-width="30"
+     opacity="0.7"
+     id="circle77"
+     style="stroke:url(#linearGradient1244)" />
+  <!-- Segment Lines with sequential pulse -->
+  <g
+     filter="url(#glow)"
+     id="g91">
+    <line
+       x1="256"
+       y1="60"
+       x2="256"
+       y2="110"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="4.5"
+       stroke-linecap="round"
+       id="line79">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="0s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="425"
+       y1="158"
+       x2="383"
+       y2="182"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="4.5"
+       stroke-linecap="round"
+       id="line81">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="0.33s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="425"
+       y1="354"
+       x2="383"
+       y2="330"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="4.5"
+       stroke-linecap="round"
+       id="line83">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="0.66s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="256"
+       y1="452"
+       x2="256"
+       y2="402"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="4.5"
+       stroke-linecap="round"
+       id="line85">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="1s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="87"
+       y1="354"
+       x2="129"
+       y2="330"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="4.5"
+       stroke-linecap="round"
+       id="line87">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="1.33s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="87"
+       y1="158"
+       x2="129"
+       y2="182"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="4.5"
+       stroke-linecap="round"
+       id="line89">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="1.66s"
+         repeatCount="indefinite" />
+    </line>
+  </g>
+  <!-- "fin" Text with glow pulse -->
+</svg>

@@ -1,0 +1,105 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="15%" stop-color="#1a1030"/>
+      <stop offset="30%" stop-color="#2d1850"/>
+      <stop offset="45%" stop-color="#4a2070"/>
+      <stop offset="55%" stop-color="#6a3080"/>
+      <stop offset="65%" stop-color="#8a4070"/>
+      <stop offset="78%" stop-color="#b85060"/>
+      <stop offset="90%" stop-color="#e07050"/>
+      <stop offset="100%" stop-color="#f09060"/>
+    </linearGradient>
+    
+    <linearGradient id="ring-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563EB">
+        <animate attributeName="stop-color" values="#2563EB;#E879F9;#10B981;#F97316;#2563EB" dur="8s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="25%" stop-color="#14B8A6">
+        <animate attributeName="stop-color" values="#14B8A6;#2563EB;#E879F9;#84CC16;#14B8A6" dur="8s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#EAB308">
+        <animate attributeName="stop-color" values="#EAB308;#14B8A6;#2563EB;#E879F9;#EAB308" dur="8s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="75%" stop-color="#E879F9">
+        <animate attributeName="stop-color" values="#E879F9;#F97316;#14B8A6;#2563EB;#E879F9" dur="8s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#2563EB">
+        <animate attributeName="stop-color" values="#2563EB;#E879F9;#10B981;#F97316;#2563EB" dur="8s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-strong" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="20" result="blur1">
+        <animate attributeName="stdDeviation" values="20;28;20" dur="3s" repeatCount="indefinite"/>
+      </feGaussianBlur>
+      <feGaussianBlur stdDeviation="10" result="blur2"/>
+      <feMerge><feMergeNode in="blur1"/><feMergeNode in="blur2"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="text-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur">
+        <animate attributeName="stdDeviation" values="5;8;5" dur="2.5s" repeatCount="indefinite"/>
+      </feGaussianBlur>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  
+  <!-- V9g Gradient Background -->
+  <rect width="512" height="512" rx="113" fill="url(#bg-gradient)"/>
+  
+  <!-- Outer Glow Ring - DICK & pulsing -->
+  <circle cx="256" cy="256" r="170" fill="none" stroke="url(#ring-gradient)" stroke-width="60" filter="url(#glow-strong)">
+    <animate attributeName="opacity" values="0.12;0.28;0.12" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Middle Ring - DICK -->
+  <circle cx="256" cy="256" r="170" fill="none" stroke="url(#ring-gradient)" stroke-width="42" filter="url(#glow)">
+    <animate attributeName="opacity" values="0.3;0.55;0.3" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Rotating dashed ring -->
+  <circle cx="256" cy="256" r="170" fill="none" stroke="url(#ring-gradient)" stroke-width="30" opacity="0.4" stroke-dasharray="50 25" stroke-linecap="round">
+    <animateTransform attributeName="transform" type="rotate" from="0 256 256" to="360 256 256" dur="25s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Counter-rotating dashed ring -->
+  <circle cx="256" cy="256" r="170" fill="none" stroke="url(#ring-gradient)" stroke-width="20" opacity="0.25" stroke-dasharray="25 50" stroke-linecap="round">
+    <animateTransform attributeName="transform" type="rotate" from="360 256 256" to="0 256 256" dur="35s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Solid Core Ring - DICK -->
+  <circle cx="256" cy="256" r="170" fill="none" stroke="url(#ring-gradient)" stroke-width="30" opacity="0.7"/>
+  
+  <!-- Segment Lines with sequential pulse -->
+  <g filter="url(#glow)">
+    <line x1="256" y1="60" x2="256" y2="110" stroke="rgba(255,255,255,0.6)" stroke-width="4.5" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2s" begin="0s" repeatCount="indefinite"/>
+    </line>
+    <line x1="425" y1="158" x2="383" y2="182" stroke="rgba(255,255,255,0.6)" stroke-width="4.5" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2s" begin="0.33s" repeatCount="indefinite"/>
+    </line>
+    <line x1="425" y1="354" x2="383" y2="330" stroke="rgba(255,255,255,0.6)" stroke-width="4.5" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2s" begin="0.66s" repeatCount="indefinite"/>
+    </line>
+    <line x1="256" y1="452" x2="256" y2="402" stroke="rgba(255,255,255,0.6)" stroke-width="4.5" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2s" begin="1s" repeatCount="indefinite"/>
+    </line>
+    <line x1="87" y1="354" x2="129" y2="330" stroke="rgba(255,255,255,0.6)" stroke-width="4.5" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2s" begin="1.33s" repeatCount="indefinite"/>
+    </line>
+    <line x1="87" y1="158" x2="129" y2="182" stroke="rgba(255,255,255,0.6)" stroke-width="4.5" stroke-linecap="round">
+      <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2s" begin="1.66s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- "fin" Text with glow pulse -->
+  <text x="256" y="280" text-anchor="middle" font-family="Raleway, Arial, sans-serif" font-weight="600" font-size="85" letter-spacing="8" fill="#FFFFFF" filter="url(#text-glow)">
+    fin
+    <animate attributeName="opacity" values="0.85;1;0.85" dur="2s" repeatCount="indefinite"/>
+  </text>
+</svg>
