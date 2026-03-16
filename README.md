@@ -1,73 +1,67 @@
-# Welcome to your Lovable project
+# Fintutto Monorepo
 
-## Project info
+Monorepo for all Fintutto ecosystem apps — property management, tenant portals, financial tools, and more.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Architecture
 
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+fintutto-monorepo/
+├── apps/
+│   ├── vermietify/          # Property management dashboard
+│   ├── financial-compass/   # Financial planning & tax tools
+│   ├── bescheidboxer/       # Bürgergeld/Sozialrecht KI-Assistent
+│   # Future apps:
+│   # ├── mieterportal/      # Tenant self-service portal
+│   # ├── hausmeister/       # Caretaker management
+│   # ├── ablesung/          # Meter readings
+│   # └── admin/             # Admin dashboard
+├── packages/
+│   ├── ui/                  # Shared shadcn/radix UI components
+│   ├── supabase/            # Shared Supabase client & types
+│   └── shared/              # Shared utils, hooks, types
+├── supabase/                # Supabase config, migrations, functions
+├── turbo.json               # Turborepo pipeline config
+└── pnpm-workspace.yaml      # Workspace config
 ```
 
-**Edit a file directly in GitHub**
+## Tech Stack
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- **Build**: Turborepo + pnpm workspaces
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui (Radix primitives)
+- **Backend**: Supabase (PostgreSQL, Auth, Edge Functions, Storage)
+- **Deployment**: Vercel (per-app deployments)
 
-**Use GitHub Codespaces**
+## Getting Started
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+# Install pnpm if not present
+npm i -g pnpm
 
-## What technologies are used for this project?
+# Install all dependencies
+pnpm install
 
-This project is built with:
+# Run vermietify in development
+pnpm dev:vermietify
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Build all apps
+pnpm build
 
-## How can I deploy this project?
+# Run tests across all apps
+pnpm test
+```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Adding a New App
 
-## Can I connect a custom domain to my Lovable project?
+1. Create `apps/<app-name>/` with its own `package.json`
+2. Import shared packages: `@fintutto/ui`, `@fintutto/supabase`, `@fintutto/shared`
+3. Run `pnpm install` from root to link workspace dependencies
+4. Add app-specific scripts to root `package.json` if needed
 
-Yes, you can!
+## Shared Packages
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+| Package | Description | Usage |
+|---------|-------------|-------|
+| `@fintutto/ui` | 50+ shadcn/radix components | `import { Button } from "@fintutto/ui"` |
+| `@fintutto/supabase` | Supabase client + DB types | `import { supabase } from "@fintutto/supabase"` |
+| `@fintutto/shared` | Utils, auth hooks, validators | `import { useAuth, cn } from "@fintutto/shared"` |

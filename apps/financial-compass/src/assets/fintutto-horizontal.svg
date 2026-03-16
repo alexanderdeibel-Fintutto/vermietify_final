@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="350"
+   height="130"
+   viewBox="0 0 350 130"
+   version="1.1"
+   id="svg525"
+   sodipodi:docname="firma-ftfirma-horizontal-animated-transparent.svg"
+   inkscape:version="1.2.1 (9c6d41e, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview527"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="3.5514286"
+     inkscape:cx="205.55108"
+     inkscape:cy="63.777152"
+     inkscape:window-width="1694"
+     inkscape:window-height="1113"
+     inkscape:window-x="299"
+     inkscape:window-y="31"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg525" />
+  <defs
+     id="defs487">
+    <linearGradient
+       id="ring"
+       x1="0%"
+       y1="100%"
+       x2="100%"
+       y2="0%">
+      <stop
+         offset="0%"
+         stop-color="#2563EB"
+         id="stop443">
+        <animate
+           attributeName="stop-color"
+           values="#2563EB;#E879F9;#10B981;#F97316;#2563EB"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+      <stop
+         offset="25%"
+         stop-color="#14B8A6"
+         id="stop445">
+        <animate
+           attributeName="stop-color"
+           values="#14B8A6;#2563EB;#E879F9;#84CC16;#14B8A6"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+      <stop
+         offset="50%"
+         stop-color="#EAB308"
+         id="stop447">
+        <animate
+           attributeName="stop-color"
+           values="#EAB308;#14B8A6;#2563EB;#E879F9;#EAB308"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+      <stop
+         offset="75%"
+         stop-color="#E879F9"
+         id="stop449">
+        <animate
+           attributeName="stop-color"
+           values="#E879F9;#F97316;#14B8A6;#2563EB;#E879F9"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+      <stop
+         offset="100%"
+         stop-color="#2563EB"
+         id="stop451">
+        <animate
+           attributeName="stop-color"
+           values="#2563EB;#E879F9;#10B981;#F97316;#2563EB"
+           dur="8s"
+           repeatCount="indefinite" />
+      </stop>
+    </linearGradient>
+    <filter
+       id="glow"
+       x="-0.132"
+       y="-0.132"
+       width="1.264"
+       height="1.264">
+      <feGaussianBlur
+         stdDeviation="3"
+         result="blur"
+         id="feGaussianBlur454" />
+      <feMerge
+         id="feMerge462">
+        <feMergeNode
+           in="blur"
+           id="feMergeNode456" />
+        <feMergeNode
+           in="blur"
+           id="feMergeNode458" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode460" />
+      </feMerge>
+    </filter>
+    <filter
+       id="glow-strong"
+       x="-0.301"
+       y="-0.301"
+       width="1.602"
+       height="1.602">
+      <feGaussianBlur
+         stdDeviation="6"
+         result="blur1"
+         id="feGaussianBlur465">
+        <animate
+           attributeName="stdDeviation"
+           values="6;9;6"
+           dur="3s"
+           repeatCount="indefinite" />
+      </feGaussianBlur>
+      <feGaussianBlur
+         stdDeviation="3"
+         result="blur2"
+         id="feGaussianBlur467" />
+      <feMerge
+         id="feMerge475">
+        <feMergeNode
+           in="blur1"
+           id="feMergeNode469" />
+        <feMergeNode
+           in="blur2"
+           id="feMergeNode471" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode473" />
+      </feMerge>
+    </filter>
+    <filter
+       id="icon-glow"
+       x="-0.026285165"
+       y="-0.15961909"
+       width="1.0525703"
+       height="1.3192382">
+      <feGaussianBlur
+         stdDeviation="2"
+         result="blur"
+         id="feGaussianBlur478">
+        <animate
+           attributeName="stdDeviation"
+           values="2;3.5;2"
+           dur="2.5s"
+           repeatCount="indefinite" />
+      </feGaussianBlur>
+      <feMerge
+         id="feMerge484">
+        <feMergeNode
+           in="blur"
+           id="feMergeNode480" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode482" />
+      </feMerge>
+    </filter>
+    <filter
+       id="icon-glow-4"
+       x="-0.09453125"
+       y="-0.097580645"
+       width="1.1890625"
+       height="1.1951613">
+      <feGaussianBlur
+         stdDeviation="2"
+         result="blur"
+         id="feGaussianBlur56">
+        <animate
+           attributeName="stdDeviation"
+           values="2;3.5;2"
+           dur="2.5s"
+           repeatCount="indefinite" />
+      </feGaussianBlur>
+      <feMerge
+         id="feMerge62">
+        <feMergeNode
+           in="blur"
+           id="feMergeNode58" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode60" />
+      </feMerge>
+    </filter>
+  </defs>
+  <circle
+     cx="65"
+     cy="65"
+     r="50"
+     fill="none"
+     stroke="url(#ring)"
+     stroke-width="17"
+     filter="url(#glow-strong)"
+     id="circle489">
+    <animate
+       attributeName="opacity"
+       values="0.12;0.28;0.12"
+       dur="3s"
+       repeatCount="indefinite" />
+  </circle>
+  <circle
+     cx="65"
+     cy="65"
+     r="50"
+     fill="none"
+     stroke="url(#ring)"
+     stroke-width="12"
+     filter="url(#glow)"
+     id="circle491">
+    <animate
+       attributeName="opacity"
+       values="0.3;0.55;0.3"
+       dur="3s"
+       repeatCount="indefinite" />
+  </circle>
+  <circle
+     cx="65"
+     cy="65"
+     r="50"
+     fill="none"
+     stroke="url(#ring)"
+     stroke-width="9"
+     opacity="0.4"
+     stroke-dasharray="15 8"
+     stroke-linecap="round"
+     id="circle493">
+    <animateTransform
+       attributeName="transform"
+       type="rotate"
+       from="0 65 65"
+       to="360 65 65"
+       dur="25s"
+       repeatCount="indefinite" />
+  </circle>
+  <circle
+     cx="65"
+     cy="65"
+     r="50"
+     fill="none"
+     stroke="url(#ring)"
+     stroke-width="6"
+     opacity="0.25"
+     stroke-dasharray="8 15"
+     stroke-linecap="round"
+     id="circle495">
+    <animateTransform
+       attributeName="transform"
+       type="rotate"
+       from="360 65 65"
+       to="0 65 65"
+       dur="35s"
+       repeatCount="indefinite" />
+  </circle>
+  <circle
+     cx="65"
+     cy="65"
+     r="50"
+     fill="none"
+     stroke="url(#ring)"
+     stroke-width="9"
+     opacity="0.7"
+     id="circle497"
+     style="display:inline" />
+  <g
+     filter="url(#glow)"
+     id="g511">
+    <line
+       x1="65"
+       y1="8"
+       x2="65"
+       y2="23"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="1.5"
+       stroke-linecap="round"
+       id="line499">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="0s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="114"
+       y1="36"
+       x2="102"
+       y2="43"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="1.5"
+       stroke-linecap="round"
+       id="line501">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="0.33s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="114"
+       y1="94"
+       x2="102"
+       y2="87"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="1.5"
+       stroke-linecap="round"
+       id="line503">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="0.66s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="65"
+       y1="122"
+       x2="65"
+       y2="107"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="1.5"
+       stroke-linecap="round"
+       id="line505">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="1s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="16"
+       y1="94"
+       x2="28"
+       y2="87"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="1.5"
+       stroke-linecap="round"
+       id="line507">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="1.33s"
+         repeatCount="indefinite" />
+    </line>
+    <line
+       x1="16"
+       y1="36"
+       x2="28"
+       y2="43"
+       stroke="rgba(255,255,255,0.6)"
+       stroke-width="1.5"
+       stroke-linecap="round"
+       id="line509">
+      <animate
+         attributeName="opacity"
+         values="0.2;0.9;0.2"
+         dur="2s"
+         begin="1.66s"
+         repeatCount="indefinite" />
+    </line>
+  </g>
+  <g
+     transform="matrix(0.76550507,0,0,0.84119842,35.268776,26.887548)"
+     stroke="#ffffff"
+     stroke-width="2.5"
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     filter="url(#icon-glow)"
+     id="g101"
+     style="filter:url(#icon-glow-4)">
+    <rect
+       x="8"
+       y="25"
+       width="64"
+       height="45"
+       rx="4"
+       id="rect93">
+      <animate
+         attributeName="opacity"
+         values="0.85;1;0.85"
+         dur="2s"
+         repeatCount="indefinite" />
+    </rect>
+    <path
+       d="M 28,25 V 15 c 0,-5 5,-7 12,-7 7,0 12,2 12,7 v 10"
+       id="path95" />
+    <line
+       x1="8"
+       y1="45"
+       x2="72"
+       y2="45"
+       id="line97" />
+    <rect
+       x="33"
+       y="38"
+       width="14"
+       height="14"
+       rx="2"
+       id="rect99" />
+  </g>
+  <text
+     x="145"
+     y="78"
+     font-family="Raleway, Arial, sans-serif"
+     font-weight="600"
+     font-size="48px"
+     letter-spacing="4"
+     fill="#ffffff"
+     filter="url(#icon-glow)"
+     id="text523"
+     style="font-size:52px;display:inline">Firma<animate
+   attributeName="opacity"
+   values="0.85;1;0.85"
+   dur="2s"
+   repeatCount="indefinite" /></text>
+</svg>

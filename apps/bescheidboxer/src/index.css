@@ -1,0 +1,319 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Skip to content link - accessible but visually hidden until focused */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 0.75rem 1.5rem;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-radius: 0 0 0.5rem 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+
+.skip-to-content:focus {
+  top: 0;
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Enhanced focus styles for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 160 20% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 160 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 20% 10%;
+
+    --primary: 160 84% 25%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 24 95% 53%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 150 10% 95%;
+    --muted-foreground: 160 10% 40%;
+
+    --accent: 160 40% 92%;
+    --accent-foreground: 160 84% 25%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+
+    --border: 150 13% 87%;
+    --input: 150 13% 87%;
+    --ring: 160 84% 35%;
+
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: 160 15% 6%;
+    --foreground: 0 0% 95%;
+
+    --card: 160 15% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 160 15% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 160 70% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 24 90% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 160 10% 15%;
+    --muted-foreground: 150 10% 55%;
+
+    --accent: 160 30% 20%;
+    --accent-foreground: 160 70% 65%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+
+    --border: 160 10% 18%;
+    --input: 160 10% 18%;
+    --ring: 160 70% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  /* BescheidBoxer & Amtshilfe gradients */
+  .gradient-amt {
+    background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%);
+  }
+
+  .gradient-boxer {
+    background: linear-gradient(135deg, #b91c1c 0%, #dc2626 40%, #f97316 100%);
+  }
+
+  .gradient-amt-warm {
+    background: linear-gradient(135deg, #059669 0%, #f97316 100%);
+  }
+
+  .gradient-text-amt {
+    background: linear-gradient(135deg, #047857 0%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-boxer {
+    background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* BescheidScan result styles */
+  .scan-error-card {
+    @apply border-l-4 border-l-destructive bg-destructive/5 rounded-lg p-4;
+  }
+
+  .scan-warning-card {
+    @apply border-l-4 border-l-warning bg-warning/5 rounded-lg p-4;
+  }
+
+  .scan-success-card {
+    @apply border-l-4 border-l-success bg-success/5 rounded-lg p-4;
+  }
+
+  /* Gamification levels */
+  .level-badge {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold;
+  }
+
+  .level-anfaenger { @apply bg-slate-100 text-slate-700; }
+  .level-kaempfer { @apply bg-blue-100 text-blue-700; }
+  .level-profi { @apply bg-purple-100 text-purple-700; }
+  .level-experte { @apply bg-amber-100 text-amber-700; }
+
+  /* Chat styles */
+  .chat-bubble-user {
+    @apply bg-primary text-primary-foreground rounded-2xl rounded-br-md px-4 py-3;
+  }
+
+  .chat-bubble-ai {
+    @apply bg-card border border-border rounded-2xl rounded-bl-md px-4 py-3;
+  }
+
+  .chat-input {
+    @apply w-full px-4 py-3 border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none;
+  }
+
+  /* Card styles */
+  .content-card {
+    @apply bg-card rounded-xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow;
+  }
+
+  .content-card-highlight {
+    @apply border-primary/30 shadow-md shadow-primary/5;
+  }
+
+  /* Letter template card */
+  .letter-card {
+    @apply bg-card rounded-xl border border-border p-5 hover:border-primary/40 hover:shadow-md transition-all cursor-pointer;
+  }
+
+  /* Forum styles */
+  .forum-post {
+    @apply bg-card rounded-xl border border-border p-5 hover:border-primary/30 transition-colors;
+  }
+
+  /* Category badges */
+  .badge-sgb2 {
+    @apply bg-emerald-100 text-emerald-800 text-xs font-medium px-2.5 py-0.5 rounded-full;
+  }
+
+  .badge-sgb3 {
+    @apply bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full;
+  }
+
+  .badge-sgb12 {
+    @apply bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full;
+  }
+
+  .badge-kdu {
+    @apply bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded-full;
+  }
+
+  /* Status badges */
+  .status-success {
+    @apply bg-success/10 border border-success/30 text-success;
+  }
+
+  .status-warning {
+    @apply bg-warning/10 border border-warning/30 text-warning;
+  }
+
+  .status-error {
+    @apply bg-destructive/10 border border-destructive/30 text-destructive;
+  }
+
+  /* Navigation */
+  .nav-link {
+    @apply text-sm font-medium text-foreground/80 hover:text-foreground transition-colors;
+  }
+
+  .nav-link-active {
+    @apply text-primary font-semibold;
+  }
+
+  /* Pricing tier cards */
+  .tier-free {
+    @apply border-border;
+  }
+
+  .tier-plus {
+    @apply border-primary/50 shadow-lg shadow-primary/10;
+  }
+
+  .tier-premium {
+    @apply border-secondary/50 shadow-lg shadow-secondary/10 ring-2 ring-secondary/20;
+  }
+}
+
+/* Print styles */
+@media print {
+  /* Hide non-essential UI */
+  header,
+  footer,
+  nav,
+  .print\\:hidden,
+  [class*="BackToTop"],
+  [class*="CookieConsent"],
+  [class*="MobileNavBar"],
+  [class*="SpotlightSearch"],
+  [class*="FristAlarm"] {
+    display: none !important;
+  }
+
+  /* Reset background and colors for print */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+
+  /* Remove shadows and borders for cleaner print */
+  .content-card,
+  .letter-card,
+  .forum-post {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    break-inside: avoid;
+  }
+
+  /* Ensure gradients show as solid text */
+  .gradient-text-boxer,
+  .gradient-text-amt {
+    -webkit-text-fill-color: black !important;
+    color: black !important;
+  }
+
+  /* Page margins */
+  @page {
+    margin: 2cm;
+  }
+
+  /* Avoid page breaks inside key elements */
+  .bg-white,
+  .bg-card,
+  [class*="rounded-xl"] {
+    break-inside: avoid;
+  }
+
+  /* Make links visible in print */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  /* Don't show URL for internal links */
+  a[href^="/"]::after,
+  a[href^="#"]::after {
+    content: "";
+  }
+}

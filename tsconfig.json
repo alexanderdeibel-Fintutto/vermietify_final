@@ -1,16 +1,16 @@
 {
-  "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "noImplicitAny": false,
-    "noUnusedParameters": false,
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
-    "allowJs": true,
-    "noUnusedLocals": false,
-    "strictNullChecks": false
-  }
+    "strict": false,
+    "noImplicitAny": false
+  },
+  "references": [
+    { "path": "apps/vermietify" },
+    { "path": "packages/ui" },
+    { "path": "packages/supabase" },
+    { "path": "packages/shared" }
+  ]
 }
