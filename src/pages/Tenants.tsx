@@ -336,7 +336,8 @@ export default function Tenants() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Mieter</TableHead>
+                    <TableHead>Vorname</TableHead>
+                    <TableHead>Nachname</TableHead>
                     <TableHead>Kontakt</TableHead>
                     <TableHead>Adresse</TableHead>
                     <TableHead>Status</TableHead>
@@ -353,12 +354,11 @@ export default function Tenants() {
                               {getInitials(tenant.first_name, tenant.last_name)}
                             </AvatarFallback>
                           </Avatar>
-                          <div>
-                            <p className="font-medium">
-                              {tenant.first_name} {tenant.last_name}
-                            </p>
-                          </div>
+                          <p className="font-medium">{tenant.first_name || "-"}</p>
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        <p className="font-medium">{tenant.last_name || "-"}</p>
                       </TableCell>
                       <TableCell>
                         <div className="space-y-1">
